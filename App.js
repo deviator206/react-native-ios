@@ -6,21 +6,58 @@
  * @flow
  */
 
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text} from 'react-native';
-import {View} from 'native-base';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import React from 'react';
+import { createAppContainer, createDrawerNavigator, createStackNavigator } from 'react-navigation';
+import { Provider } from 'react-redux';
+import { default as configureStore } from './storage/store/createAppStore';
 
-export default class App extends Component {
+//screens
+import LoginPage from './pages/login/loginPage';
+
+console.disableYellowBox = true;
+
+const AppNavigator = createStackNavigator({
+  login: {
+    screen: LoginPage,
+    key: 'login',
+    navigationOptions: () => ({
+      header: null
+    })
+  }
+}, {
+    initialRouteName: "login",
+    mode: 'modal',
+    headerMode: 'none',
+    initialRouteParams: { someParam: 'Bonjour' }
+  });
+const AppContainer = createAppContainer(AppNavigator);
+
+
+// store creation
+const newStore = configureStore({});
+window.storeInstance = newStore;
+
+
+class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.handleNavigationChange = this.handleNavigationChange.bind(this);
+  }
+
+  handleNavigationChange(prevState, newState, action) {
+    console.log(prevState, newState, action);
+  }
+  componentDidMount() {
+    //  SplashScreen.hide();
+  }
   render() {
     return (
-      <View >
-        <Text style={{
-          marginTop:"30%",
-          fontSize:43
-        }}> Test Project 0.0.16 !! </Text>
-        <Icon name="arrow-forward" style={{ color: "black", fontSize: 20 }} />
-      </View>
+      <Provider store={newStore}>
+        <AppContainer />
+      </Provider>
     );
   }
 }
+export default App;
+

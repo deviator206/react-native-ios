@@ -14,6 +14,9 @@
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		00E356F31AD99517003FC87E /* ametek_iosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ametek_iosTests.m */; };
 		077FBD3E7099489FB15FAC96 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC081A33930A4585B073D8D6 /* EvilIcons.ttf */; };
+		09E303AB23257654000B57F3 /* Montserrat-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09E303AA23257653000B57F3 /* Montserrat-Black.ttf */; };
+		09E303AD23257676000B57F3 /* Montserrat-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09E303AC23257676000B57F3 /* Montserrat-BlackItalic.ttf */; };
+		09E303AF2325768C000B57F3 /* Montserrat-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 09E303AE2325768B000B57F3 /* Montserrat-Bold.otf */; };
 		11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -410,6 +413,10 @@
 		00E356F21AD99517003FC87E /* ametek_iosTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ametek_iosTests.m; sourceTree = "<group>"; };
 		09009E88C291444F8A49E274 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		09D097A05F174C67AFBCA301 /* libRNScreens-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNScreens-tvOS.a"; sourceTree = "<group>"; };
+		09E3037B23257515000B57F3 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../assets/fonts; sourceTree = "<group>"; };
+		09E303AA23257653000B57F3 /* Montserrat-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Black.ttf"; path = "../assets/fonts/Montserrat-Black.ttf"; sourceTree = "<group>"; };
+		09E303AC23257676000B57F3 /* Montserrat-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-BlackItalic.ttf"; path = "../assets/fonts/Montserrat-BlackItalic.ttf"; sourceTree = "<group>"; };
+		09E303AE2325768B000B57F3 /* Montserrat-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Bold.otf"; path = "../assets/fonts/Montserrat-Bold.otf"; sourceTree = "<group>"; };
 		0E435AB508E54E9CBAB00316 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		11079E3EAE914BA89C2D00F6 /* libRNGestureHandler-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNGestureHandler-tvOS.a"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
@@ -751,6 +758,10 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				09E303AE2325768B000B57F3 /* Montserrat-Bold.otf */,
+				09E303AC23257676000B57F3 /* Montserrat-BlackItalic.ttf */,
+				09E303AA23257653000B57F3 /* Montserrat-Black.ttf */,
+				09E3037B23257515000B57F3 /* fonts */,
 				13B07FAE1A68108700A75B9A /* ametek_ios */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* ametek_iosTests */,
@@ -1323,6 +1334,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09E303AF2325768C000B57F3 /* Montserrat-Bold.otf in Resources */,
+				09E303AD23257676000B57F3 /* Montserrat-BlackItalic.ttf in Resources */,
+				09E303AB23257654000B57F3 /* Montserrat-Black.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				DCEA44FF38CA4B6AB97D3616 /* AntDesign.ttf in Resources */,
