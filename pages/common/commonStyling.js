@@ -10,7 +10,7 @@ const styleContent = StyleSheet.create({
     },
     headerTitle: {
         textAlign: "center",
-       // // fontFamily: "Montserrat-Medium",
+       fontFamily: "Montserrat-Medium",
         fontSize: 20
 
     },
@@ -42,7 +42,7 @@ const styleContent = StyleSheet.create({
     },
     tabNameStyling: {
         fontSize: 12,
-        // // fontFamily: 'Montserrat-Medium',
+        fontFamily: 'Montserrat-Medium',
         color: "#616161"
     },
     tabIconStyling: {
@@ -53,7 +53,7 @@ const styleContent = StyleSheet.create({
     dynamicComponentTextAreaStyle: {
         color: "#000000",
         fontSize: 14,
-        // // fontFamily: 'Montserrat-Regular',
+        fontFamily: 'Montserrat-Regular',
         textTransform: "uppercase",
         fontWeight: "100",
         width: '90%',
@@ -66,7 +66,7 @@ const styleContent = StyleSheet.create({
 
         height: 40,
         lineHeight: 40,
-        // // fontFamily: 'Montserrat-Regular',
+        fontFamily: 'Montserrat-Regular',
         textTransform: "uppercase",
         fontWeight: "100"
     },
@@ -76,13 +76,13 @@ const styleContent = StyleSheet.create({
     },
     errorMessageText: {
         color: AppConst.primaryRed,
-        // // fontFamily: 'Montserrat-SemiBold',
+        fontFamily: 'Montserrat-SemiBold',
         fontSize: 14,
         marginVertical: "1%"
         //marginTop: "5%"
     },
     sectionTitle: {
-        // // fontFamily: "Montserrat-SemiBold",
+        fontFamily: "Montserrat-SemiBold",
         fontSize: 15,
         color: "#616161",
         marginTop: "10%",
@@ -94,30 +94,30 @@ const styleContent = StyleSheet.create({
         fontSize: 14,
         marginTop: "4%",
         marginBottom: "0%",
-        // fontFamily: 'Montserrat-Medium'
+        fontFamily: 'Montserrat-Medium'
     },
     darkLabelStyling: {
         color: "#1A1A1A",
         fontSize: 15,
-        // fontFamily: 'Montserrat-Medium'
+        fontFamily: 'Montserrat-Medium'
     },
     secondaryLabel: {
         fontSize: 14,
-        // fontFamily: 'Montserrat-SemiBold',
+        fontFamily: 'Montserrat-SemiBold',
         color: "#616161",
         marginBottom: "3%",
         textTransform:"uppercase"
     },
     secondaryTextDesignation:{
         fontSize: 12,
-        // fontFamily: 'Montserrat-Medium',
+        fontFamily: 'Montserrat-Medium',
         color: "#AEAEAE",
         marginTop:"1%"
     },
     secondaryText: {
         fontSize: 12,
         lineHeight:18,
-        // fontFamily: 'Montserrat-Medium',
+        fontFamily: 'Montserrat-Medium',
         color: "#AEAEAE",
         marginBottom: "3%"
     },
@@ -125,7 +125,7 @@ const styleContent = StyleSheet.create({
         textTransform: "uppercase"
     },
     inputBoxStyle: {
-        // fontFamily: 'Montserrat-Medium',
+        fontFamily: 'Montserrat-Medium',
         fontSize: 14,
         color: "#1A1A1A",
         backgroundColor: "#ffffff",
@@ -144,7 +144,7 @@ const styleContent = StyleSheet.create({
     modalHeader: {
         color: "#FFFFFF",
         fontSize: 20,
-        // fontFamily: 'Montserrat-Medium'
+        fontFamily: 'Montserrat-Medium'
     },
     modalCloseBtn: {
         fontSize: 30,
@@ -169,7 +169,7 @@ const styleContent = StyleSheet.create({
     modalTwoButtons: {
         color: "#FFFFFF",
         fontSize: 18,
-        // fontFamily: 'Montserrat-Medium',
+        fontFamily: 'Montserrat-Medium',
         textAlign: "center",
         height: 50,
         lineHeight: 50

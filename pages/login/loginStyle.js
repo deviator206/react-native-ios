@@ -43,7 +43,7 @@ const styleContent = StyleSheet.create({
   },
   signInText: {
     color: "#FAFAFA",
-    // fontFamily: 'Montserrat-Regular',
+    fontFamily: 'Montserrat-Regular',
     fontSize: 16,
   },
   signInIcon: {
@@ -65,7 +65,7 @@ const styleContent = StyleSheet.create({
   },
   versionContent: {
     textAlign : 'right',
-    // fontFamily: 'Montserrat-Regular',
+    fontFamily: 'Montserrat-Regular',
     textTransform: "capitalize",
     marginRight: "10%",
     fontSize: 12,
@@ -76,7 +76,7 @@ const styleContent = StyleSheet.create({
     width: "100%"
   },
   h1Login:{
-    // fontFamily: 'Montserrat-Bold',
+    fontFamily: 'Montserrat-Bold',
     fontSize: 30,
     textTransform: "uppercase",
     fontWeight:"bold",
@@ -89,7 +89,7 @@ const styleContent = StyleSheet.create({
   welcomeMsg:{
     marginTop: "5%",
     textAlign : 'left',
-    // fontFamily: "Montserrat-Regular",
+    fontFamily: "Montserrat-Regular",
     color: "#1a1a1a"
   },
   loginUpperContent :{
@@ -145,7 +145,7 @@ const styleContent = StyleSheet.create({
   },
   forgetPswdLink: {
     color: "#000000",
-    // fontFamily: 'Montserrat-Regular',
+    fontFamily: 'Montserrat-Regular',
     textTransform: "capitalize"
   }
 });
