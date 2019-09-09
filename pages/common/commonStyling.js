@@ -10,7 +10,7 @@ const styleContent = StyleSheet.create({
     },
     headerTitle: {
         textAlign: "center",
-       fontFamily: "Montserrat-Medium",
+        fontFamily: "Montserrat-Medium",
         fontSize: 20
 
     },
