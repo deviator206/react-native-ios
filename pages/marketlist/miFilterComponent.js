@@ -127,13 +127,11 @@ export default class miFilterComponent extends React.Component {
                                     <Text note style={commonStyle.labelStyling}>{i18nMessages.lbl_filter_start_date}</Text>
                                 </Col>
                             </Row>
-                            <Row style={commonStyle.formGridValue}>
+                            <Row style={commonStyle.dateGridValue}>
                                 <Col>
-                                    <FeatherIcon name="calendar" style={styleContent.calenderIcon} />
+                                    <FeatherIcon name="calendar" style={commonStyle.calenderIcon} />
                                 </Col>
-                                <Col style={{
-                                    width: "88%"
-                                }}>
+                                <Col style={commonStyle.dateLabel}>
                                     {this.getDatePickerView('START_DATE')}
                                 </Col>
                             </Row>
@@ -142,13 +140,11 @@ export default class miFilterComponent extends React.Component {
                                     <Text note style={commonStyle.labelStyling}>{i18nMessages.lbl_filter_end_date}</Text>
                                 </Col>
                             </Row>
-                            <Row style={commonStyle.formGridValue}>
+                            <Row style={commonStyle.dateGridValue}>
                                 <Col>
-                                    <FeatherIcon name="calendar" style={styleContent.calenderIcon} />
+                                    <FeatherIcon name="calendar" style={commonStyle.calenderIcon} />
                                 </Col>
-                                <Col style={{
-                                    width: "88%"
-                                }}>
+                                <Col style={commonStyle.dateLabel}>
                                     {this.getDatePickerView('END_DATE')}
                                 </Col>
                             </Row>

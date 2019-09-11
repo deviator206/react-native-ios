@@ -144,6 +144,8 @@ dependencies {
     implementation project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation "androidx.core:core:1.0.2"
+    implementation "androidx.annotation:annotation:1.1.0"
     implementation "com.facebook.react:react-native:+"  // From node_modules
 }
 

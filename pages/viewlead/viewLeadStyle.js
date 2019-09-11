@@ -15,15 +15,14 @@ const styleContent = StyleSheet.create({
         backgroundColor: "white",
         paddingLeft: "5%",
         paddingRight: "5%",
-        borderColor: '#999999',
-
+        borderColor: '#999999'
     },
     searchBarWrapper: {
         width: "90%",
     },
     gridWrapper: {
         width: "96%",
-        marginTop: "2%",
+        marginBottom: 20,
         alignSelf: "center"
     },
     gridCardWrapper: {

@@ -180,8 +180,7 @@ class ViewLeadPage extends React.Component {
                             });
                         }}
                     >
-                        <Card style={styleContent.gridCardWrapper}
-                        >
+                        <Card style={styleContent.gridCardWrapper}>
                             <CardItem>
                                 <Col>
                                     <Grid>
@@ -284,42 +283,44 @@ class ViewLeadPage extends React.Component {
             <Container>
                 <HeaderComponent title="View Leads" navigation={navigation} />
                 <Content style={styleContent.mainContent}>
-                    <Grid >
-                        <Row style={styleContent.searchAndFilterWrapper}>
-                            <Col style={styleContent.searchBarWrapper} >
-                                <Item searchBar
-                                    rounded
-                                    style={styleContent.searchBarStyling}>
-                                    <Input
-                                        placeholder="Search"
-                                        style={{
-                                            fontSize: 14,
-                                            fontFamily: 'Montserrat-Regular',
-                                            color: "#616161"
-                                        }}
-                                    />
-                                    <Icon name="search" style={styleContent.iconStyling} />
-                                </Item>
-                            </Col>
-                            <Col  >
-                                <Button
-                                    transparent
-                                    onPress={() => {
-                                        this.filerBtnToggled();
-                                    }
+                    <View style={{ height: '100%' }}>
+                        <Grid >
+                            <Row style={styleContent.searchAndFilterWrapper}>
+                                <Col style={styleContent.searchBarWrapper} >
+                                    <Item searchBar
+                                        rounded
+                                        style={styleContent.searchBarStyling}>
+                                        <Input
+                                            placeholder="Search"
+                                            style={{
+                                                fontSize: 14,
+                                                fontFamily: 'Montserrat-Regular',
+                                                color: "#616161"
+                                            }}
+                                        />
+                                        <Icon name="search" style={styleContent.iconStyling} />
+                                    </Item>
+                                </Col>
+                                <Col  >
+                                    <Button
+                                        transparent
+                                        onPress={() => {
+                                            this.filerBtnToggled();
+                                        }
 
 
-                                    }
-                                >
-                                    <EntypoIcon name="sound-mix" style={styleContent.iconStyling} />
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Grid>
+                                        }
+                                    >
+                                        <EntypoIcon name="sound-mix" style={styleContent.iconStyling} />
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Grid>
 
-                    <Grid style={styleContent.gridWrapper} >
-                        {this.getViewLeads()}
-                    </Grid>
+                        <Grid style={styleContent.gridWrapper} >
+                            {this.getViewLeads()}
+                        </Grid>
+                    </View>    
                 </Content>
                 <FooterComponent  {...this.props} disableView={true} />
 

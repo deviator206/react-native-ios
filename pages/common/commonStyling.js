@@ -124,6 +124,22 @@ const styleContent = StyleSheet.create({
     textUppercase: {
         textTransform: "uppercase"
     },
+    calenderIcon: {
+        color: "#666",
+        fontSize: 20,
+        marginTop:"30%",
+        marginLeft:"30%",
+    },
+    dateLabel: {
+        width: "88%",
+        fontFamily: 'Montserrat-Medium',
+        color: "#333",
+        marginTop: 5
+    },
+    dateGridValue: {
+        height: 30,
+        marginBottom: 10
+    },
     inputBoxStyle: {
         fontFamily: 'Montserrat-Medium',
         fontSize: 14,

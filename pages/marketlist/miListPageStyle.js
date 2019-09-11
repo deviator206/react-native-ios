@@ -99,12 +99,6 @@ const styleContent = StyleSheet.create({
         borderRadius: 90
 
     },
-    calenderIcon: {
-        color: "black",
-        fontSize: 20,
-        marginTop:"30%",
-        marginLeft:"10%"
-      },
     datePickerStyle:{
         color:"#616161",
         fontSize:14,

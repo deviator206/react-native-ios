@@ -9,17 +9,19 @@ const styleContent = StyleSheet.create({
         fontSize: 25
     },
     iconStyling: {
-        fontSize: 25
+        fontSize: 25,
+        color: "#616161"
     },
     searchIcon: {
         paddingRight: 5
     },
     searchBarStyling: {
-        width: "80%",
+        width: "90%",
         alignSelf: "center",
-        backgroundColor:"#FFFFFF",
-        borderWidth: 1,
-        borderColor: "#999999"
+        backgroundColor: "white",
+        paddingLeft: "5%",
+        paddingRight: "5%",
+        borderColor: '#999999',
 
     },
     searchBarWrapper: {
@@ -27,26 +29,26 @@ const styleContent = StyleSheet.create({
     },
     gridWrapper: {
         width: "96%",
-        marginTop: "2%",
+        marginBottom: 20,
         alignSelf: "center"
     },
     gridCardWrapper: {
-        width: "90%",
+        width: "96%",
         alignSelf: "center",
         marginTop: "5%",
-        marginLeft: "5%",
-        marginRight: "5%"
+        marginLeft: "2%",
+        marginRight: "2%"
     },
     searchAndFilterWrapper: {
-        marginTop: "2%"
+        marginTop: "5%"
     },
     colLabelOnly: {
-        width: "50%"
+        width: "42%",
+        height: 25
     },
     colValue: {
-        width: "50%",
-        justifyContent: "space-around",
-        alignItems: "flex-end"
+        flexDirection: 'row', flexWrap: 'wrap',
+        width:"54%"
     },
     cardViewMainTitle: {
         fontSize: 18,
@@ -61,10 +63,8 @@ const styleContent = StyleSheet.create({
     },
     cardViewPrimaryLabel: {
         fontSize: 14,
-        fontFamily: 'Montserrat-Bold',
-        color: "#616161",
-        marginTop: "2%",
-        marginBottom: "2%"
+        fontFamily: 'Montserrat-Regular',
+        color: "#616161"
     },
     cardViewPrimaryValue: {
         fontSize: 14,

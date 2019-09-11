@@ -138,16 +138,16 @@ export default class NotificationListPage extends React.Component {
                 <HeaderComponent navigation={navigation}   title="Notifications" />
                 
                 <Content style={styleContent.mainContent}>
-                    <Tabs   tabBarUnderlineStyle={{backgroundColor:'red', height:3}} tabBarPosition="overlayTop">
+                <View style={{ height: '100%' }}>
+                    <Tabs tabBarUnderlineStyle={{backgroundColor:'red', height:3}} tabBarPosition="overlayTop" tabStyle={{ fontFamily: 'Montserrat-Bold'}}>
                         <Tab 
                         activeTabStyle={{backgroundColor:"#FFFFFF"}} 
                         activeTextStyle={{color:"#000000"}} 
-                        textStyle={{color:"#616161"}} 
-                        tabStyle={{backgroundColor:"#E8E8E8"}} 
-                      
-                        heading="Read" 
+                        textStyle={{color:"#888"}} 
+                        tabStyle={{backgroundColor:"#fff"}} 
+                        heading="READ"
                         >
-                            <Grid >
+                            <Grid style={{ backgroundColor: '#E8E8E8' }}>
                                 <Row style={styleContent.searchAndFilterWrapper}>
                                     <Col style={styleContent.searchBarWrapper} >
                                         <Item searchBar rounded style={styleContent.searchBarStyling}>
@@ -165,7 +165,7 @@ export default class NotificationListPage extends React.Component {
 
                                             }
                                         >
-                                            <FilterIcon name="filter-outline" style={styleContent.iconStylingBigger} />
+                                            <FilterIcon name="filter-outline" style={styleContent.iconStyling} />
                                         </Button>
                                     </Col>
                                 </Row>
@@ -179,10 +179,10 @@ export default class NotificationListPage extends React.Component {
                         activeTabStyle={{backgroundColor:"#FFFFFF"}} 
                         activeTextStyle={{color:"#000000"}} 
                         textStyle={{color:"#616161"}} 
-                        tabStyle={{backgroundColor:"#E8E8E8"}} 
-                        heading="Unread"
+                        tabStyle={{backgroundColor:"#fff"}} 
+                        heading="UNREAD"
                         >
-                            <Grid >
+                            <Grid style={{ backgroundColor: '#E8E8E8' }}>
                                 <Row style={styleContent.searchAndFilterWrapper}>
                                     <Col style={styleContent.searchBarWrapper} >
                                         <Item searchBar rounded style={styleContent.searchBarStyling}>
@@ -200,7 +200,7 @@ export default class NotificationListPage extends React.Component {
 
                                             }
                                         >
-                                            <FilterIcon name="filter-outline" style={styleContent.iconStylingBigger} />
+                                            <FilterIcon name="filter-outline" style={styleContent.iconStyling} />
                                         </Button>
                                     </Col>
                                 </Row>
@@ -211,11 +211,23 @@ export default class NotificationListPage extends React.Component {
                             </Grid>
                         </Tab>
                     </Tabs>
-
+                   </View> 
                 </Content>
-                <View style={styleContent.circular} transparent button >
-                    <Icon name="add" style={{ color: "white", fontSize: 50 }} />
+                <View style={styleContent.floatingButtonView}>
+                    <Button
+                        style={styleContent.floatingButton}
+                        button
+                        onPress={() => {
+                            this.props.navigation.navigate("miadd");
+                        }} >
+                        <Icon name="add" style={{
+                            color: "white",
+                            fontSize: 30,
+                            marginLeft: 15
+                        }} />
+                    </Button>
                 </View>
+                
                 <FooterComponent />
 
                 <Modal

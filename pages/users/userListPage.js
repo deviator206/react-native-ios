@@ -138,18 +138,33 @@ class UserListPage extends React.Component {
                                                 </Col>
                                             </Row>
                                             <Row>
-                                                <Col>
-                                                    <Text style={styleContent.cardViewSecondaryInfo}  >  User Name: {item.userName} </Text>
+                                                <Col style={styleContent.colLabelOnly}>
+                                                    <Text style={styleContent.cardViewPrimaryLabel}>  User Name </Text>
+
+                                                </Col>
+                                                <Col style={styleContent.colValue}>
+                                                    <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+                                                    <Text style={styleContent.cardViewPrimaryValue} >{item.userName}</Text>
                                                 </Col>
                                             </Row>
                                             <Row>
-                                                <Col>
-                                                    <Text style={styleContent.cardViewSecondaryInfo}  >  Email: {item.email} </Text>
+                                                <Col style={styleContent.colLabelOnly}>
+                                                    <Text style={styleContent.cardViewPrimaryLabel}>  Email </Text>
+
+                                                </Col>
+                                                <Col style={styleContent.colValue}>
+                                                    <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+                                                    <Text style={styleContent.cardViewPrimaryValue} >{item.email}</Text>
                                                 </Col>
                                             </Row>
                                             <Row>
-                                                <Col>
-                                                     <Text style={styleContent.cardViewSecondaryInfo}  > Business Unit: {item.businessUnit} </Text>
+                                                <Col style={styleContent.colLabelOnly}>
+                                                    <Text style={styleContent.cardViewPrimaryLabel}>  Business Unit </Text>
+
+                                                </Col>
+                                                <Col style={styleContent.colValue}>
+                                                    <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+                                                    <Text style={styleContent.cardViewPrimaryValue} >{item.businessUnit}</Text>
                                                 </Col>
                                             </Row>
                                         </Grid>
@@ -171,45 +186,49 @@ class UserListPage extends React.Component {
         return (
             <Container>
                 <HeaderComponent navigation={navigation} title="Users" />
+                
                 <Content style={styleContent.mainContent}>
-                    <Grid >
-                        <Row style={styleContent.searchAndFilterWrapper}>
-                            <Col style={styleContent.searchBarWrapper} >
-                                <Item searchBar rounded style={styleContent.searchBarStyling}>
-                                    <Input
-                                        placeholder="Search"
-                                        onChangeText={(value) => {
-                                            this.onSearchTextChange(value);
-                                        }}
-                                    />
-                                    <Button transparent
+                    <View style={{ height: '100%' }}>
+                        <Grid>
+                            <Row style={styleContent.searchAndFilterWrapper}>
+                                <Col style={styleContent.searchBarWrapper} >
+                                    <Item searchBar rounded style={styleContent.searchBarStyling}>
+                                        <Input
+                                            placeholder="Search"
+                                            onChangeText={(value) => {
+                                                this.onSearchTextChange(value);
+                                            }}
+                                        />
+                                        <Button transparent
+                                            onPress={() => {
+                                                this.onSearchButtonClicked();
+                                            }}
+                                        >
+                                            <Icon name="search"
+                                                style={[styleContent.iconStyling, styleContent.searchIcon]}
+                                            />
+                                        </Button>
+                                    </Item>
+                                </Col>
+                                <Col  >
+                                    <Button
+                                        transparent
                                         onPress={() => {
-                                            this.onSearchButtonClicked();
+                                            this.filerBtnToggled();
                                         }}
                                     >
-                                        <Icon name="search"
-                                            style={[styleContent.iconStyling, styleContent.searchIcon]}
-                                        />
+                                        <FilterIcon name="filter-outline" style={styleContent.iconStylingBigger} />
                                     </Button>
-                                </Item>
-                            </Col>
-                            <Col  >
-                                <Button
-                                    transparent
-                                    onPress={() => {
-                                        this.filerBtnToggled();
-                                    }}
-                                >
-                                    <FilterIcon name="filter-outline" style={styleContent.iconStylingBigger} />
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Grid>
+                                </Col>
+                            </Row>
+                        </Grid>
 
-                    <Grid style={styleContent.gridWrapper} >
-                        {this.getViewLeads()}
-                    </Grid>
+                        <Grid style={styleContent.gridWrapper} >
+                            {this.getViewLeads()}
+                        </Grid>
+                    </View> 
                 </Content>
+                 
                 <Button
                     style={styleContent.floatingButton}
                     button
