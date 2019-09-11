@@ -1,7 +1,7 @@
 
 import { Item, Picker } from 'native-base';
 import React from 'react';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import styleContent from './commonStyling';
 
 export default class DropDownComponent extends React.Component {
@@ -100,7 +100,7 @@ export default class DropDownComponent extends React.Component {
                 <Picker
                     key={indG}
                     mode="dropdown"
-                    iosIcon={<Icon name="arrow-down" />}
+                    iosIcon={<Icon name="ios-arrow-down" />}
                     textStyle={styleContent.dynamicComponentTextStyle}
                     itemStyle={styleContent.dynamicComponentTextStyle}
                     itemTextStyle={styleContent.dynamicComponentTextStyle}
@@ -149,7 +149,7 @@ export default class DropDownComponent extends React.Component {
                 mode="dropdown"
                 textStyle={{ color: "#d3d3d3" }}
                 itemTextStyle={{ color: '#d3d3d3' }}
-                iosIcon={<Icon name="arrow-down" />}
+                iosIcon={<Icon name="ios-arrow-down" />}
                 onValueChange={onDropDownSelectionChange}
                 selectedValue={selected}
                 placeholderIconColor="#007aff"

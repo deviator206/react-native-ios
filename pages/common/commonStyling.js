@@ -11,8 +11,8 @@ const styleContent = StyleSheet.create({
     headerTitle: {
         textAlign: "center",
         fontFamily: "Montserrat-Medium",
-        fontSize: 20
-
+        fontSize: 20,
+        color:"#ffffff"
     },
     headerTitleWrapper: {
         width: "70%",

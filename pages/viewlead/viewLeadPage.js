@@ -228,7 +228,7 @@ class ViewLeadPage extends React.Component {
                                             </Col>
                                             <Col style={styleContent.colValue} >
                                                 <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-                                                <Text style={styleContent.cardViewPrimaryValue} > {item.leadsSummaryRes && item.leadsSummaryRes.salesRep}  </Text>
+                                                <Text style={styleContent.cardViewPrimaryValue} > {(item.leadsSummaryRes && item.leadsSummaryRes.salesRep && item.leadsSummaryRes.salesRep.userDisplayName) ? item.leadsSummaryRes.salesRep.userDisplayName: ''}  </Text>
                                             </Col>
                                         </Row>
                                         <Row>
