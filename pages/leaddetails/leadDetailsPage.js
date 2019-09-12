@@ -636,7 +636,13 @@ class LeadDetailsPage extends React.Component {
                   </Row>
                   <Row>
                     <Col>
-                      <Text style={styleContent.primaryText}> {leadDetails.leadsSummaryRes.salesRep} </Text>
+                      <Text style={styleContent.primaryText}> {
+                                  (
+                                   leadDetails.leadsSummaryRes && 
+                                   leadDetails.leadsSummaryRes.salesRep && 
+                                   leadDetails.leadsSummaryRes.salesRep.userDisplayName) ? 
+                                   leadDetails.leadsSummaryRes.salesRep.userDisplayName: ''
+                                   } </Text>
                     </Col>
 
                   </Row>

@@ -21,3 +21,10 @@ add 3rd party and also make sure that you run the link
   },
 3. execute command react-native link
 
+# Selecting the iOS simulator
+react-native run-ios --simulator="iPhone 8 Plus"
+
+
+# Icon creation
+https://appiconmaker.co/Home/Index/104b424d-9182-41b3-82d1-47832be3e13a
+
