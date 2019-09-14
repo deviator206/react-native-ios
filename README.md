@@ -28,3 +28,5 @@ react-native run-ios --simulator="iPhone 8 Plus"
 # Icon creation
 https://appiconmaker.co/Home/Index/104b424d-9182-41b3-82d1-47832be3e13a
 
+
+/Users/raga/sandeep/ui/react-native-ios/README.md

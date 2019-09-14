@@ -104,7 +104,7 @@ class MiAddPage extends React.Component {
             INPUT_INVESTMENT,
             INPUT_DESCRIPTION
         } = this.state;
-        if (INPUT_DESCRIPTION || INPUT_DESCRIPTION === '') {
+        if (INPUT_DESCRIPTION && INPUT_DESCRIPTION === '') {
             this.setState({
                 INPUT_DESCRIPTION_MISSING: true
             });

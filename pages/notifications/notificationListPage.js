@@ -228,8 +228,7 @@ export default class NotificationListPage extends React.Component {
                     </Button>
                 </View>
                 
-                <FooterComponent />
-
+                
                 <Modal
                     animationType="slide"
                     transparent={false}
