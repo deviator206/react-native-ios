@@ -65,11 +65,13 @@ export default class CheckBoxComponent extends React.Component {
                     onCheckBoxChanged()
                 }}
             >
-                <CheckBox checked={checkedState} color="black" style={{
-                    paddingLeft: "0%",
-                    marginLeft: "0%"
-
-                }} />
+                <CheckBox 
+                    checked={checkedState} 
+                    color="black" 
+                    style={{
+                    justifyContent:"space-around"
+                }}
+                 />
                 <Body>
                     <Text style={commonStyle.darkLabelStyling} >{checkBoxLabel} </Text>
                 </Body>

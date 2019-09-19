@@ -148,7 +148,7 @@ export default class DropDownComponent extends React.Component {
                 }
                 mode="dropdown"
                 textStyle={{ color: "#d3d3d3" }}
-                itemTextStyle={{ color: '#d3d3d3' }}
+                itemTextStyle={{ color: '#444444' }}
                 iosIcon={<Icon name="ios-arrow-down" />}
                 onValueChange={onDropDownSelectionChange}
                 selectedValue={selected}

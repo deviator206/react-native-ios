@@ -309,6 +309,7 @@ class MiDetailsPage extends React.Component {
         if(fullSet.length > 1) {
             return <View>
                 <Button
+                transparent
                     onPress={this.showMoreInfoMessagesClicked}
                 >
                        <Text>View More</Text> 
@@ -349,7 +350,7 @@ class MiDetailsPage extends React.Component {
                                             miDetails.description && (
                                                 <Row>
                                                     <Col>
-                                                        <Text style={styleContent.cardViewPrimaryLabel}  > Description : {miDetails.description} </Text>
+                                                        <Text style={commonStyle.darkLabelStyling}  > Description : {miDetails.description} </Text>
                                                     </Col>
                                                 </Row>
                                             )
@@ -419,13 +420,16 @@ class MiDetailsPage extends React.Component {
                         height: "auto"
                     }]} >
                         {this.getListedInfo()}
-                        {this.viewMoreButton()}
+                        
                     </Grid>
 
 
 
 
                     <Grid style={{ marginTop: 10 }}>
+                        <Row>
+                        {this.viewMoreButton()}
+                        </Row>
                         <Row>
                             <Col style={{ marginLeft: 10 }}>
                                 <CheckBoxComponent

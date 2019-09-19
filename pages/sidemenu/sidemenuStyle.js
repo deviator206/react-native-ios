@@ -14,9 +14,9 @@ const styleContent = StyleSheet.create({
     },
     profilePic: {
         flex: 0.8,
-        width: "90%",
-        borderRadius: 50,
-        aspectRatio: 0.75,
+        width: "60%",
+        borderRadius: 90,
+        aspectRatio: 0.8,
         resizeMode: 'contain',
         alignSelf: "flex-start",
         paddingLeft: "8%"

@@ -27,7 +27,7 @@ const styleContent = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-around",
-    alignItems: "flex-start",
+    // alignItems: "flex-start",
     backgroundColor: '#E8E8E8'
   },
   textFont: {
@@ -140,7 +140,8 @@ const styleContent = StyleSheet.create({
     color: "#A7A7A7"
   },
   forgetPswdLinkButton: {
-    flex: 0.2,
+    
+    height:30,
     marginTop: "2%",
   },
   forgetPswdLink: {
