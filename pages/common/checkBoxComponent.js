@@ -12,7 +12,16 @@ export default class CheckBoxComponent extends React.Component {
         this.onSelectionChanged = this.onSelectionChanged.bind(this);
         this.getView = this.getView.bind(this);
     }
-
+    static getDerivedStateFromProps(props, state) {
+        if (props.currentState !== state.checkedState) {
+          return {
+            checkedState: props.currentState,
+          };
+        }
+    
+        // Return null if the state hasn't changed
+        return null;
+      }
 
     componentDidMount() {
         const {  updateToParent, controlType , currentState = false} = this.props;

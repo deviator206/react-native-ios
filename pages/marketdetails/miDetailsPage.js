@@ -1,4 +1,4 @@
-import { Button, Col, Container, Content, Footer, Grid, Row, Text, Textarea } from 'native-base';
+import { Button, Col, Container, Content, Footer, Grid, Row, Text, Textarea , View} from 'native-base';
 import React from 'react';
 import { FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -11,6 +11,7 @@ import DropDownComponent from '../common/dropdownComponent';
 import HeaderComponent from '../common/headerComponent';
 import i18nMessages from '../common/i18n';
 import ModalComponent from '../common/modalComponent';
+import { default as MiInfoListComponent } from './miInfoListComponent';
 import SpinnerComponent from '../common/spinnerComponent';
 import styleContent from './miDetailsPageStyle';
 
@@ -23,7 +24,7 @@ class MiDetailsPage extends React.Component {
         this.state = {
             filterVisible: false
         };
-        this.filerBtnToggled = this.filerBtnToggled.bind(this);
+        
         this.getDropdownFor = this.getDropdownFor.bind(this);
         this.onDropDownChange = this.onDropDownChange.bind(this);
         this.onInputTextChanged = this.onInputTextChanged.bind(this);
@@ -45,6 +46,11 @@ class MiDetailsPage extends React.Component {
         this.getListedInfo = this.getListedInfo.bind(this);
         this.onCheckBoxChanged = this.onCheckBoxChanged.bind(this);
 
+        this.showMoreInfoMessagesClicked = this.showMoreInfoMessagesClicked.bind(this);
+        
+        this.hideMoreInfoMessagesClicked = this.hideMoreInfoMessagesClicked.bind(this);
+
+        this.viewMoreButton = this.viewMoreButton.bind(this);
 
 
     }
@@ -56,23 +62,6 @@ class MiDetailsPage extends React.Component {
         });
     }
     onResponseSuccess(resp) {
-        const resultSet = [
-            {
-                name: "John",
-                info: "ke if you want to access manager app on all machines. Go to {Tomcat_ins",
-                date: "24-09-2019"
-            },
-            {
-                name: "Olive",
-                info: "ke if you want to access manager app on all machines. Go to {Tomcat_ins",
-                date: "24-09-2019"
-            },
-            {
-                name: "Mustang",
-                info: "ke if you want to access manager app on all machines. Go to {Tomcat_ins",
-                date: "24-09-2019"
-            }
-        ];
         this.setState({
             spinner: false,
             miDetails: resp,
@@ -81,16 +70,34 @@ class MiDetailsPage extends React.Component {
         });
     }
 
+    showMoreInfoMessagesClicked() {
+        const { miDetails } = this.state;
+        const fullSet = (miDetails && miDetails.miInfoList) ? miDetails.miInfoList : [];
+        this.setState({
+            filterVisible: true,
+            filterState: {
+                infoList:fullSet
+            }
+        });
+    }
 
+    hideMoreInfoMessagesClicked() {
+        this.setState({
+            filterVisible: false,
+            filterState: {}
+        });
+    }
 
     loadDetail() {
         const { navigation } = this.props;
         const itemId = navigation.getParam('miId', 'NO-ID');
         this.setState({
             spinner: true,
+            ADD_MORE_INFO: false,
         });
         this.props.loadMIDetail({ itemId }).then(this.onResponseSuccess).catch(this.onResponseError);
     }
+    
 
     onCheckBoxChanged({ type, value }) {
         this.setState({
@@ -223,13 +230,7 @@ class MiDetailsPage extends React.Component {
 
 
 
-    filerBtnToggled() {
-        const { filterVisible } = this.state;
-        console.log(filterVisible);
-        this.setState({
-            filterVisible: !filterVisible
-        });
-    }
+    
     componentDidMount() {
         this.setState({
             filterVisible: false
@@ -244,7 +245,11 @@ class MiDetailsPage extends React.Component {
 
     getListedInfo() {
         const { miDetails } = this.state;
-        const resultSet = (miDetails && miDetails.miInfoList) ? miDetails.miInfoList : []
+        const fullSet = (miDetails && miDetails.miInfoList) ? miDetails.miInfoList : [];
+        const resultSet = [];
+        if(fullSet.length > 0) {
+            resultSet.push(fullSet[fullSet.length-1]);
+        }
         let returnedView;
         if (resultSet && resultSet.length > 0) {
             returnedView = (
@@ -275,7 +280,7 @@ class MiDetailsPage extends React.Component {
                                         <Col style={styleContent.profileDetails}>
                                             <Row style={styleContent.profileDetailsRow}>
                                                 <Col><Text style={styleContent.profileDetailsLabel}> {item.name} </Text></Col>
-                                                <Col style={styleContent.alignItemTOEnd}><Text style={styleContent.profileDetailsValue}>  {item.date} </Text></Col>
+                                                <Col style={styleContent.alignItemTOEnd}><Text style={styleContent.profileDetailsValue}>  {item.creationDate} </Text></Col>
                                             </Row>
                                             <Row>
                                                 <Col>
@@ -297,17 +302,28 @@ class MiDetailsPage extends React.Component {
     }
 
 
+    viewMoreButton() {
+        const { miDetails } = this.state;
+        const fullSet = (miDetails && miDetails.miInfoList) ? miDetails.miInfoList : [];
+        const resultSet = [];
+        if(fullSet.length > 1) {
+            return <View>
+                <Button
+                    onPress={this.showMoreInfoMessagesClicked}
+                >
+                       <Text>View More</Text> 
+                </Button>
+                
+            </View>
+        }
+        return null;
+    }
 
     render() {
 
         const { ADD_MORE_INFO = false, CONVERT_TO_LEAD = false, miDetails } = this.state;
         const { navigation } = this.props;
-        const item = {
-            miId: "MI#779",
-            type: "New Item",
-            description: "This is likely happening when upgrading React Native from below 0.60 to 0.60 or above. Going forward",
-            status: "OPEN"
-        };
+        const itemId = navigation.getParam('miId', 'NO-ID');
         return (
             <Container>
                 <HeaderComponent navigation={navigation} title="Market Intelligence" />
@@ -403,6 +419,7 @@ class MiDetailsPage extends React.Component {
                         height: "auto"
                     }]} >
                         {this.getListedInfo()}
+                        {this.viewMoreButton()}
                     </Grid>
 
 
@@ -438,6 +455,7 @@ class MiDetailsPage extends React.Component {
                         <Row style={{ marginTop: 15 }}>
                             <Col style={{ marginLeft: 10 }}>
                                 <CheckBoxComponent
+                                currentState={CONVERT_TO_LEAD}
                                     checkBoxLabel={i18nMessages.lbl_mi_info_convert_to_lead}
                                     controlType={appConstant.MI_INFO.CONVERT_TO_LEAD}
                                     updateToParent={this.onCheckBoxChanged}
@@ -506,7 +524,13 @@ class MiDetailsPage extends React.Component {
                     </Button >
                 </Footer>
 
-                {this.overlayScreenView()}
+                <MiInfoListComponent
+                itemId = {itemId}
+                   refreshList={this.state.filterState}
+                    showModal={this.state.filterVisible}
+                    closeListModal={this.hideMoreInfoMessagesClicked}
+                />
+
                 {this.getSpinnerComponentView()}
             </Container>
         )
