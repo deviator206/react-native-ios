@@ -13,13 +13,14 @@ const styleContent = StyleSheet.create({
         paddingLeft: "10%"
     },
     profilePic: {
-        flex: 0.8,
-        width: "60%",
-        borderRadius: 90,
-        aspectRatio: 0.8,
+        //flex: 0.8,
+        width: 160,
+        height: 160,
+        borderRadius: 80,
+        // aspectRatio: 0.8,
         resizeMode: 'contain',
         alignSelf: "flex-start",
-        paddingLeft: "8%"
+        // paddingLeft: "8%"
     },
     profileName: {
         flex: 0.2,
@@ -44,6 +45,8 @@ const styleContent = StyleSheet.create({
         marginHorizontal: "5%"
     },
     closeBtnStyling: {
+        borderColor:"red",
+        borderWidth:3,
         alignSelf:"flex-end",
         backgroundColor:"#333333",
         justifyContent: "center",

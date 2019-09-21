@@ -45,10 +45,17 @@ export default class SideMenuBar extends React.Component {
         
         return (
             <Container style={styleContent.container}>
-                <View style={styleContent.sideMenuSectionOne}>
-                    <Button style={styleContent.closeBtnStyling} onPress={() => { this.props.navigation.closeDrawer(); }}>
+                <Button 
+                        transparent
+                        style={styleContent.closeBtnStyling} 
+                        onPress={() => { 
+                            alert("here!")
+                                                        this.props.navigation.closeDrawer(); 
+                            }}>
                         <Icon style={styleContent.closeBtn} name="close" />
                     </Button >
+                <View style={styleContent.sideMenuSectionOne}>
+                    
                     <Image source={require('../images/profile_pic_logo_2.png')} style={styleContent.profilePic} />
                     <Text style={styleContent.profileName}> {userDisplayName} </Text>
                 </View>

@@ -112,8 +112,18 @@ class DashboardPage extends React.Component {
     }
 
     onResponseFromReferenceData(resp) {
+        let refReference = resp;
+        if(refReference[appConstant.DROP_DOWN_TYPE.BU_NAME]) {
+            let buReferenced = refReference[appConstant.DROP_DOWN_TYPE.BU_NAME];
+            buReferenced.unshift({
+                "code": "#_ALL_#",
+                "name": "ALL BU",
+            });
+            refReference[appConstant.DROP_DOWN_TYPE.BU_NAME] = buReferenced;
+        }
+        
         this.setState({
-            referenceData: resp
+            referenceData: refReference
         });
     }
 
