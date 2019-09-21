@@ -116,57 +116,7 @@ class ViewLeadPage extends React.Component {
 
     getViewLeads() {
         const { resultSet } = this.state;
-        /**
-         const dataR = [
-             {
-                 companyName: "CM Tek-3",
-                 description: "This is likely happening when upgrading React Native from below 0.60 to 0.60 or above. Going forward",
-                 contact: "RK Sharma",
-                 status: "Approved",
-                 salesRep: "Samir",
-                 businessUnit: "Atlas",
-                 lastUpdated: "12/4/2019",
-                 inactiveDays: "129"
-             }, {
-                 companyName: 'BM Sigma',
-                 description: "This is likely happening when upgrading React Native from below 0.60 to 0.60 or above. Going forward",
-                 contact: "Shrivastava",
-                 status: "Closed",
-                 salesRep: "Sunayna",
-                 businessUnit: "Spectro",
-                 lastUpdated: "12/4/2019",
-                 inactiveDays: "29"
- 
-             },
-             {
-                 companyName: 'Suraj Ent',
-                 description: "This is likely happening when upgrading React Native from below 0.60 to 0.60 or above. Going forward",
-                 contact: "Shrivastava",
-                 status: "Pending",
-                 salesRep: "Sunayna",
-                 businessUnit: "Spectro",
-                 lastUpdated: "12/4/2019",
-                 inactiveDays: "29"
- 
-             },
-             {
-                 companyName: 'IT Stick',
-                 description: "This is likely happening when upgrading React Native from below 0.60 to 0.60 or above. Going forward",
-                 contact: "Shrivastava",
-                 status: "PENDING",
-                 salesRep: "Sunayna",
-                 businessUnit: "Spectro",
-                 lastUpdated: "12/4/2019",
-                 inactiveDays: "29"
- 
-             }];
- 
-             */
-        /**
-         * 
-         * {"id":25,"name":"dingdong","email":"a@b.com","phoneNumber":"9764007637","state":"NA","country":"CND","designation":null},"leadsSummaryRes":{"businessUnits":["ATL"],"rootLeadId":16,"salesRep":"shivanshu","industry":null,"budget":0.0,"currency":"INR"},"updateDate":"2019-06-04","updatorId":8,"creationDate":"2019-06-04","inactiveDuration":76,"tenure":"LT1Y","deleted":false,"message":null,"creatorId":8}
-         */
-
+       
         const returnedView = (
             <FlatList
                 data={resultSet}

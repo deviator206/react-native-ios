@@ -52,9 +52,8 @@ const styleContent = StyleSheet.create({
         width: "50%"
     },
     colValue: {
-        width: "50%",
-        justifyContent: "space-around",
-        alignItems: "flex-end"
+        flexDirection: 'row', flexWrap: 'wrap',
+        width:"54%"
     },
     cardViewMainTitle: {
         fontSize: 18,
@@ -65,14 +64,13 @@ const styleContent = StyleSheet.create({
     cardViewSecondaryInfo: {
         fontSize: 14,
         fontFamily: 'Montserrat-Regular',
-        color: "#555555"
+        color: "#616161",
+        marginBottom: "3%"
     },
     cardViewPrimaryLabel: {
         fontSize: 14,
-        fontFamily: 'Montserrat-Bold',
-        color: "#616161",
-        marginTop: "2%",
-        marginBottom: "2%"
+        fontFamily: 'Montserrat-Regular',
+        color: "#616161"
     },
     cardViewPrimaryValue: {
         fontSize: 14,

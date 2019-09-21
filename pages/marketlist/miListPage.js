@@ -233,83 +233,94 @@ class MiListPage extends React.Component {
                                         <Grid>
                                             <Row>
                                                 <Col>
-                                                    <Text style={styleContent.cardViewMainTitle} > MI#{item.id} </Text>
+                                                    <Text style={[styleContent.cardViewMainTitle, commonStyle.camelCase]} > Market Intelligence #{item.id} </Text>
                                                 </Col>
-                                                <Col style={{ flexDirection: "row" }}>
-                                                    <Text style={styleContent.cardViewSecondaryInfo}  > Type:  </Text>
-                                                    <Text style={styleContent.cardViewPrimaryValue}  >  {item.type} </Text>
-                                                </Col>
+                                                
 
                                             </Row>
+
                                             {
-                                                item && item.creationDate && (
+                                                item && item.description && (
                                                     <Row>
                                                         <Col>
-                                                            <Text style={styleContent.cardViewSecondaryInfo}  > Date:  </Text>
-
-                                                        </Col>
-                                                        <Col>
-                                                            <Text style={styleContent.cardViewPrimaryValue}  >  {item.creationDate} </Text>
+                                                            <Text style={styleContent.cardViewSecondaryInfo}  > {item.description} </Text>
                                                         </Col>
                                                     </Row>
-
                                                 )
+                                            }
+                                            <Row>
+                                            <Col style={styleContent.colLabelOnly} >
+                                                <Text style={styleContent.cardViewPrimaryLabel}  > Type </Text>
+
+                                            </Col>
+                                            <Col style={styleContent.colValue} >
+                                                <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+                                                <Text style={styleContent.cardViewPrimaryValue} >{item.type}  </Text>
+                                            </Col>
+                                        </Row>
+
+                              
+                                            {
+                                                item && item.creationDate && (
+
+                                                    <Row>
+                                            <Col style={styleContent.colLabelOnly} >
+                                                <Text style={styleContent.cardViewPrimaryLabel}  > Date </Text>
+
+                                            </Col>
+                                            <Col style={styleContent.colValue} >
+                                                <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+                                                <Text style={styleContent.cardViewPrimaryValue} >{item.creationDate}  </Text>
+                                            </Col>
+                                        </Row>)
                                             }
                                             {
                                                 item && item.name && (
+                                                    
                                                     <Row>
-                                                        <Col>
-                                                            <Text style={styleContent.cardViewSecondaryInfo}  > Project Name:  </Text>
-                                                        </Col>
-                                                        <Col>
-                                                            <Text style={styleContent.cardViewPrimaryValue}  > {item.name} </Text>
-                                                        </Col>
-                                                    </Row>
+                                            <Col style={styleContent.colLabelOnly} >
+                                                <Text style={styleContent.cardViewPrimaryLabel}  > Project Name </Text>
+
+                                            </Col>
+                                            <Col style={styleContent.colValue} >
+                                                <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+                                                <Text style={styleContent.cardViewPrimaryValue} >{item.name}  </Text>
+                                            </Col>
+                                        </Row>
+                                                    
 
                                                 )
                                             }
                                             {
                                                 item && item.investment && (
-                                                    <Row>
-                                                        <Col>
-                                                            <Text style={styleContent.cardViewSecondaryInfo}  >Investment: </Text>
-                                                        </Col>
-                                                        <Col>
-                                                            <Text style={styleContent.cardViewPrimaryValue}  > {item.investment} </Text>
-                                                        </Col>
-                                                    </Row>
-                                                )
-                                            }
-                                            {
-                                                item && item.description && (
-                                                    <Row>
-                                                        <Col>
-                                                            <Text style={styleContent.cardViewSecondaryInfo}  >Description: </Text>
-                                                        </Col>
-                                                    </Row>
-                                                )
-                                            }
-                                            {
-                                                item && item.description && (
-                                                    <Row>
-                                                        <Col>
-                                                            <Text style={styleContent.cardViewPrimaryValue}  > {item.description} </Text>
-                                                        </Col>
-                                                    </Row>
-                                                )
-                                            }
 
+                                                    <Row>
+                                                    <Col style={styleContent.colLabelOnly} >
+                                                        <Text style={styleContent.cardViewPrimaryLabel}  > Investment </Text>
+        
+                                                    </Col>
+                                                    <Col style={styleContent.colValue} >
+                                                        <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+                                                        <Text style={styleContent.cardViewPrimaryValue} >{item.investment}  </Text>
+                                                    </Col>
+                                                </Row>
+
+                                                )
+                                            }
+                                            
+                                            
                                             <Row>
-                                                <Col style={styleContent.colLabelOnly} >
-                                                    <Text style={styleContent.cardViewPrimaryLabel}  > Status: </Text>
+                                                    <Col style={styleContent.colLabelOnly} >
+                                                        <Text style={styleContent.cardViewPrimaryLabel}  > Status </Text>
+        
+                                                    </Col>
+                                                    <Col style={styleContent.colValue} >
+                                                        <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+                                                        <Text style={[styleContent.cardViewPrimaryValue,this.getStatusStyle(item.status)]} >{item.status}  </Text>
+                                                    </Col>
+                                                </Row>
 
-                                                </Col>
-                                                <Col style={styleContent.colValue} >
-
-                                                    <Text style={this.getStatusStyle(item.status)} > {item.status}  </Text>
-                                                </Col>
-
-                                            </Row>
+                                           
                                         </Grid>
 
                                     </Col>
