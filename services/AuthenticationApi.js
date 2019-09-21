@@ -1,8 +1,8 @@
 import ServiceClass from "./Services";
-
-class AuthenticationApi {
+import BaseApi from "./BaseApi";
+class AuthenticationApi  extends BaseApi {
     constructor() {
-
+        super();
     }
 
     forgotPasswordApi({ params={userName:"test01",password:"abc"}, successHandler, errorHandler }) {
@@ -32,9 +32,7 @@ class AuthenticationApi {
                 alert("VALIDATE THE RESPONSE")
             }
         }).catch((err) => {
-            if (errorHandler) {
-                errorHandler({message:"NORMALIZED ERROR",error:"FORBIDDEN"})
-            }
+          this.errorHandlerMechanism(errorHandler, err);
         })
     }
 }

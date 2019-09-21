@@ -4,6 +4,7 @@ import { Image } from "react-native";
 import AuthenticationApi from '../../services/AuthenticationApi';
 import { default as commonStyling } from '../common/commonStyling';
 import ModalComponent from '../common/modalComponent';
+import {default as i18nMessages} from '../common/i18n';
 import SpinnerComponent from '../common/spinnerComponent';
 import styleContent from './loginStyle';
 
@@ -103,7 +104,6 @@ export default class LoginPage extends Component {
             showError: true,
             showForgotPasswordModal: false,
             errMsg: resp.message
-            // errMsg: i18nMessages['ERROR_MSG_' + (resp.error).toUpperCase()]
         });
 
         // this.props.navigation.navigate('dashboard');

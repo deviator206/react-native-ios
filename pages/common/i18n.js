@@ -31,6 +31,7 @@ const i18nMessages = {
     "lbl_notify_bu":"Notify BU",
     "ERROR_MSG_FORBIDDEN":" Invalid credentials, Please try with correct ones.",
     "ERROR_MSG_CREDENTIALS_MISSING": "Please enter Username and Password",
+    "ERROR_MSG_UNKNOWN_RESPONSE": "Please contact the Admin ",
     "lbl_project_name_mi": "Project Name",
     "lbl_investment_mi": "Investment",
     "lbl_mi_info_add_more_info": "Add More Information",
