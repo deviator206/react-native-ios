@@ -187,12 +187,12 @@ class MiAddPage extends React.Component {
     getSectionLabel() {
         const { MI_TYPE } = this.state;
         let returnedView;
-        if (MI_TYPE === appConstant.MI_TYPE_CONST.PROJECT) {
+        if (MI_TYPE && MI_TYPE.toUpperCase() === appConstant.MI_TYPE_CONST.PROJECT) {
             returnedView = (
                 <Row><Col><Text note style={commonStyle.labelStyling} >{i18nMessages.lbl_project_name_mi} </Text></Col></Row>
             )
         }
-        else if (MI_TYPE === appConstant.MI_TYPE_CONST.INVESTMENT) {
+        else if (MI_TYPE && MI_TYPE.toUpperCase() === appConstant.MI_TYPE_CONST.INVESTMENT) {
             returnedView = (
                 <Row><Col><Text note style={commonStyle.labelStyling} >{i18nMessages.lbl_investment_mi} </Text></Col></Row>
             )
@@ -204,7 +204,7 @@ class MiAddPage extends React.Component {
     getSectionInput() {
         const { MI_TYPE } = this.state;
         let returnedView;
-        if (MI_TYPE === appConstant.MI_TYPE_CONST.PROJECT || MI_TYPE === appConstant.MI_TYPE_CONST.INVESTMENT) {
+        if (MI_TYPE && MI_TYPE.toUpperCase()  === appConstant.MI_TYPE_CONST.PROJECT || MI_TYPE && MI_TYPE.toUpperCase() === appConstant.MI_TYPE_CONST.INVESTMENT) {
             returnedView = (
                 <Row>
                     <Col>
@@ -216,7 +216,7 @@ class MiAddPage extends React.Component {
                                 autoCapitalize="none"
                                 autoCorrect={false}
                                 onChangeText={(value) => {
-                                    this.onInputTextChanged(MI_TYPE, value);
+                                    this.onInputTextChanged(MI_TYPE.toUpperCase(), value);
                                 }}
                             />
                         </Item>

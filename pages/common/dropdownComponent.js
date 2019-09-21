@@ -92,7 +92,7 @@ export default class DropDownComponent extends React.Component {
                 (<Picker.Item
                     key={ind}
                     label={this.getDropDownLabel(singleItem)}
-                    style={styleContent.dynamicComponentTextStyle}
+                    style={styleContent.dropdownTextItemAndSelection}
                     value={this.getDropDownValue(singleItem)} />)
             )
         });
@@ -101,9 +101,9 @@ export default class DropDownComponent extends React.Component {
                     key={indG}
                     mode="dropdown"
                     iosIcon={<Icon name="ios-arrow-down" />}
-                    textStyle={styleContent.dynamicComponentTextStyle}
-                    itemStyle={styleContent.dynamicComponentTextStyle}
-                    itemTextStyle={styleContent.dynamicComponentTextStyle}
+                    textStyle={styleContent.dropdownTextItemAndSelection}
+                    itemStyle={styleContent.dropdownTextItemAndSelection}
+                    itemTextStyle={styleContent.dropdownTextItemAndSelection}
                     style={styleContent.dynamicComponentTextStyle}
                     placeholderStyle={styleContent.dynamicComponentTextStyle}
                     onValueChange={onDropDownSelectionChange}

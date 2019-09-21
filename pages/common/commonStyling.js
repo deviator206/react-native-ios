@@ -60,8 +60,18 @@ const styleContent = StyleSheet.create({
         marginRight: "5%",
         marginLeft: "5%"
     },
+    dropdownTextItemAndSelection: {
+        color: "#444444",
+        fontSize: 14,
+
+        height: 40,
+        lineHeight: 40,
+        fontFamily: 'Montserrat-Regular',
+        textTransform: "uppercase",
+        color: '#000000'
+    },
     dynamicComponentTextStyle: {
-        color: "#000000",
+        color: "#444444",
         fontSize: 14,
 
         height: 40,
