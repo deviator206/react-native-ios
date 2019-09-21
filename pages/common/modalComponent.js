@@ -68,6 +68,9 @@ export default class ModalComponent extends BaseComponent {
         showInlineError: false
       });
       this.authenticateApi.forgotPasswordApi({
+        payload:{
+          "email": emailAdded
+        },
         successHandler: this.onSuccessHandler,
         errorHandler: this.onErrorHandler
       });

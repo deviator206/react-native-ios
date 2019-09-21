@@ -18,7 +18,8 @@ const SERVICE_URL = {
     'CREATE_NEW_MI': 'marketIntelligence/',
     'CREATE_NEW_USER':'user/',
     'SEARCH_MI': 'search/marketIntelligence/',
-    'GET_LEAD_STATS': 'statistics/lead?'
+    'GET_LEAD_STATS': 'statistics/lead?',
+    'FORGOT_PASSWORD':'/forgotpassword'
 }
 
 const axiosInstance = axios.create({
@@ -82,6 +83,10 @@ class ServiceClass {
 
     static async postUpdateMI({ itemId, payload }) {
         return await axiosInstance.post(SERVICE_URL['UPDATE_MI'] + itemId, payload);
+    }
+
+    static async postForgotPassword({ payload }) {
+        return await axiosInstance.post(SERVICE_URL['FORGOT_PASSWORD'], payload);
     }
 
     static async getUsers() {

@@ -134,4 +134,15 @@ class App extends React.Component {
 }
 export default App;
 
+/**
+ * 
+ * 
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/leadManagement
+spring.datasource.username=leadManagement
+spring.datasource.password=lms.App=Am2tek
+#spring.datasource.defaultAutoCommit=false
+
+ */
+
 

@@ -5,8 +5,8 @@ class AuthenticationApi  extends BaseApi {
         super();
     }
 
-    forgotPasswordApi({ params={userName:"test01",password:"abc"}, successHandler, errorHandler }) {
-        ServiceClass.loginService(params).then((resp) => {
+    forgotPasswordApi({ payload, successHandler, errorHandler }) {
+        ServiceClass.postForgotPassword({payload}).then((resp) => {
             if (resp && resp.data && successHandler) {
                 ServiceClass.updateHeaderInformation(resp.data);
                 successHandler(resp.data);
@@ -14,11 +14,7 @@ class AuthenticationApi  extends BaseApi {
                 alert("VALIDATE THE RESPONSE")
             }
         }).catch((err) => {
-            if (err && err.response && err.response.data && errorHandler) {
-                errorHandler(err.response.data)
-            } else if(errorHandler) {
-                errorHandler({message:"NORMALIZED ERROR",error:"FORBIDDEN"})
-            }
+            this.errorHandlerMechanism(errorHandler, err);
         })
     }
 
