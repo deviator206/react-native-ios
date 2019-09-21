@@ -1,7 +1,9 @@
 import ServiceClass from "./Services";
+import BaseApi from "./BaseApi";
 
-class MarketIntelligenceApi {
+class MarketIntelligenceApi extends BaseApi  {
     constructor() {
+        super();
     }
 
     updateMI(params) {
@@ -10,10 +12,10 @@ class MarketIntelligenceApi {
                 if (resp && resp.data) {
                     resolve(resp.data)
                 } else {
-                    reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                    this.invalidSuccessRejectResponse(reject,resp);
                 }
             }).catch((err) => {
-                reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                this.errorHandlerRejectMechanism(reject, err);
             })
         });
     }
@@ -24,10 +26,10 @@ class MarketIntelligenceApi {
                 if (resp && resp.data) {
                     resolve(resp.data)
                 } else {
-                    reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                    this.invalidSuccessRejectResponse(reject,resp);
                 }
             }).catch((err) => {
-                reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                this.errorHandlerRejectMechanism(reject, err);
             })
         });
     }
@@ -39,10 +41,10 @@ class MarketIntelligenceApi {
                 if (resp && resp.data) {
                     resolve(resp.data)
                 } else {
-                    reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                    this.invalidSuccessRejectResponse(reject,resp);
                 }
             }).catch((err) => {
-                reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                this.errorHandlerRejectMechanism(reject, err);
             })
         });
     }
@@ -53,10 +55,10 @@ class MarketIntelligenceApi {
                 if (resp && resp.data) {
                     resolve(resp.data)
                 } else {
-                    reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                    this.invalidSuccessRejectResponse(reject,resp);
                 }
             }).catch((err) => {
-                reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                this.errorHandlerRejectMechanism(reject, err);
             })
         });
     }
@@ -68,10 +70,10 @@ class MarketIntelligenceApi {
                 if (resp && resp.data) {
                     resolve(resp.data)
                 } else {
-                    reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                    this.invalidSuccessRejectResponse(reject,resp);
                 }
             }).catch((err) => {
-                reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                this.errorHandlerRejectMechanism(reject, err);
             })
         });
     }
