@@ -241,8 +241,7 @@ class UserListPage extends React.Component {
                         marginLeft: 15
                     }} />
                 </Button>
-                <FooterComponent />
-
+               
                 <Modal
                     animationType="slide"
                     transparent={false}

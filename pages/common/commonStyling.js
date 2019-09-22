@@ -8,6 +8,12 @@ const styleContent = StyleSheet.create({
         marginBottom: 10,
         height: 56,
     },
+    datePickerStyle:{
+        color:"#616161",
+        fontSize:14,
+        fontFamily: 'Montserrat-SemiBold',
+        lineHeight: 15
+     },
     headerTitle: {
         textAlign: "center",
         fontFamily: "Montserrat-Medium",
@@ -63,7 +69,7 @@ const styleContent = StyleSheet.create({
     dropdownTextItemAndSelection: {
         color: "#444444",
         fontSize: 14,
-
+       //  width:"92%",
         height: 40,
         lineHeight: 40,
         fontFamily: 'Montserrat-Regular',
@@ -155,9 +161,9 @@ const styleContent = StyleSheet.create({
         fontSize: 14,
         color: "#1A1A1A",
         backgroundColor: "#ffffff",
-        borderColor: "#D9D9D9",
-        borderWidth: 1,
-        borderLeftWidth: 0
+       // borderColor: "#D9D9D9",
+        // borderWidth: 1,
+        // borderLeftWidth: 0
     },
     modalHeaderDiv: {
         backgroundColor: "#0E0D0D",

@@ -126,18 +126,16 @@ const styleContent = StyleSheet.create({
   passwordInput: {
     //marginTop: "5%",
   },
-  usernameInput: {
+  loginInput: {
+    backgroundColor:"white",
+    height:57,
+    borderColor:"#999999",
+    borderWidth:1
+    
    // marginTop: "5%"
   },
   iconLoginPage: {
-    backgroundColor: "#ffffff",
-    height: 50,
-    borderColor: "#D9D9D9",
-    borderWidth: 1,
-    paddingVertical: "3%",
-    paddingLeft: "5%",
-    borderRightWidth: 0,
-    color: "#A7A7A7"
+    color:"#dddddd"  
   },
   forgetPswdLinkButton: {
     

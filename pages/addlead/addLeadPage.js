@@ -22,7 +22,9 @@ import BUListComponent from './BUListComponent';
 const refDataApi = new RefDataApi({ state: {} });
 const leadApi = new LeadApi({ state: {} });
 const userApi = new UserApi({ state: {} });
-
+const formatDate = date => {
+  return `${date.getFullYear()}/${date.getDate()}/${date.getMonth()+1}`;
+};
 
 class AddLeadPage extends React.Component {
   constructor(props) {
@@ -33,7 +35,7 @@ class AddLeadPage extends React.Component {
       customerName: '',
       selectedBuList: [],
       isSelfApproved: false,
-      leadCreatedDate: new Date(2018, 4, 4)
+      leadCreatedDate: new Date()
     };
 
     this.onDropDownChange = this.onDropDownChange.bind(this);
@@ -66,6 +68,7 @@ class AddLeadPage extends React.Component {
     this.onFPModalClosed = this.onFPModalClosed.bind(this);
     this.onUserListLoaded = this.onUserListLoaded.bind(this);
     this.onUserListLoadedError = this.onUserListLoadedError.bind(this);
+    this.validateLeadInputPayload = this.validateLeadInputPayload.bind(this);
   }
 
 
@@ -75,7 +78,7 @@ class AddLeadPage extends React.Component {
     });
   }
 
-  onResponseSubmitLead() {
+  onResponseSubmitLead(resp) {
     this.setState({
       spinner: false,
       showOverlay: true
@@ -123,6 +126,57 @@ class AddLeadPage extends React.Component {
     });
   }
 
+  validateLeadInputPayload(userId) {
+    const { 
+      CUSTOMER_NAME,
+      REQUIREMENT,
+      CONTACT_EMAIL,
+      CONTACT_PHONE,
+    } = this.state;
+
+    
+
+      if(!userId || userId == -1) {
+        alert("User Id is not Valid")
+        return true;
+      }
+
+      let isValid = false;
+      let validationError = {
+        ERROR_CONTACT_PHONE : true,
+        ERROR_CONTACT_EMAIL : true,
+        ERROR_REQUIREMENT : true,
+        ERROR_CUSTOMER_NAME : true,
+      };
+      let minContact = -1;
+      if(CONTACT_PHONE || CONTACT_PHONE != '') {
+        minContact++;
+        validationError['ERROR_CONTACT_PHONE'] = false;
+      }
+      if((CONTACT_EMAIL || CONTACT_EMAIL != '') ) {
+        minContact++;
+        validationError['ERROR_CONTACT_EMAIL'] = false;
+      }
+      
+      let requirementValidation = -1;
+
+      if(REQUIREMENT || REQUIREMENT != '') {
+        requirementValidation++;
+        validationError['ERROR_REQUIREMENT'] = false;
+      }
+
+      if(CUSTOMER_NAME || CUSTOMER_NAME != '') {
+        requirementValidation++;
+        validationError['ERROR_CUSTOMER_NAME'] = false;
+      }
+
+      this.setState({
+        ...validationError
+      })
+     
+      return (requirementValidation >= 1 && minContact > -1) ? true : false;
+  }
+
   onLeadSubmit() {
     const { TENURE, SOURCE, CURRENCY, INDUSTRY, COUNTRY, selectedPhyState = 'NA', leadCreatedDate = new Date(),
       CUSTOMER_NAME,
@@ -139,11 +193,11 @@ class AddLeadPage extends React.Component {
     const userId = (window.userInformation &&
       window.userInformation.userInfo &&
       window.userInformation.userInfo.userId) ? window.userInformation.userInfo.userId : -1;
-
-      if(!userId || userId == -1) {
-        alert("User Id is not Valid")
-        return true;
-      }
+    
+    if(!this.validateLeadInputPayload(userId)) {
+      console.log("If true")
+      return ;
+    }
     const inputPayload = {
       "source": SOURCE,
       "custName": CUSTOMER_NAME,
@@ -288,13 +342,21 @@ class AddLeadPage extends React.Component {
 
   componentDidMount() {
     this.props.loadRefData().then(this.onResponseFromReferenceData).catch(this.onErrorResponseFromReferenceData);
+    const myBU = (window.userInformation &&
+      window.userInformation.userInfo &&
+      window.userInformation.userInfo.businessUnit) ? window.userInformation.userInfo.businessUnit : "";
+
+    const buList = [];
+    if(myBU !== "") {
+      buList.push(myBU);
+    }
     this.setState({
       spinner: true,
       currentSelectedBU: appConfig.BU_LIST[0],
-      selectedBuList: [],
+      selectedBuList: buList,
       showOverlay: false,
       isSelfApproved: false,
-      leadCreatedDate: new Date(2018, 4, 4)
+      leadCreatedDate: new Date(new Date().getFullYear(),new Date().getDate(),new Date().getUTCMonth()+1)
     });
   }
 
@@ -327,7 +389,7 @@ class AddLeadPage extends React.Component {
         textStyle={styleContent.datePickerStyle}
         placeHolderTextStyle={styleContent.datePickerStyle}
         animationType={"fade"}
-        placeHolderText={i18nMessages.select_date_lbl}
+        placeHolderText={formatDate(new Date())}
         onDateChange={this.onLeadAddDateSelected}
       />
     )
@@ -484,7 +546,7 @@ class AddLeadPage extends React.Component {
           width: "50%"
         }}
       >
-        <Text note style={commonStyle.labelStyling} >{i18nMessages.lbl_select_rep} </Text>
+        <Text  style={commonStyle.labelStyling} >{i18nMessages.lbl_select_rep} </Text>
         <Item >
           {this.getDropdownForSplType(appConstant.DROP_DOWN_TYPE.SALES_REP)}
         </Item>
@@ -521,11 +583,11 @@ class AddLeadPage extends React.Component {
               <Grid >
                 <Row>
                   <Col >
-                    <Text note style={commonStyle.sectionTitle}>{i18nMessages.date_label}</Text>
+                    <Text  style={commonStyle.sectionTitle}>{i18nMessages.date_label}</Text>
                   </Col>
                   <Col>
 
-                    <Text note style={commonStyle.sectionTitle} >{i18nMessages.source_type}</Text>
+                    <Text  style={commonStyle.sectionTitle} >{i18nMessages.source_type}</Text>
                   </Col>
                 </Row>
                 <Row>
@@ -554,7 +616,9 @@ class AddLeadPage extends React.Component {
                 <Row>
                   <Col>
                     <Label style={commonStyle.labelStyling}>{i18nMessages.customer_name_lbl}</Label>
-                    <Item  >
+                    <Item 
+                    error={this.state.ERROR_CUSTOMER_NAME}
+                    >
                       <Input
                         style={commonStyle.dynamicComponentTextStyle}
                         returnKeyType="next"
@@ -572,11 +636,13 @@ class AddLeadPage extends React.Component {
                   </Col>
                 </Row>
 
-                <Row><Col><Text note style={commonStyle.labelStyling} >{i18nMessages.requirement_project_lbl} </Text></Col></Row>
+                <Row><Col><Text  style={commonStyle.labelStyling} >{i18nMessages.requirement_project_lbl} </Text></Col></Row>
 
                 <Row>
                   <Col>
-                    <Item>
+                    <Item
+                    error={this.state.ERROR_REQUIREMENT} 
+                    >
                       <Textarea
                         style={commonStyle.dynamicComponentTextAreaStyle}
                         rowSpan={4}
@@ -595,14 +661,14 @@ class AddLeadPage extends React.Component {
 
                 <Row>
                   <Col>
-                    <Text note style={commonStyle.labelStyling} >{i18nMessages.tenure_lbl} </Text>
+                    <Text  style={commonStyle.labelStyling} >{i18nMessages.tenure_lbl} </Text>
                     <Item >
                       {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.TENURE)}
 
                     </Item>
                   </Col>
                 </Row>
-                <Row><Col><Text note style={commonStyle.sectionTitle} >{i18nMessages.lbl_contact_info}</Text></Col></Row>
+                <Row><Col><Text  style={commonStyle.sectionTitle} >{i18nMessages.lbl_contact_info}</Text></Col></Row>
                 <Row>
                   <Col>
 
@@ -633,7 +699,9 @@ class AddLeadPage extends React.Component {
                     <Label style={commonStyle.labelStyling} >
                       {i18nMessages.lbl_contact_email}
                     </Label>
-                    <Item >
+                    <Item
+                    error={this.state.ERROR_CONTACT_EMAIL} 
+                    >
 
                       <Input
                         style={commonStyle.dynamicComponentTextStyle}
@@ -658,7 +726,9 @@ class AddLeadPage extends React.Component {
                     <Label style={commonStyle.labelStyling} >
                       {i18nMessages.lbl_contact_phone}
                     </Label>
-                    <Item >
+                    <Item 
+                    error={this.state.ERROR_CONTACT_PHONE} 
+                    >
 
                       <Input
                         style={commonStyle.dynamicComponentTextStyle}
@@ -680,7 +750,7 @@ class AddLeadPage extends React.Component {
 
                 <Row>
                   <Col>
-                    <Text note style={commonStyle.labelStyling} >{i18nMessages.lbl_contact_country} </Text>
+                    <Text  style={commonStyle.labelStyling} >{i18nMessages.lbl_contact_country} </Text>
                     <Item >
                       {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.COUNTRY)}
                     </Item>
@@ -688,19 +758,19 @@ class AddLeadPage extends React.Component {
                 </Row>
                 <Row>
                   <Col>
-                    <Text note style={commonStyle.labelStyling} >{i18nMessages.lbl_contact_state} </Text>
+                    <Text  style={commonStyle.labelStyling} >{i18nMessages.lbl_contact_state} </Text>
                     <Item >
                       {this.getDropdownForSplType(appConstant.DROP_DOWN_TYPE.STATE)}
                     </Item>
                   </Col>
                 </Row>
 
-                <Row><Col><Text note style={commonStyle.sectionTitle} >{i18nMessages.lbl_business_unit_info}</Text></Col></Row>
+                <Row><Col><Text  style={commonStyle.sectionTitle} >{i18nMessages.lbl_business_unit_info}</Text></Col></Row>
                 <Row>
                   <Col style={{
                     width: "70%"
                   }}>
-                    <Text note style={commonStyle.labelStyling} >{i18nMessages.lbl_business_unit_name} </Text>
+                    <Text  style={commonStyle.labelStyling} >{i18nMessages.lbl_business_unit_name} </Text>
                     <Item >
                       {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.BU_NAME)}
                     </Item>
@@ -747,7 +817,7 @@ class AddLeadPage extends React.Component {
                 </Row>
                 <Row>
                   <Col>
-                    <Label note style={commonStyle.labelStyling} >{i18nMessages.lbl_industry} </Label>
+                    <Label  style={commonStyle.labelStyling} >{i18nMessages.lbl_industry} </Label>
                     <Item >
                       {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.INDUSTRY)}
                     </Item>
@@ -761,7 +831,7 @@ class AddLeadPage extends React.Component {
                       width: "40%"
                     }}
                   >
-                    <Label note style={commonStyle.labelStyling} >{i18nMessages.lbl_estimated_budget} </Label>
+                    <Label  style={commonStyle.labelStyling} >{i18nMessages.lbl_estimated_budget} </Label>
                     <Item >
 
                       <Input
@@ -770,6 +840,7 @@ class AddLeadPage extends React.Component {
                         clearButtonMode="always"
                         autoCapitalize="none"
                         autoCorrect={false}
+                        placeholder='Enter Amount'
                         onChangeText={(value) => {
                           this.inputTextFieldChanged({
                             type: 'ESTIMATE',
@@ -786,7 +857,7 @@ class AddLeadPage extends React.Component {
                       marginLeft: "10%"
                     }}
                   >
-                    <Text note style={commonStyle.labelStyling} >{i18nMessages.lbl_currency} </Text>
+                    <Text  style={commonStyle.labelStyling} >{i18nMessages.lbl_currency} </Text>
                     <Item >
                       {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.CURRENCY)}
                     </Item>

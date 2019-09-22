@@ -57,18 +57,19 @@ export default class miInfoListComponent extends React.Component {
                                         {
                                             borderTopColor: "#616161",
                                             borderTopWidth: 1,
-                                            paddingTop: 8
+                                            paddingVertical: 10,
+                                            paddingHorizontal: 10
                                         }
                                     }>
-                                        <Col style={styleContent.profilePic}></Col>
+                                        
                                         <Col style={styleContent.profileDetails}>
                                             <Row style={styleContent.profileDetailsRow}>
-                                                <Col><Text style={styleContent.profileDetailsLabel}> {item.name} </Text></Col>
+                                                <Col><Text style={styleContent.profileDetailsLabel}> teset nmame{item.name} </Text></Col>
                                                 <Col style={styleContent.alignItemTOEnd}><Text style={styleContent.profileDetailsValue}>  {item.creationDate} </Text></Col>
                                             </Row>
                                             <Row>
                                                 <Col>
-                                                    <Text style={[styleContent.cardViewSecondaryInfo, styleContent.profileDetailsInfo]}> {item.info} </Text>
+                                                    <Text style={[styleContent.cardViewSecondaryInfo, styleContent.profileDetailsInfo]}> s to be used for the online purchase at Netflix on your Standard Chartere {item.info} </Text>
                                                 </Col>
                                             </Row>
                                         </Col>

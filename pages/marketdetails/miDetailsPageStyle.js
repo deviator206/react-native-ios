@@ -79,8 +79,8 @@ const styleContent = StyleSheet.create({
     cardViewSecondaryInfo: {
         fontSize: 14,
         fontFamily: 'Montserrat-Regular',
-        color: "#AEAEAE",
-        lineHeight: 18
+        color: "#666666",
+        lineHeight: 14
     },
     cardViewPrimaryLabel: {
         fontSize: 14,
@@ -159,6 +159,7 @@ const styleContent = StyleSheet.create({
         flex: 1
     },
     profileDetailsRow: {
+        borderColor:"red",
       marginTop: 5,
       marginLeft: 5
     },
@@ -166,7 +167,7 @@ const styleContent = StyleSheet.create({
         alignItems: "flex-end"
     },
     profileDetailsLabel: {
-        fontFamily: 'Montserrat-SemiBold',
+        fontFamily: 'Montserrat-Regular',
         fontSize: 16,
         color: "#000000"
     },

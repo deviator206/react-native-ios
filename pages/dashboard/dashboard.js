@@ -19,6 +19,17 @@ const userApi = new UserApi({ state: {} });
 
 const leadApi = new LeadApi({ state: {} });
 
+const formatDate = (date, type) => {
+    if(type === 'START_DATE') {
+        let month = date.getMonth()+1;
+        if(month > 1) {
+            month = month - 1
+        }
+        return `${date.getFullYear()}/${date.getDate()}/${month}`;
+    }
+    return `${date.getFullYear() }/${date.getDate()}/${date.getMonth()+1}`;
+    
+  };
 
 
 
@@ -219,7 +230,7 @@ class DashboardPage extends React.Component {
                 textStyle={styleContent.datePickerStyle}
                 placeHolderTextStyle={styleContent.datePickerStyle}
                 animationType={"fade"}
-                placeHolderText={i18nMessages.select_date_lbl}
+                placeHolderText={formatDate(new Date(), type)}
                 onDateChange={(val) => {
                     this.onDateSelected(type, val)
                 }}

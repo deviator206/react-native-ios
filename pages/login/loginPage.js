@@ -167,7 +167,7 @@ export default class LoginPage extends Component {
                         </View>
                         <View style={styleContent.loginMiddle}>
                             {this.getErrorView()}
-                            <Item regular error={this.state.userNameMissing}  style={styleContent.usernameInput}>
+                            <Item regular error={this.state.userNameMissing}  style={styleContent.loginInput}>
                                 <Icon active name='person' style={styleContent.iconLoginPage}/>
                                 <Input
                                     style={commonStyling.inputBoxStyle}
@@ -181,7 +181,7 @@ export default class LoginPage extends Component {
                                     onChangeText={(val) => { this.onUserNameChanged(val) }} />
                             </Item>
                             <View style={{height: 12}}/>
-                            <Item regular error={this.state.passwordMissing}  style={styleContent.passwordInput}>
+                            <Item regular error={this.state.passwordMissing}  style={styleContent.loginInput}>
                                 <Icon active name='lock' style={styleContent.iconLoginPage}/>
                                 <Input 
                                     style={commonStyling.inputBoxStyle}

@@ -502,6 +502,7 @@ class LeadDetailsPage extends React.Component {
                           clearButtonMode="always"
                           autoCapitalize="none"
                           autoCorrect={false}
+                          placeholder='Enter Amount'
                           value={this.state && this.state.leadDetails && this.state.leadDetails.leadsSummaryRes && this.state.leadDetails.leadsSummaryRes.budget && (this.state.leadDetails.leadsSummaryRes.budget).toString()}
                           onChangeText={(text) => {
                             this.inputElementChanged(appConstant.UPDATE_LEAD.BUDGET, text);
@@ -557,7 +558,7 @@ class LeadDetailsPage extends React.Component {
                           style={commonStyle.dynamicComponentTextAreaStyle}
                           rowSpan={4}
                           bordered
-                          placeholder="Lorem Ipsum is sim"
+                          placeholder="Enter Message to be notified to BU"
                           onChangeText={(text) => {
                             this.inputElementChanged(appConstant.UPDATE_LEAD.NOTIFY_TEXT, text);
                           }}

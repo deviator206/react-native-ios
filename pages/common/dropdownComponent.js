@@ -44,6 +44,27 @@ export default class DropDownComponent extends React.Component {
         }
     }
 
+    
+    static getDerivedStateFromProps(props, state) {
+        const { dataSource, updateToParent, dropDownType, defaultSelection, returnAttribute = 'code' } = props;
+        const defaultAutoSelectedValue = (dataSource && dataSource[0] && dataSource[0][returnAttribute]) ? dataSource[0][returnAttribute] : '';
+        const value = (defaultSelection) ? defaultSelection : defaultAutoSelectedValue;
+        
+        if (state.selected == '' &&  value !== state.selected) {
+            if (updateToParent) {
+                updateToParent({ type: dropDownType, value })
+            }
+          return {
+            selected: value,
+          };
+          
+        }
+    
+        // Return null if the state hasn't changed y
+        return null;
+      }
+      
+
     componentDidUpdate1(prevProps) {
         const { dataSource, updateToParent, dropDownType } = this.props;
         const { selected } = this.state;
@@ -143,13 +164,14 @@ export default class DropDownComponent extends React.Component {
                 style={
                     {
                         color: "#f0f3f7",
-                        textTransform: "capitalize"
+                        textTransform: "capitalize",
+                        
                     }
                 }
                 mode="dropdown"
                 textStyle={{ color: "#d3d3d3" }}
                 itemTextStyle={{ color: '#444444' }}
-                iosIcon={<Icon name="ios-arrow-down" />}
+                iosIcon={<Icon name="ios-arrow-down" style={{color:"#d3d3d3"}}/>}
                 onValueChange={onDropDownSelectionChange}
                 selectedValue={selected}
                 placeholderIconColor="#007aff"
