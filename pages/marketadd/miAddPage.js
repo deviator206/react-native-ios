@@ -233,7 +233,7 @@ class MiAddPage extends React.Component {
         const { navigation } = this.props;
         return (
             <Container>
-                <HeaderComponent navigation={navigation} title="Add Market Intelligence" />
+                <HeaderComponent navigation={navigation} title="Add MI " />
                 <Content style={styleContent.mainContent}>
                     <Grid style={styleContent.gridWrapper}>
                         <Row >

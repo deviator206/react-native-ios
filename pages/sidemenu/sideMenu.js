@@ -1,6 +1,6 @@
 import { Button, Container, ListItem, Text, View } from 'native-base';
 import React from 'react';
-import { FlatList, Image } from "react-native";
+import { FlatList, Image , TouchableHighlight} from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styleContent from './sidemenuStyle';
 
@@ -45,20 +45,24 @@ export default class SideMenuBar extends React.Component {
         
         return (
             <Container style={styleContent.container}>
-                <Button 
-                        transparent
-                        style={styleContent.closeBtnStyling} 
-                        onPress={() => { 
-                            alert("here!")
-                                                        this.props.navigation.closeDrawer(); 
-                            }}>
-                        <Icon style={styleContent.closeBtn} name="close" />
-                    </Button >
+                
+                
                 <View style={styleContent.sideMenuSectionOne}>
-                    
+                <View 
+                 style={styleContent.closeBtnStyling} 
+                >
+                                <TouchableHighlight
+                                    onPress={() => {
+                                        this.props.navigation.closeDrawer(); 
+                                    }}>
+                                   <Icon style={styleContent.closeBtn} name="close" />
+                                </TouchableHighlight>
+                            </View>
                     <Image source={require('../images/profile_pic_logo_2.png')} style={styleContent.profilePic} />
                     <Text style={styleContent.profileName}> {userDisplayName} </Text>
                 </View>
+
+                
                 <FlatList
                     style={styleContent.sideMenuSectionTwo}
                     data={routes}

@@ -5,29 +5,30 @@ const styleContent = StyleSheet.create({
         flexDirection: "column"
     },
     sideMenuSectionOne: {
-        flex: 0.6,
+        paddingTop:"10%",
+        flex: 0.85,
         width: "100%",
         justifyContent: "space-between",
         backgroundColor: "#333333",
         alignItems: "flex-start",
-        paddingLeft: "10%"
+       // paddingLeft: "10%"
     },
     profilePic: {
         //flex: 0.8,
-        width: 160,
-        height: 160,
-        borderRadius: 80,
+        width: 150,
+        height: 150,
+        borderRadius: 75,
         // aspectRatio: 0.8,
         resizeMode: 'contain',
-        alignSelf: "flex-start",
-        // paddingLeft: "8%"
+        alignSelf: "center"
     },
     profileName: {
         flex: 0.2,
         color: "#FFFFFF",
+        alignSelf: "center",
         fontFamily: 'Montserrat-SemiBold',
         fontSize: 20,
-        marginBottom: "10%"
+        // marginBottom: "10%"
     },
     sideMenuSectionTwo: {
         flex:0.6,
@@ -45,8 +46,6 @@ const styleContent = StyleSheet.create({
         marginHorizontal: "5%"
     },
     closeBtnStyling: {
-        borderColor:"red",
-        borderWidth:3,
         alignSelf:"flex-end",
         backgroundColor:"#333333",
         justifyContent: "center",
@@ -55,7 +54,7 @@ const styleContent = StyleSheet.create({
         marginRight: 5
     },
     closeBtn: {
-        color: "#666666",
+        color: "white",
         fontSize: 35
     },
     listItemStyle: {
