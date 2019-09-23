@@ -10,6 +10,7 @@ import { default as appConstant } from '../common/consts';
 import HeaderComponent from '../common/headerComponent';
 import SpinnerComponent from '../common/spinnerComponent';
 import { default as FilterComponent } from './miFilterComponent';
+import FlatListComponent from '../common/flatListComponent';
 import styleContent from './miListPageStyle';
 
 
@@ -164,132 +165,23 @@ class MiListPage extends React.Component {
         return styleContent.pendingStatus;
     }
 
-
     getViewLeads() {
-        const { resultSet = [] } = this.state;
-        let returnedView
-        if (resultSet && resultSet.length > 0) {
-            returnedView = (
-                <FlatList
-                    data={resultSet}
-                    renderItem={({ item }) =>
-                        <Row
-                            button
-                            onPress={() => {
-                                // item.id
-                                this.props.navigation.navigate("midetails", {
-                                    miId: item.id
-                                });
-                            }}
-                        >
-                            <Card style={styleContent.gridCardWrapper} >
-                                <CardItem>
-                                    <Col>
-                                        <Grid>
-                                            <Row>
-                                                <Col>
-                                                    <Text style={[styleContent.cardViewMainTitle, commonStyle.camelCase]} > Market Intelligence #{item.id} </Text>
-                                                </Col>
-                                                
+        const { resultSet } = this.state;
+        return (
+            <FlatListComponent 
+            type="mi"
+            resultSet = {resultSet}
+            onSingleItemCliced = {()=>{
+                this.props.navigation.navigate("midetails", {
+                    miId: item.id
+                });
+            }}
+            getStatusClass={this.getStatusStyle}
+            />
+        )
 
-                                            </Row>
-
-                                            {
-                                                item && item.description && (
-                                                    <Row>
-                                                        <Col>
-                                                            <Text style={styleContent.cardViewSecondaryInfo}  > {item.description} </Text>
-                                                        </Col>
-                                                    </Row>
-                                                )
-                                            }
-                                            <Row>
-                                            <Col style={styleContent.colLabelOnly} >
-                                                <Text style={styleContent.cardViewPrimaryLabel}  > Type </Text>
-
-                                            </Col>
-                                            <Col style={styleContent.colValue} >
-                                                <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-                                                <Text style={styleContent.cardViewPrimaryValue} >{item.type}  </Text>
-                                            </Col>
-                                        </Row>
-
-                              
-                                            {
-                                                item && item.creationDate && (
-
-                                                    <Row>
-                                            <Col style={styleContent.colLabelOnly} >
-                                                <Text style={styleContent.cardViewPrimaryLabel}  > Date </Text>
-
-                                            </Col>
-                                            <Col style={styleContent.colValue} >
-                                                <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-                                                <Text style={styleContent.cardViewPrimaryValue} >{item.creationDate}  </Text>
-                                            </Col>
-                                        </Row>)
-                                            }
-                                            {
-                                                item && item.name && (
-                                                    
-                                                    <Row>
-                                            <Col style={styleContent.colLabelOnly} >
-                                                <Text style={styleContent.cardViewPrimaryLabel}  > Project Name </Text>
-
-                                            </Col>
-                                            <Col style={styleContent.colValue} >
-                                                <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-                                                <Text style={styleContent.cardViewPrimaryValue} >{item.name}  </Text>
-                                            </Col>
-                                        </Row>
-                                                    
-
-                                                )
-                                            }
-                                            {
-                                                item && item.investment && (
-
-                                                    <Row>
-                                                    <Col style={styleContent.colLabelOnly} >
-                                                        <Text style={styleContent.cardViewPrimaryLabel}  > Investment </Text>
-        
-                                                    </Col>
-                                                    <Col style={styleContent.colValue} >
-                                                        <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-                                                        <Text style={styleContent.cardViewPrimaryValue} >{item.investment}  </Text>
-                                                    </Col>
-                                                </Row>
-
-                                                )
-                                            }
-                                            
-                                            
-                                            <Row>
-                                                    <Col style={styleContent.colLabelOnly} >
-                                                        <Text style={styleContent.cardViewPrimaryLabel}  > Status </Text>
-        
-                                                    </Col>
-                                                    <Col style={styleContent.colValue} >
-                                                        <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-                                                        <Text style={[styleContent.cardViewPrimaryValue,this.getStatusStyle(item.status)]} >{item.status}  </Text>
-                                                    </Col>
-                                                </Row>
-
-                                           
-                                        </Grid>
-
-                                    </Col>
-                                </CardItem>
-                            </Card>
-                        </Row>
-                    }
-                >
-
-                </FlatList>
-            );
-        }
-        return returnedView;
     }
+   
     render() {
         const { navigation } = this.props;
         return (

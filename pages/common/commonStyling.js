@@ -42,6 +42,40 @@ const styleContent = StyleSheet.create({
         marginLeft: "2%",
         marginRight: "2%"
     },
+    list_cardViewMainTitle: {
+        fontSize: 18,
+        fontFamily: 'Montserrat-SemiBold',
+        color: "#000000",
+        marginBottom: "3%"
+    },
+    list_colValue: {
+        flexDirection: 'row', flexWrap: 'wrap',
+        width:"54%"
+    },
+    list_colValueThird: {
+       
+    },
+    list_cardViewSecondaryInfo: {
+        fontSize: 14,
+        fontFamily: 'Montserrat-Regular',
+        color: "#616161",
+        marginBottom: "3%"
+    },
+    list_colLabelOnly: {
+        width: "42%",
+        height: 25
+    },
+    list_cardViewPrimaryValue: {
+        fontSize: 14,
+        fontFamily: 'Montserrat-Medium',
+        color: "#1A1A1A"
+    },
+    list_cardViewPrimaryLabel: {
+        fontSize: 14,
+        fontFamily: 'Montserrat-Regular',
+        color: "#616161"
+    },
+
     footerSection: {
         backgroundColor: "#FFFFFF",
         width: "100%"

@@ -11,6 +11,7 @@ import FooterComponent from '../common/footerComponent';
 import HeaderComponent from '../common/headerComponent';
 import i18nMessages from '../common/i18n';
 import SpinnerComponent from '../common/spinnerComponent';
+import FlatListComponent from '../common/flatListComponent';
 import styleContent from './viewLeadStyle';
 
 const leadApi = new LeadApi({ state: {} });
@@ -55,16 +56,138 @@ class ViewLeadPage extends React.Component {
     }
 
     onLeadResponseSuccess(resp) {
+        const localResult = [
+            {
+              "attachment": "string",
+              "creationDate": "string",
+              "creator": {
+                "businessUnit": "string",
+                "email": "string",
+                "enabled": true,
+                "roles": [
+                  "string"
+                ],
+                "userDisplayName": "string",
+                "userId": 0,
+                "userName": "string"
+              },
+              "creatorId": 0,
+              "custName": "string",
+              "deleted": true,
+              "description": "string",
+              "id": 0,
+              "inactiveDuration": 0,
+              "leadContact": {
+                "country": "string",
+                "designation": "string",
+                "email": "string",
+                "id": 0,
+                "name": "string",
+                "phoneNumber": "string",
+                "state": "string"
+              },
+              "leadsSummaryRes": {
+                "budget": 0,
+                "businessUnits": [
+                  "string"
+                ],
+                "currency": "string",
+                "industry": "string",
+                "rootLeadId": 0,
+                "salesRep": {
+                  "businessUnit": "string",
+                  "email": "string",
+                  "enabled": true,
+                  "roles": [
+                    "string"
+                  ],
+                  "userDisplayName": "string",
+                  "userId": 0,
+                  "userName": "string"
+                },
+                "salesRepId": 0
+              },
+              "message": "string",
+              "source": "string",
+              "sourceInfo": "string",
+              "status": "string",
+              "tenure": "string",
+              "updateDate": "string",
+              "updatorId": 0
+            }
+          ];
         this.setState({
             spinner: false,
-            resultSet: resp
+            resultSet:localResult
         });
     }
 
     onLeadResponseError(error) {
         console.log(error);
+        const localResult = [
+            {
+              "attachment": "string",
+              "creationDate": "string",
+              "creator": {
+                "businessUnit": "string",
+                "email": "string",
+                "enabled": true,
+                "roles": [
+                  "string"
+                ],
+                "userDisplayName": "string",
+                "userId": 0,
+                "userName": "string"
+              },
+              "creatorId": 0,
+              "custName": "string",
+              "deleted": true,
+              "description": "string",
+              "id": 0,
+              "inactiveDuration": 0,
+              "leadContact": {
+                "country": "string",
+                "designation": "string",
+                "email": "string",
+                "id": 0,
+                "name": "string",
+                "phoneNumber": "string",
+                "state": "string"
+              },
+              "leadsSummaryRes": {
+                "budget": 0,
+                "businessUnits": [
+                  "string"
+                ],
+                "currency": "string",
+                "industry": "string",
+                "rootLeadId": 0,
+                "salesRep": {
+                  "businessUnit": "string",
+                  "email": "string",
+                  "enabled": true,
+                  "roles": [
+                    "string"
+                  ],
+                  "userDisplayName": "string",
+                  "userId": 0,
+                  "userName": "string"
+                },
+                "salesRepId": 0
+              },
+              "message": "string",
+              "source": "string",
+              "sourceInfo": "string",
+              "status": "string",
+              "tenure": "string",
+              "updateDate": "string",
+              "updatorId": 0
+            }
+          ];
+
         this.setState({
-            spinner: false
+            spinner: false,
+            resultSet:localResult
         });
     }
 
@@ -142,115 +265,23 @@ class ViewLeadPage extends React.Component {
     }
 
 
-    getViewLeads() {
+    getViewLeads () {
+
+        //const { resultSet, onSingleItemCliced , getStatusCircle, getLeadContact} = this.props;
         const { resultSet } = this.state;
-       
-        const returnedView = (
-            <FlatList
-                data={resultSet}
-                renderItem={({ item }) =>
-                    <Row
-                        button
-                        onPress={() => {
-                            // item.id
-                            this.props.navigation.navigate("leaddetails", {
-                                leadId: item.id
-                            });
-                        }}
-                    >
-                        <Card style={styleContent.gridCardWrapper}>
-                            <CardItem>
-                                <Col>
-                                    <Grid>
-                                        <Row>
-                                            <Col>
-                                                <Text style={[styleContent.cardViewMainTitle, commonStyle.camelCase]} > {item.custName} </Text>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col>
-                                                <Text style={styleContent.cardViewSecondaryInfo}  > {item.description} </Text>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col style={styleContent.colLabelOnly} >
-                                                <Text style={styleContent.cardViewPrimaryLabel}  > Contact </Text>
-
-                                            </Col>
-                                            {this.getLeadContact(item)}
-                                           
-                                        </Row>
-                                        <Row>
-                                            <Col style={styleContent.colLabelOnly} >
-                                                <Text style={
-                                                    styleContent.cardViewPrimaryLabel}  > Status </Text>
-
-                                            </Col>
-                                            <Col style={styleContent.colValue} >
-                                                <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-                                                <Text style={this.getStatusClass(item.status)} > {item.status && appConstant.DECODED_LEAD_STATUS[(item.status).toUpperCase()]}  </Text>
-
-                                            </Col>
-                                            <Col style={styleContent.colValueThird} >
-                                                <View style={this.getStatusCircle(item.status)} />
-                                            </Col>
-
-                                        </Row>
-                                        <Row>
-
-                                            <Col style={styleContent.colLabelOnly} >
-                                                <Text style={styleContent.cardViewPrimaryLabel}  > Sales Rep </Text>
-
-                                            </Col>
-                                            <Col style={styleContent.colValue} >
-                                                <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-                                                <Text style={styleContent.cardViewPrimaryValue} > {(item.leadsSummaryRes && item.leadsSummaryRes.salesRep && item.leadsSummaryRes.salesRep.userDisplayName) ? item.leadsSummaryRes.salesRep.userDisplayName: ''}  </Text>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col style={styleContent.colLabelOnly} >
-                                                <Text style={styleContent.cardViewPrimaryLabel}  > Unit </Text>
-
-                                            </Col>
-                                            <Col style={styleContent.colValue} >
-                                                <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-                                                <Text style={styleContent.cardViewPrimaryValue} > {item.leadsSummaryRes && item.leadsSummaryRes.businessUnits && item.leadsSummaryRes.businessUnits.length > 0 && item.leadsSummaryRes.businessUnits[0]}  </Text>
-                                            </Col>
-
-                                        </Row>
-                                        <Row>
-                                            <Col style={styleContent.colLabelOnly} >
-                                                <Text style={styleContent.cardViewPrimaryLabel}  > Last Updated </Text>
-
-                                            </Col>
-                                            <Col style={styleContent.colValue} >
-                                                <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-                                                <Text style={styleContent.cardViewPrimaryValue} > {item.updateDate}  </Text>
-                                            </Col>
-
-                                        </Row>
-                                        <Row>
-                                            <Col style={styleContent.colLabelOnly} >
-                                                <Text style={styleContent.cardViewPrimaryLabel}  > Inactive Days </Text>
-                                            </Col>
-                                            <Col style={styleContent.colValue} >
-                                                <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-                                                <Text style={styleContent.cardViewPrimaryValue} > {item.inactiveDuration}  </Text>
-                                            </Col>
-                                        </Row>
-                                    </Grid>
-
-                                </Col>
-                            </CardItem>
-                        </Card>
-                    </Row>
-                }
-            >
-
-            </FlatList>
-        );
-
-        return returnedView;
+        return (
+            <FlatListComponent 
+            resultSet = {resultSet}
+            onSingleItemCliced = {()=>{
+                this.props.navigation.navigate("leaddetails", {
+                    leadId: item.id
+                });
+            }}
+            getStatusClass={this.getStatusClass}
+            getStatusCircle={this.getStatusCircle}
+            getLeadContact={this.getLeadContact}
+            />
+        )
     }
     render() {
         const { navigation } = this.props;
