@@ -31,6 +31,7 @@ class ViewLeadPage extends React.Component {
         this.onLeadResponseSuccess = this.onLeadResponseSuccess.bind(this);
         this.onLeadResponseError = this.onLeadResponseError.bind(this);
         this.getStatusCircle = this.getStatusCircle.bind(this);
+        this.getLeadContact = this.getLeadContact.bind(this);
     }
 
     getSpinnerComponentView() {
@@ -113,6 +114,33 @@ class ViewLeadPage extends React.Component {
         return styleContent.needMoreStatusCircle
     }
 
+    getLeadContact(item) {
+        if(item.leadContact && item.leadContact.name)
+        {
+            return  (
+                <Col style={styleContent.colValue} >
+            <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+            <Text style={styleContent.cardViewPrimaryValue} >{item.leadContact && item.leadContact.name}  </Text>
+        </Col>
+            )
+        } else if(item.leadContact && item.leadContact.email) {
+            return  (
+                <Col style={styleContent.colValue} >
+            <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+            <Text style={styleContent.cardViewPrimaryValue} >{item.leadContact && item.leadContact.email}  </Text>
+        </Col>
+            )
+        } else if(item.leadContact && item.leadContact.phoneNumber) {
+            return  (
+                <Col style={styleContent.colValue} >
+            <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+            <Text style={styleContent.cardViewPrimaryValue} >{item.leadContact && item.leadContact.phoneNumber}  </Text>
+        </Col>
+            )
+        } 
+                                               
+    }
+
 
     getViewLeads() {
         const { resultSet } = this.state;
@@ -149,10 +177,8 @@ class ViewLeadPage extends React.Component {
                                                 <Text style={styleContent.cardViewPrimaryLabel}  > Contact </Text>
 
                                             </Col>
-                                            <Col style={styleContent.colValue} >
-                                                <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-                                                <Text style={styleContent.cardViewPrimaryValue} >{item.leadContact && item.leadContact.name}  </Text>
-                                            </Col>
+                                            {this.getLeadContact(item)}
+                                           
                                         </Row>
                                         <Row>
                                             <Col style={styleContent.colLabelOnly} >
