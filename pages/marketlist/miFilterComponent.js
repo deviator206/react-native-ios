@@ -108,12 +108,17 @@ export default class miFilterComponent extends React.Component {
                 transparent={false}
                 visible={showModal}
                 onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
+                    if (toggleHandler) {
+                        toggleHandler()
+                    }
                 }}>
-                <View style={{ width: '100%', height: "100%" }}>
-                    <View style={commonStyle.modalHeaderDiv}>
+                <View style={{ width: '100%',height:"75%" }}>
+                    <View style={[commonStyle.modalHeaderDiv, {
+                        marginTop:"10%"
+                    }]}>
                         <View><Text note style={commonStyle.modalHeader}> Filter  </Text></View>
-                        <View>
+                        <View 
+                        >
                             <TouchableHighlight
                                 onPress={() => {
                                     if (toggleHandler) {
