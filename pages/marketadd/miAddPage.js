@@ -23,7 +23,7 @@ class MiAddPage extends React.Component {
             filterVisible: false
         };
         this.filerBtnToggled = this.filerBtnToggled.bind(this);
-        this.getDropdownFor = this.getDropdownFor.bind(this);
+        this.getDropdownForAddMIPage = this.getDropdownForAddMIPage.bind(this);
         this.onDropDownChange = this.onDropDownChange.bind(this);
         this.getSectionLabel = this.getSectionLabel.bind(this);
         this.onInputTextChanged = this.onInputTextChanged.bind(this);
@@ -147,12 +147,12 @@ class MiAddPage extends React.Component {
         });
     }
 
-    getDropdownFor(type) {
+    getDropdownForAddMIPage(type) {
         let returnedView = null;
-        let dataSource = [];
-        dataSource = (appConstant.MI_TYPE) ? appConstant.MI_TYPE : [];
+        let dataSourceMI = [];
+        dataSourceMI = (appConstant.MI_TYPE) ? [...appConstant.MI_TYPE] : [];
         returnedView = <DropDownComponent
-            dataSource={dataSource}
+            dataSource={dataSourceMI}
             updateToParent={this.onDropDownChange}
             dropDownType={type}
             showAttribute='name'
@@ -204,7 +204,7 @@ class MiAddPage extends React.Component {
     getSectionInput() {
         const { MI_TYPE } = this.state;
         let returnedView;
-        if (MI_TYPE && MI_TYPE.toUpperCase()  === appConstant.MI_TYPE_CONST.PROJECT || MI_TYPE && MI_TYPE.toUpperCase() === appConstant.MI_TYPE_CONST.INVESTMENT) {
+        if (MI_TYPE && MI_TYPE.toUpperCase() === appConstant.MI_TYPE_CONST.PROJECT || MI_TYPE && MI_TYPE.toUpperCase() === appConstant.MI_TYPE_CONST.INVESTMENT) {
             returnedView = (
                 <Row>
                     <Col>
@@ -243,7 +243,7 @@ class MiAddPage extends React.Component {
                         </Row>
                         <Row >
                             <Col style={{ marginBottom: "5%" }}>
-                                {this.getDropdownFor('MI_TYPE')}
+                                {this.getDropdownForAddMIPage('MI_TYPE')}
 
                             </Col>
                         </Row>

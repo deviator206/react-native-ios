@@ -202,7 +202,7 @@ export default class FlatListComponent extends React.Component {
                         onPress={() => {
                             // item.id
                             if (onSingleItemCliced) {
-                                onSingleItemCliced();
+                                onSingleItemCliced(item);
                             }
                             /*
                             this.props.navigation.navigate("leaddetails", {

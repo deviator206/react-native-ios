@@ -255,7 +255,7 @@ class MiListPage extends React.Component {
             <FlatListComponent
                 type="mi"
                 resultSet={resultSet}
-                onSingleItemCliced={() => {
+                onSingleItemCliced={(item) => {
                     this.props.navigation.navigate("midetails", {
                         miId: item.id
                     });

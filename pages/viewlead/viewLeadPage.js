@@ -272,7 +272,7 @@ class ViewLeadPage extends React.Component {
         return (
             <FlatListComponent 
             resultSet = {resultSet}
-            onSingleItemCliced = {()=>{
+            onSingleItemCliced = {(item)=>{
                 this.props.navigation.navigate("leaddetails", {
                     leadId: item.id
                 });
