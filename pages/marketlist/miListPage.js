@@ -37,6 +37,8 @@ class MiListPage extends React.Component {
         this.getStatusStyle = this.getStatusStyle.bind(this);
         this.triggerFilterBasedSearch = this.triggerFilterBasedSearch.bind(this);
         this.triggerResetFilterBasedSearch = this.triggerResetFilterBasedSearch.bind(this);
+        this.validateTheFilter = this.validateTheFilter.bind(this);
+        this.prepareInputPayload = this.prepareInputPayload.bind(this);
 
     }
 
@@ -67,11 +69,44 @@ class MiListPage extends React.Component {
         this.onLoadAllMarketInt();
     }
 
-    triggerFilterBasedSearch(filterState) {
-        const { MI_TYPE_DROP_DOWN, START_DATE, MI_STATUS_DROP_DOWN, END_DATE } = filterState;
+    validateTheFilter(inputFilterState) {
+        let isChanged = false;
+        const newFilterState = {};
+        const { filterState } = this.state;
+        const { searchText, MI_TYPE_DROP_DOWN, START_DATE, MI_STATUS_DROP_DOWN, END_DATE } = filterState;
+        if (MI_TYPE_DROP_DOWN !== inputFilterState.MI_TYPE_DROP_DOWN) {
+            isChanged = true;
+            newFilterState['MI_TYPE_DROP_DOWN'] = inputFilterState.MI_TYPE_DROP_DOWN
+        }
+
+        if (inputFilterState.START_DATE && START_DATE !== inputFilterState.START_DATE) {
+            isChanged = true;
+            newFilterState['START_DATE'] = inputFilterState.START_DATE
+        }
+
+        if (inputFilterState.MI_STATUS_DROP_DOWN && MI_STATUS_DROP_DOWN !== inputFilterState.MI_STATUS_DROP_DOWN) {
+            isChanged = true;
+            newFilterState['MI_STATUS_DROP_DOWN'] = inputFilterState.MI_STATUS_DROP_DOWN
+        }
+
+
+        if (inputFilterState.END_DATE && END_DATE !== inputFilterState.END_DATE) {
+            isChanged = true;
+            newFilterState['END_DATE'] = inputFilterState.END_DATE
+        }
+
+        if (inputFilterState.searchText && searchText !== inputFilterState.searchText) {
+            isChanged = true;
+            newFilterState['searchText'] = inputFilterState.searchText
+        }
+        return (isChanged) ? newFilterState : isChanged;
+    }
+
+    prepareInputPayload(filterState) {
+        const { MI_TYPE_DROP_DOWN, START_DATE, MI_STATUS_DROP_DOWN, END_DATE , searchText} = filterState;
         let filterPayload = {};
 
-        if (MI_TYPE_DROP_DOWN) {
+        if (MI_TYPE_DROP_DOWN ) {
             filterPayload = {
                 ...filterPayload,
                 type: MI_TYPE_DROP_DOWN
@@ -99,12 +134,61 @@ class MiListPage extends React.Component {
             }
         }
 
-        this.setState({
-            filterVisible: false,
-            spinner: true,
-            filterState
-        });
-        this.props.searchMIList(filterPayload).then(this.onResponseSuccess).catch(this.onResponseError);
+        if(searchText) {
+            filterPayload = {
+                ...filterPayload,
+                searchText
+            }
+        }
+
+        // special handling for  skipping certain attribute
+        if(filterPayload["type"] === "all"){
+            delete filterPayload.type;
+        }
+
+        if(filterPayload["status"] === "both"){
+            delete filterPayload.status;
+        }
+
+        return filterPayload;
+    }
+
+    triggerFilterBasedSearch(ipfilterState) {
+        const { filterState } = this.state;
+        const validationResponse = this.validateTheFilter(ipfilterState);
+        if (typeof (validationResponse) === "object") {
+            const updatedState = {
+                ...filterState,
+                ...validationResponse
+            }
+            
+            // prepare input
+            const filterPayload = this.prepareInputPayload(updatedState);
+
+            if(Object.keys(filterPayload).length > 0) {
+                // invoke rest
+                this.props.searchMIList(filterPayload).then(this.onResponseSuccess).catch(this.onResponseError);
+                this.setState({
+                    filterVisible: false,
+                    spinner: true,
+                    filterState: {
+                       ...updatedState
+                    }
+                });
+            } else {
+                this.setState({
+                    filterVisible: false,
+                    filterState: {
+                       ...updatedState
+                    }
+                });
+            }
+            
+            // update state
+           
+            
+        }
+      
     }
 
     onSearchButtonClicked() {
@@ -113,7 +197,7 @@ class MiListPage extends React.Component {
             const filterPayload = {
                 "searchText": searchInput
             }
-           //  this.triggerFilterBasedSearch(filterPayload)
+            this.triggerFilterBasedSearch(filterPayload)
         }
     }
     onLoadAllMarketInt() {
@@ -168,20 +252,20 @@ class MiListPage extends React.Component {
     getViewLeads() {
         const { resultSet } = this.state;
         return (
-            <FlatListComponent 
-            type="mi"
-            resultSet = {resultSet}
-            onSingleItemCliced = {()=>{
-                this.props.navigation.navigate("midetails", {
-                    miId: item.id
-                });
-            }}
-            getStatusClass={this.getStatusStyle}
+            <FlatListComponent
+                type="mi"
+                resultSet={resultSet}
+                onSingleItemCliced={() => {
+                    this.props.navigation.navigate("midetails", {
+                        miId: item.id
+                    });
+                }}
+                getStatusClass={this.getStatusStyle}
             />
         )
 
     }
-   
+
     render() {
         const { navigation } = this.props;
         return (

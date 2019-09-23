@@ -12,9 +12,7 @@ import styleContent from './miListPageStyle';
 export default class miFilterComponent extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        };
+        this.state = {};
         this.getDropdownFor = this.getDropdownFor.bind(this);
         this.onDropDownChange = this.onDropDownChange.bind(this);
         this.getDatePickerView = this.getDatePickerView.bind(this);
@@ -51,18 +49,47 @@ export default class miFilterComponent extends React.Component {
     getDropdownFor(type) {
         let returnedView = null;
         let dataSource = [];
+        let defaultSelection = "";
+        const { savedState } = this.props
         switch (type) {
             case 'MI_TYPE_DROP_DOWN':
                 dataSource = (appConstant.MI_TYPE) ? appConstant.MI_TYPE : [];
+                let containsALL = false;
+                dataSource.forEach(singleSource => {
+                    if (singleSource.code === "all") {
+                        containsALL = true;
+                    }
+                });
+                if (!containsALL) {
+                    dataSource.unshift({
+                        name: 'ALL',
+                        code: 'all'
+                    });
+                }
+                defaultSelection = (savedState && savedState.MI_TYPE_DROP_DOWN) ? savedState.MI_TYPE_DROP_DOWN : ''
                 break;
             case 'MI_STATUS_DROP_DOWN':
                 dataSource = (appConstant.MI_STATUS_DROP_DOWN) ? appConstant.MI_STATUS_DROP_DOWN : [];
+                let containsBOTH = false;
+                dataSource.forEach(singleSource => {
+                    if (singleSource.code === "both") {
+                        containsBOTH = true;
+                    }
+                });
+                if (!containsBOTH) {
+                    dataSource.unshift({
+                        name: 'BOTH',
+                        code: 'both'
+                    });
+                }
+                defaultSelection = (savedState && savedState.MI_STATUS_DROP_DOWN) ? savedState.MI_STATUS_DROP_DOWN : ''
                 break;
             default:
                 break;
         }
         if (dataSource.length > 0) {
             returnedView = <DropDownComponent
+                defaultSelection={defaultSelection}
                 dataSource={dataSource}
                 updateToParent={this.onDropDownChange}
                 dropDownType={type}
@@ -74,7 +101,7 @@ export default class miFilterComponent extends React.Component {
     }
 
     render() {
-        const { showModal = false, toggleHandler, applyFilterHandler, resetFilterHandler , savedState ={}} = this.props;
+        const { showModal = false, toggleHandler, applyFilterHandler, resetFilterHandler, savedState = {} } = this.props;
         return (
             <Modal
                 animationType="slide"
