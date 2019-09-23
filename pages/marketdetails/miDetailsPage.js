@@ -1,4 +1,4 @@
-import { Button, Col, Container, Content, Footer, Grid, Row, Text, Textarea , View} from 'native-base';
+import { Button, Col, Container, Content, Footer, Grid, Row, Text, Textarea, View } from 'native-base';
 import React from 'react';
 import { FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -24,7 +24,7 @@ class MiDetailsPage extends React.Component {
         this.state = {
             filterVisible: false
         };
-        
+
         this.getDropdownFor = this.getDropdownFor.bind(this);
         this.onDropDownChange = this.onDropDownChange.bind(this);
         this.onInputTextChanged = this.onInputTextChanged.bind(this);
@@ -47,7 +47,7 @@ class MiDetailsPage extends React.Component {
         this.onCheckBoxChanged = this.onCheckBoxChanged.bind(this);
 
         this.showMoreInfoMessagesClicked = this.showMoreInfoMessagesClicked.bind(this);
-        
+
         this.hideMoreInfoMessagesClicked = this.hideMoreInfoMessagesClicked.bind(this);
 
         this.viewMoreButton = this.viewMoreButton.bind(this);
@@ -76,7 +76,7 @@ class MiDetailsPage extends React.Component {
         this.setState({
             filterVisible: true,
             filterState: {
-                infoList:fullSet
+                infoList: fullSet
             }
         });
     }
@@ -97,7 +97,7 @@ class MiDetailsPage extends React.Component {
         });
         this.props.loadMIDetail({ itemId }).then(this.onResponseSuccess).catch(this.onResponseError);
     }
-    
+
 
     onCheckBoxChanged({ type, value }) {
         this.setState({
@@ -181,9 +181,23 @@ class MiDetailsPage extends React.Component {
         };
         if (ADD_MORE_INFO && INPUT_ADD_MORE_INFO && INPUT_ADD_MORE_INFO !== '') {
             hasInfoUpdated = true;
+            const myBU = (window.userInformation &&
+                window.userInformation.userInfo &&
+                window.userInformation.userInfo.businessUnit) ? window.userInformation.userInfo.businessUnit : "";
+
+
+            const userId = (window.userInformation &&
+                window.userInformation.userInfo &&
+                window.userInformation.userInfo.userId) ? window.userInformation.userInfo.userId : "";
+
+
             payload["miInfoList"] = [
                 {
-                    "info": INPUT_ADD_MORE_INFO
+                    "info": INPUT_ADD_MORE_INFO,
+                    "creator": {
+                        "businessUnit": myBU,
+                        "userId": userId
+                    },
                 }
             ]
         }
@@ -230,7 +244,7 @@ class MiDetailsPage extends React.Component {
 
 
 
-    
+
     componentDidMount() {
         this.setState({
             filterVisible: false
@@ -247,8 +261,8 @@ class MiDetailsPage extends React.Component {
         const { miDetails } = this.state;
         const fullSet = (miDetails && miDetails.miInfoList) ? miDetails.miInfoList : [];
         const resultSet = [];
-        if(fullSet.length > 0) {
-            resultSet.push(fullSet[fullSet.length-1]);
+        if (fullSet.length > 0) {
+            resultSet.push(fullSet[fullSet.length - 1]);
         }
         let returnedView;
         if (resultSet && resultSet.length > 0) {
@@ -306,15 +320,15 @@ class MiDetailsPage extends React.Component {
         const { miDetails } = this.state;
         const fullSet = (miDetails && miDetails.miInfoList) ? miDetails.miInfoList : [];
         const resultSet = [];
-        if(fullSet.length > 1) {
+        if (fullSet.length > 1) {
             return <View>
                 <Button
-                transparent
+                    transparent
                     onPress={this.showMoreInfoMessagesClicked}
                 >
-                       <Text>View More</Text> 
+                    <Text>View More</Text>
                 </Button>
-                
+
             </View>
         }
         return null;
@@ -420,7 +434,7 @@ class MiDetailsPage extends React.Component {
                         height: "auto"
                     }]} >
                         {this.getListedInfo()}
-                        
+
                     </Grid>
 
 
@@ -428,7 +442,7 @@ class MiDetailsPage extends React.Component {
 
                     <Grid style={{ marginTop: 10 }}>
                         <Row>
-                        {this.viewMoreButton()}
+                            {this.viewMoreButton()}
                         </Row>
                         <Row>
                             <Col style={{ marginLeft: 10 }}>
@@ -459,7 +473,7 @@ class MiDetailsPage extends React.Component {
                         <Row style={{ marginTop: 15 }}>
                             <Col style={{ marginLeft: 10 }}>
                                 <CheckBoxComponent
-                                currentState={CONVERT_TO_LEAD}
+                                    currentState={CONVERT_TO_LEAD}
                                     checkBoxLabel={i18nMessages.lbl_mi_info_convert_to_lead}
                                     controlType={appConstant.MI_INFO.CONVERT_TO_LEAD}
                                     updateToParent={this.onCheckBoxChanged}
@@ -529,8 +543,8 @@ class MiDetailsPage extends React.Component {
                 </Footer>
 
                 <MiInfoListComponent
-                itemId = {itemId}
-                   refreshList={this.state.filterState}
+                    itemId={itemId}
+                    refreshList={this.state.filterState}
                     showModal={this.state.filterVisible}
                     closeListModal={this.hideMoreInfoMessagesClicked}
                 />

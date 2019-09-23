@@ -7,6 +7,7 @@ import { default as commonStyle } from '../common/commonStyling';
 import { default as appConstant } from '../common/consts';
 import DropDownComponent from '../common/dropdownComponent';
 import i18nMessages from '../common/i18n';
+import { default as Utils } from '../common/Util';
 import styleContent from './miDetailsPageStyle';
 import SpinnerComponent from '../common/spinnerComponent';
 import HeaderComponent from '../common/headerComponent';
@@ -64,8 +65,8 @@ export default class miInfoListComponent extends React.Component {
                                         
                                         <Col style={styleContent.profileDetails}>
                                             <Row style={styleContent.profileDetailsRow}>
-                                                <Col><Text style={styleContent.profileDetailsLabel}> teset nmame{item.name} </Text></Col>
-                                                <Col style={styleContent.alignItemTOEnd}><Text style={styleContent.profileDetailsValue}>  {item.creationDate} </Text></Col>
+                                                <Col><Text style={styleContent.profileDetailsLabel}> {(item.creator && item.creator.userDisplayName)? item.creator.userDisplayName: "User" } </Text></Col>
+                                                <Col style={styleContent.alignItemTOEnd}><Text style={styleContent.profileDetailsValue}>  {Utils.getFormattedDate(new Date(item.creationDate))} </Text></Col>
                                             </Row>
                                             <Row>
                                                 <Col>
