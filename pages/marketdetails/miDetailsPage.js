@@ -260,9 +260,11 @@ class MiDetailsPage extends React.Component {
     getListedInfo() {
         const { miDetails } = this.state;
         const fullSet = (miDetails && miDetails.miInfoList) ? miDetails.miInfoList : [];
-        const resultSet = [];
-        if (fullSet.length > 0) {
-            resultSet.push(fullSet[fullSet.length - 1]);
+        let resultSet = [];
+        if (fullSet.length > 1) {
+            resultSet = [...fullSet.slice(0,2) ];
+        } else {
+            resultSet = [...fullSet];
         }
         let returnedView;
         if (resultSet && resultSet.length > 0) {
@@ -282,27 +284,7 @@ class MiDetailsPage extends React.Component {
 
                             <Col>
                                 <Grid>
-
-                                    <Row style={
-                                        {
-                                            borderTopColor: "#616161",
-                                            borderTopWidth: 1,
-                                            paddingTop: 8
-                                        }
-                                    }>
-                                        <Col style={styleContent.profilePic}></Col>
-                                        <Col style={styleContent.profileDetails}>
-                                            <Row style={styleContent.profileDetailsRow}>
-                                                <Col><Text style={styleContent.profileDetailsLabel}> {item.name} </Text></Col>
-                                                <Col style={styleContent.alignItemTOEnd}><Text style={styleContent.profileDetailsValue}>  {item.creationDate} </Text></Col>
-                                            </Row>
-                                            <Row>
-                                                <Col>
-                                                    <Text style={[styleContent.cardViewSecondaryInfo, styleContent.profileDetailsInfo]}> {item.info} </Text>
-                                                </Col>
-                                            </Row>
-                                        </Col>
-                                    </Row>
+                                    {MiInfoListComponent.getCardView(item)}
                                 </Grid>
                             </Col>
                         </Row>
@@ -320,7 +302,7 @@ class MiDetailsPage extends React.Component {
         const { miDetails } = this.state;
         const fullSet = (miDetails && miDetails.miInfoList) ? miDetails.miInfoList : [];
         const resultSet = [];
-        if (fullSet.length > 1) {
+        if (fullSet.length > 2) {
             return <View>
                 <Button
                     transparent

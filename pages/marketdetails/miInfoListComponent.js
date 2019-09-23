@@ -1,6 +1,6 @@
-import { Button, Col, Container, Content, Footer, Grid, Row, Text, Textarea , View } from 'native-base';
+import { Button, Col, Container, Content, Footer, Grid, Row, Text, Textarea, View } from 'native-base';
 import React from 'react';
-import { Alert, Modal, TouchableHighlight , FlatList} from 'react-native';
+import { Alert, Modal, TouchableHighlight, FlatList } from 'react-native';
 import { default as FeatherIcon } from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { default as commonStyle } from '../common/commonStyling';
@@ -26,10 +26,34 @@ export default class miInfoListComponent extends React.Component {
         this.getListedInfo = this.getListedInfo.bind(this);
         this.onResponseSuccess = this.onResponseSuccess.bind(this);
         this.onResponseError = this.onResponseError.bind(this);
-   
+
     }
     componentDidMount() {
-        this.loadDetail();    
+        this.loadDetail();
+    }
+    static getCardView(item) {
+        return (
+            <Row style={
+                {
+                    borderTopColor: "#616161",
+                    borderTopWidth: 1,
+                    paddingVertical: 10,
+                    paddingHorizontal: 10
+                }
+            }>
+
+                <Col style={styleContent.profileDetails}>
+                    <Row style={styleContent.profileDetailsRow}>
+                        <Col><Text style={styleContent.profileDetailsLabel}> {(item.creator && item.creator.userDisplayName) ? item.creator.userDisplayName : "User"} </Text></Col>
+                        <Col style={styleContent.alignItemTOEnd}><Text style={styleContent.profileDetailsValue}>  {Utils.getFormattedDate(new Date(item.creationDate))} </Text></Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Text style={[styleContent.cardViewSecondaryInfo, styleContent.profileDetailsInfo]}> s to be used for the online purchase at Netflix on your Standard Chartere {item.info} </Text>
+                        </Col>
+                    </Row>
+                </Col>
+            </Row>)
     }
 
     getListedInfo() {
@@ -53,28 +77,8 @@ export default class miInfoListComponent extends React.Component {
 
                             <Col>
                                 <Grid>
+                                {miInfoListComponent.getCardView(item)}
 
-                                    <Row style={
-                                        {
-                                            borderTopColor: "#616161",
-                                            borderTopWidth: 1,
-                                            paddingVertical: 10,
-                                            paddingHorizontal: 10
-                                        }
-                                    }>
-                                        
-                                        <Col style={styleContent.profileDetails}>
-                                            <Row style={styleContent.profileDetailsRow}>
-                                                <Col><Text style={styleContent.profileDetailsLabel}> {(item.creator && item.creator.userDisplayName)? item.creator.userDisplayName: "User" } </Text></Col>
-                                                <Col style={styleContent.alignItemTOEnd}><Text style={styleContent.profileDetailsValue}>  {Utils.getFormattedDate(new Date(item.creationDate))} </Text></Col>
-                                            </Row>
-                                            <Row>
-                                                <Col>
-                                                    <Text style={[styleContent.cardViewSecondaryInfo, styleContent.profileDetailsInfo]}> s to be used for the online purchase at Netflix on your Standard Chartere {item.info} </Text>
-                                                </Col>
-                                            </Row>
-                                        </Col>
-                                    </Row>
                                 </Grid>
                             </Col>
                         </Row>
@@ -128,16 +132,16 @@ export default class miInfoListComponent extends React.Component {
                 onRequestClose={() => {
                     Alert.alert('Modal has been closed.');
                 }}>
-                    <HeaderComponent  
-                        title="Message  List"
-                        sideMenuClickHandler = {()=>{
-                            
-                            if(closeListModal) {
-                                closeListModal()
-                            }
-                        }} />
+                <HeaderComponent
+                    title="Message  List"
+                    sideMenuClickHandler={() => {
+
+                        if (closeListModal) {
+                            closeListModal()
+                        }
+                    }} />
                 <View style={{ width: '100%', height: "100%" }}>
-                {this.getListedInfo()}
+                    {this.getListedInfo()}
                 </View>
                 {this.getSpinnerComponentView()}
             </Modal>
