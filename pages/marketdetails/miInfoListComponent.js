@@ -49,7 +49,7 @@ export default class miInfoListComponent extends React.Component {
                     </Row>
                     <Row>
                         <Col>
-                            <Text style={[styleContent.cardViewSecondaryInfo, styleContent.profileDetailsInfo]}> s to be used for the online purchase at Netflix on your Standard Chartere {item.info} </Text>
+                            <Text style={[styleContent.cardViewSecondaryInfo, styleContent.profileDetailsInfo]}>  {item.info} </Text>
                         </Col>
                     </Row>
                 </Col>

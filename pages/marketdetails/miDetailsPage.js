@@ -4,6 +4,7 @@ import { FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux';
 import MarketIntelligenceApi from '../../services/MarketIntelligenceApi';
+import { default as Utils } from '../common/Util';
 import CheckBoxComponent from '../common/checkBoxComponent';
 import { default as commonStyle } from '../common/commonStyling';
 import { default as appConstant } from '../common/consts';
@@ -14,6 +15,7 @@ import ModalComponent from '../common/modalComponent';
 import { default as MiInfoListComponent } from './miInfoListComponent';
 import SpinnerComponent from '../common/spinnerComponent';
 import styleContent from './miDetailsPageStyle';
+import FlatListComponent from '../common/flatListComponent';
 
 const marketIntelligenceApi = new MarketIntelligenceApi({ state: {} });
 
@@ -326,95 +328,21 @@ class MiDetailsPage extends React.Component {
                 <HeaderComponent navigation={navigation} title="Market Intelligence" />
                 <Content style={styleContent.mainContent}>
 
-                    <Grid style={commonStyle.gridWrapper}>
-                        <Row style={commonStyle.gridCardWrapper}>
-                            <Col>
-                                {
-                                    miDetails &&
-                                    miDetails.id &&
-                                    (<Grid>
-                                        <Row>
-                                            <Col>
-                                                <Text style={styleContent.cardViewMainTitle} > MI#{miDetails.id} </Text>
-                                            </Col>
-                                            <Col style={{ flexDirection: "row" }}>
-                                                <Text style={styleContent.cardViewSecondaryInfo}  > Type :  </Text>
-                                                <Text style={styleContent.cardViewPrimaryValue}  >  {miDetails.type} </Text>
-                                            </Col>
-                                        </Row>
-                                        {
-                                            miDetails.description && (
-                                                <Row>
-                                                    <Col>
-                                                        <Text style={commonStyle.darkLabelStyling}  > Description : {miDetails.description} </Text>
-                                                    </Col>
-                                                </Row>
-                                            )
-                                        }
+                    <Grid style={[commonStyle.gridWrapper,{
+                        marginLeft:"10%"
+                    }]}>
 
-                                        {
-                                            miDetails.status &&
-                                            (
-                                                <Row style={{ marginTop: 10, height: 50 }}>
-                                                    <Col style={styleContent.colWidth50} >
-                                                        <Text style={styleContent.cardViewPrimaryLabel}  > Status: </Text>
-                                                    </Col>
-                                                    <Col style={styleContent.colWidth50} >
-                                                        <Text style={this.getStatusStyle(miDetails.status)} > {miDetails.status}  </Text>
-                                                    </Col>
-                                                </Row>
-                                            )
-                                        }
-
-                                        {
-                                            miDetails.creationDate &&
-                                            (
-                                                <Row style={{ marginTop: 10, height: 50 }}>
-                                                    <Col >
-                                                        <Text style={styleContent.cardViewPrimaryLabel}  > Creation Date: {miDetails.creationDate} </Text>
-                                                    </Col>
-                                                </Row>
-                                            )
-                                        }
-
-                                        {
-                                            miDetails.name &&
-                                            (
-                                                <Row style={{ marginTop: 10, height: 50 }}>
-                                                    <Col  >
-                                                        <Text style={styleContent.cardViewPrimaryLabel}  > Project Name : {miDetails.name} </Text>
-                                                    </Col>
-                                                </Row>
-                                            )
-                                        }
-                                        {
-                                            miDetails.investment &&
-                                            (
-                                                <Row style={{ marginTop: 10, height: 50 }}>
-                                                    <Col style={styleContent.colWidth30} >
-                                                        <Text style={styleContent.cardViewPrimaryLabel}  >Investment: </Text>
-
-                                                    </Col>
-                                                    <Col style={styleContent.colWidth70} >
-
-                                                        <Text style={styleContent.cardViewSecondaryInfo} > {miDetails.investment}  </Text>
-                                                    </Col>
-
-                                                </Row>
-                                            )
-                                        }
-                                    </Grid>
-                                    )}
-
-
-                            </Col>
-                        </Row>
-
+                        {
+                            miDetails && miDetails.id && 
+                            FlatListComponent.getMIListing(miDetails,{getStatusClass : this.getStatusStyle})
+                        }
                     </Grid>
 
                     <Grid style={[styleContent.gridWrapper, {
                         height: "auto"
                     }]} >
+                        <Row><Col><Text  style={commonStyle.labelStyling} > Information : </Text></Col></Row>
+
                         {this.getListedInfo()}
 
                     </Grid>
@@ -426,6 +354,8 @@ class MiDetailsPage extends React.Component {
                         <Row>
                             {this.viewMoreButton()}
                         </Row>
+
+                        <Row><Col><Text  style={commonStyle.labelStyling} > Actions:  </Text></Col></Row>
                         <Row>
                             <Col style={{ marginLeft: 10 }}>
                                 <CheckBoxComponent
