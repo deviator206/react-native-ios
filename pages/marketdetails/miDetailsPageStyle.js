@@ -117,6 +117,11 @@ const styleContent = StyleSheet.create({
         marginTop: "5%",
         marginBottom: "2%"
     },
+    container: {
+        flex: 1,
+        flexDirection: "column",
+        justifyContent: "space-between"
+    },
     addFooter:{
         backgroundColor: '#ec2227',
         justifyContent: 'center',

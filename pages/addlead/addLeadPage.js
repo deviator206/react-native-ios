@@ -23,7 +23,7 @@ const refDataApi = new RefDataApi({ state: {} });
 const leadApi = new LeadApi({ state: {} });
 const userApi = new UserApi({ state: {} });
 const formatDate = date => {
-  return `${date.getFullYear()}/${date.getDate()}/${date.getMonth()+1}`;
+  return `${date.getFullYear()}/${date.getDate()}/${date.getMonth() + 1}`;
 };
 
 class AddLeadPage extends React.Component {
@@ -127,54 +127,54 @@ class AddLeadPage extends React.Component {
   }
 
   validateLeadInputPayload(userId) {
-    const { 
+    const {
       CUSTOMER_NAME,
       REQUIREMENT,
       CONTACT_EMAIL,
       CONTACT_PHONE,
     } = this.state;
 
-    
 
-      if(!userId || userId == -1) {
-        alert("User Id is not Valid")
-        return true;
-      }
 
-      let isValid = false;
-      let validationError = {
-        ERROR_CONTACT_PHONE : true,
-        ERROR_CONTACT_EMAIL : true,
-        ERROR_REQUIREMENT : true,
-        ERROR_CUSTOMER_NAME : true,
-      };
-      let minContact = -1;
-      if(CONTACT_PHONE || CONTACT_PHONE != '') {
-        minContact++;
-        validationError['ERROR_CONTACT_PHONE'] = false;
-      }
-      if((CONTACT_EMAIL || CONTACT_EMAIL != '') ) {
-        minContact++;
-        validationError['ERROR_CONTACT_EMAIL'] = false;
-      }
-      
-      let requirementValidation = -1;
+    if (!userId || userId == -1) {
+      alert("User Id is not Valid")
+      return true;
+    }
 
-      if(REQUIREMENT || REQUIREMENT != '') {
-        requirementValidation++;
-        validationError['ERROR_REQUIREMENT'] = false;
-      }
+    let isValid = false;
+    let validationError = {
+      ERROR_CONTACT_PHONE: true,
+      ERROR_CONTACT_EMAIL: true,
+      ERROR_REQUIREMENT: true,
+      ERROR_CUSTOMER_NAME: true,
+    };
+    let minContact = -1;
+    if (CONTACT_PHONE || CONTACT_PHONE != '') {
+      minContact++;
+      validationError['ERROR_CONTACT_PHONE'] = false;
+    }
+    if ((CONTACT_EMAIL || CONTACT_EMAIL != '')) {
+      minContact++;
+      validationError['ERROR_CONTACT_EMAIL'] = false;
+    }
 
-      if(CUSTOMER_NAME || CUSTOMER_NAME != '') {
-        requirementValidation++;
-        validationError['ERROR_CUSTOMER_NAME'] = false;
-      }
+    let requirementValidation = -1;
 
-      this.setState({
-        ...validationError
-      })
-     
-      return (requirementValidation >= 1 && minContact > -1) ? true : false;
+    if (REQUIREMENT || REQUIREMENT != '') {
+      requirementValidation++;
+      validationError['ERROR_REQUIREMENT'] = false;
+    }
+
+    if (CUSTOMER_NAME || CUSTOMER_NAME != '') {
+      requirementValidation++;
+      validationError['ERROR_CUSTOMER_NAME'] = false;
+    }
+
+    this.setState({
+      ...validationError
+    })
+
+    return (requirementValidation >= 1 && minContact > -1) ? true : false;
   }
 
   onLeadSubmit() {
@@ -193,10 +193,10 @@ class AddLeadPage extends React.Component {
     const userId = (window.userInformation &&
       window.userInformation.userInfo &&
       window.userInformation.userInfo.userId) ? window.userInformation.userInfo.userId : -1;
-    
-    if(!this.validateLeadInputPayload(userId)) {
+
+    if (!this.validateLeadInputPayload(userId)) {
       console.log("If true")
-      return ;
+      return;
     }
     const inputPayload = {
       "source": SOURCE,
@@ -341,13 +341,18 @@ class AddLeadPage extends React.Component {
   }
 
   componentDidMount() {
+    const { navigation } = this.props;
+    const marketIntId = navigation.getParam('miId', 'NO-ID');
+    const INPUT_CTL_CUSTOMER_NAME = navigation.getParam('INPUT_CTL_CUSTOMER_NAME', '');
+    const INPUT_CTL_REQUIREMENT = navigation.getParam('INPUT_CTL_REQUIREMENT', '');
+
     this.props.loadRefData().then(this.onResponseFromReferenceData).catch(this.onErrorResponseFromReferenceData);
     const myBU = (window.userInformation &&
       window.userInformation.userInfo &&
       window.userInformation.userInfo.businessUnit) ? window.userInformation.userInfo.businessUnit : "";
 
     const buList = [];
-    if(myBU !== "") {
+    if (myBU !== "") {
       buList.push(myBU);
     }
     this.setState({
@@ -356,7 +361,10 @@ class AddLeadPage extends React.Component {
       selectedBuList: buList,
       showOverlay: false,
       isSelfApproved: false,
-      leadCreatedDate: new Date(new Date().getFullYear(),new Date().getDate(),new Date().getUTCMonth()+1)
+      marketIntId,
+      INPUT_CTL_CUSTOMER_NAME,
+      INPUT_CTL_REQUIREMENT,
+      leadCreatedDate: new Date(new Date().getFullYear(), new Date().getDate(), new Date().getUTCMonth() + 1)
     });
   }
 
@@ -546,7 +554,7 @@ class AddLeadPage extends React.Component {
           width: "50%"
         }}
       >
-        <Text  style={commonStyle.labelStyling} >{i18nMessages.lbl_select_rep} </Text>
+        <Text style={commonStyle.labelStyling} >{i18nMessages.lbl_select_rep} </Text>
         <Item >
           {this.getDropdownForSplType(appConstant.DROP_DOWN_TYPE.SALES_REP)}
         </Item>
@@ -583,11 +591,11 @@ class AddLeadPage extends React.Component {
               <Grid >
                 <Row>
                   <Col >
-                    <Text  style={commonStyle.sectionTitle}>{i18nMessages.date_label}</Text>
+                    <Text style={commonStyle.sectionTitle}>{i18nMessages.date_label}</Text>
                   </Col>
                   <Col>
 
-                    <Text  style={commonStyle.sectionTitle} >{i18nMessages.source_type}</Text>
+                    <Text style={commonStyle.sectionTitle} >{i18nMessages.source_type}</Text>
                   </Col>
                 </Row>
                 <Row>
@@ -616,13 +624,14 @@ class AddLeadPage extends React.Component {
                 <Row>
                   <Col>
                     <Label style={commonStyle.labelStyling}>{i18nMessages.customer_name_lbl}</Label>
-                    <Item 
-                    error={this.state.ERROR_CUSTOMER_NAME}
+                    <Item
+                      error={this.state.ERROR_CUSTOMER_NAME}
                     >
                       <Input
                         style={commonStyle.dynamicComponentTextStyle}
                         returnKeyType="next"
                         clearButtonMode="always"
+                        placeholder="Customer Name"
                         autoCapitalize="none"
                         autoCorrect={false}
                         onChangeText={(value) => {
@@ -636,17 +645,18 @@ class AddLeadPage extends React.Component {
                   </Col>
                 </Row>
 
-                <Row><Col><Text  style={commonStyle.labelStyling} >{i18nMessages.requirement_project_lbl} </Text></Col></Row>
+                <Row><Col><Text style={commonStyle.labelStyling} >{i18nMessages.requirement_project_lbl} </Text></Col></Row>
 
                 <Row>
                   <Col>
                     <Item
-                    error={this.state.ERROR_REQUIREMENT} 
+                      error={this.state.ERROR_REQUIREMENT}
                     >
                       <Textarea
                         style={commonStyle.dynamicComponentTextAreaStyle}
                         rowSpan={4}
                         bordered
+                        placeholder="Enter Requirements"
                         onChangeText={(value) => {
                           this.inputTextFieldChanged({
                             type: 'REQUIREMENT',
@@ -661,14 +671,14 @@ class AddLeadPage extends React.Component {
 
                 <Row>
                   <Col>
-                    <Text  style={commonStyle.labelStyling} >{i18nMessages.tenure_lbl} </Text>
+                    <Text style={commonStyle.labelStyling} >{i18nMessages.tenure_lbl} </Text>
                     <Item >
                       {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.TENURE)}
 
                     </Item>
                   </Col>
                 </Row>
-                <Row><Col><Text  style={commonStyle.sectionTitle} >{i18nMessages.lbl_contact_info}</Text></Col></Row>
+                <Row><Col><Text style={commonStyle.sectionTitle} >{i18nMessages.lbl_contact_info}</Text></Col></Row>
                 <Row>
                   <Col>
 
@@ -700,7 +710,7 @@ class AddLeadPage extends React.Component {
                       {i18nMessages.lbl_contact_email}
                     </Label>
                     <Item
-                    error={this.state.ERROR_CONTACT_EMAIL} 
+                      error={this.state.ERROR_CONTACT_EMAIL}
                     >
 
                       <Input
@@ -726,8 +736,8 @@ class AddLeadPage extends React.Component {
                     <Label style={commonStyle.labelStyling} >
                       {i18nMessages.lbl_contact_phone}
                     </Label>
-                    <Item 
-                    error={this.state.ERROR_CONTACT_PHONE} 
+                    <Item
+                      error={this.state.ERROR_CONTACT_PHONE}
                     >
 
                       <Input
@@ -750,7 +760,7 @@ class AddLeadPage extends React.Component {
 
                 <Row>
                   <Col>
-                    <Text  style={commonStyle.labelStyling} >{i18nMessages.lbl_contact_country} </Text>
+                    <Text style={commonStyle.labelStyling} >{i18nMessages.lbl_contact_country} </Text>
                     <Item >
                       {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.COUNTRY)}
                     </Item>
@@ -758,19 +768,19 @@ class AddLeadPage extends React.Component {
                 </Row>
                 <Row>
                   <Col>
-                    <Text  style={commonStyle.labelStyling} >{i18nMessages.lbl_contact_state} </Text>
+                    <Text style={commonStyle.labelStyling} >{i18nMessages.lbl_contact_state} </Text>
                     <Item >
                       {this.getDropdownForSplType(appConstant.DROP_DOWN_TYPE.STATE)}
                     </Item>
                   </Col>
                 </Row>
 
-                <Row><Col><Text  style={commonStyle.sectionTitle} >{i18nMessages.lbl_business_unit_info}</Text></Col></Row>
+                <Row><Col><Text style={commonStyle.sectionTitle} >{i18nMessages.lbl_business_unit_info}</Text></Col></Row>
                 <Row>
                   <Col style={{
                     width: "70%"
                   }}>
-                    <Text  style={commonStyle.labelStyling} >{i18nMessages.lbl_business_unit_name} </Text>
+                    <Text style={commonStyle.labelStyling} >{i18nMessages.lbl_business_unit_name} </Text>
                     <Item >
                       {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.BU_NAME)}
                     </Item>
@@ -817,7 +827,7 @@ class AddLeadPage extends React.Component {
                 </Row>
                 <Row>
                   <Col>
-                    <Label  style={commonStyle.labelStyling} >{i18nMessages.lbl_industry} </Label>
+                    <Label style={commonStyle.labelStyling} >{i18nMessages.lbl_industry} </Label>
                     <Item >
                       {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.INDUSTRY)}
                     </Item>
@@ -831,7 +841,7 @@ class AddLeadPage extends React.Component {
                       width: "40%"
                     }}
                   >
-                    <Label  style={commonStyle.labelStyling} >{i18nMessages.lbl_estimated_budget} </Label>
+                    <Label style={commonStyle.labelStyling} >{i18nMessages.lbl_estimated_budget} </Label>
                     <Item >
 
                       <Input
@@ -857,7 +867,7 @@ class AddLeadPage extends React.Component {
                       marginLeft: "10%"
                     }}
                   >
-                    <Text  style={commonStyle.labelStyling} >{i18nMessages.lbl_currency} </Text>
+                    <Text style={commonStyle.labelStyling} >{i18nMessages.lbl_currency} </Text>
                     <Item >
                       {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.CURRENCY)}
                     </Item>

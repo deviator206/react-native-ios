@@ -171,10 +171,15 @@ class MiDetailsPage extends React.Component {
     initiateMICreation() {
         const {
             ADD_MORE_INFO,
-            INPUT_ADD_MORE_INFO
+            INPUT_ADD_MORE_INFO,
+            CONVERT_TO_LEAD,
+            INPUT_CTL_CUSTOMER_NAME,
+            INPUT_CTL_REQUIREMENT
+
         } = this.state;
 
         let hasInfoUpdated = false;
+        let convertToLead = false
 
         const { navigation } = this.props;
         const itemId = navigation.getParam('miId', 'NO-ID');
@@ -202,8 +207,22 @@ class MiDetailsPage extends React.Component {
                     },
                 }
             ]
+        } else if(
+            CONVERT_TO_LEAD && 
+            INPUT_CTL_CUSTOMER_NAME && 
+            INPUT_CTL_CUSTOMER_NAME !== ''&&
+            INPUT_CTL_REQUIREMENT &&
+            INPUT_CTL_REQUIREMENT !== ''
+            ) {
+                convertToLead = true;
+                this.props.navigation.navigate("addlead", {
+                    INPUT_CTL_CUSTOMER_NAME: INPUT_CTL_CUSTOMER_NAME,
+                    INPUT_CTL_REQUIREMENT:INPUT_CTL_REQUIREMENT,
+                    miId:itemId
+                });
+                return ;
         }
-
+        
         if (hasInfoUpdated) {
             this.setState({
                 spinner: true
@@ -214,6 +233,8 @@ class MiDetailsPage extends React.Component {
                 payload
             }).then(this.onSuccessHandler).catch(this.onErrorHandler);
         }
+
+
 
     }
 
@@ -324,7 +345,7 @@ class MiDetailsPage extends React.Component {
         const { navigation } = this.props;
         const itemId = navigation.getParam('miId', 'NO-ID');
         return (
-            <Container>
+            <Container style={styleContent.container}>
                 <HeaderComponent navigation={navigation} title="Market Intelligence" />
                 <Content style={styleContent.mainContent}>
 
@@ -395,7 +416,7 @@ class MiDetailsPage extends React.Component {
                         {CONVERT_TO_LEAD && (
                             <Row>
                                 <Col style={styleContent.marginHorizontalRow}>
-                                    <Text style={commonStyle.darkLabelStyling}> Add Company Name </Text>
+                                    <Text style={commonStyle.darkLabelStyling}> Add Customer Name </Text>
                                 </Col>
                             </Row>
                         )}
@@ -406,7 +427,7 @@ class MiDetailsPage extends React.Component {
                                         style={commonStyle.dynamicComponentTextAreaStyle}
                                         rowSpan={2}
                                         bordered
-                                        placeholder="Lorem Ipsum is sim"
+                                        placeholder="Enter Customer Name"
                                         onChangeText={(text) => {
                                             this.onInputTextChanged(appConstant.MI_INFO.CTL_CUSTOMER_NAME, text);
                                         }}
@@ -429,7 +450,7 @@ class MiDetailsPage extends React.Component {
                                         style={commonStyle.dynamicComponentTextAreaStyle}
                                         rowSpan={4}
                                         bordered
-                                        placeholder="Lorem Ipsum is sim"
+                                        placeholder="Enter Requirement"
                                         onChangeText={(text) => {
                                             this.onInputTextChanged(appConstant.MI_INFO.CTL_REQUIREMENT, text);
                                         }}
@@ -442,13 +463,11 @@ class MiDetailsPage extends React.Component {
 
                     </Grid>
                 </Content>
-                <Footer style={{
-                    backgroundColor: "yellow"
-                }}>
+                <Footer >
                     <Button
                         style={styleContent.addFooter}
                         onPress={this.initiateMICreation}
-                    >
+                        >
                         <Text style={styleContent.addFooterText}>UPDATE MI </Text>
                         <Icon name="arrow-forward" style={{ color: "white", fontSize: 20 }} />
                     </Button >
