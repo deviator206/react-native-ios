@@ -136,7 +136,7 @@ class AddLeadPage extends React.Component {
       CONTACT_PHONE,
     } = this.state;
 
-
+    const { marketIntId, INPUT_CTL_CUSTOMER_NAME, INPUT_CTL_REQUIREMENT } = this.state;
 
     if (!userId || userId == -1) {
       alert("User Id is not Valid")
@@ -172,11 +172,22 @@ class AddLeadPage extends React.Component {
       validationError['ERROR_CUSTOMER_NAME'] = false;
     }
 
+
     this.setState({
       ...validationError
-    })
+    });
 
-    return (requirementValidation >= 1 && minContact > -1) ? true : false;
+    if (
+      marketIntId &&
+      INPUT_CTL_CUSTOMER_NAME &&
+      INPUT_CTL_REQUIREMENT
+    ) {
+      return (minContact > -1) ? true : false;
+    } else {
+      return (requirementValidation >= 1 && minContact > -1) ? true : false;
+    }
+
+    
   }
 
   onLeadSubmit() {
@@ -200,6 +211,9 @@ class AddLeadPage extends React.Component {
       console.log("If true")
       return;
     }
+    const { marketIntId, INPUT_CTL_CUSTOMER_NAME, INPUT_CTL_REQUIREMENT } = this.state;
+
+
     const inputPayload = {
       "source": SOURCE,
       "custName": CUSTOMER_NAME,
@@ -222,6 +236,16 @@ class AddLeadPage extends React.Component {
       "deleted": false,
       "creatorId": userId,
       "creationDate": Utils.getFormattedDate(leadCreatedDate)
+    }
+
+    if (
+      marketIntId &&
+      INPUT_CTL_CUSTOMER_NAME &&
+      INPUT_CTL_REQUIREMENT
+    ) {
+      inputPayload["leadsSummaryRes"]["rootLeadId"] = marketIntId;
+      inputPayload["custName"] = CUSTOMER_NAME;
+      inputPayload["description"] = REQUIREMENT;
     }
 
     this.setState({
@@ -594,8 +618,8 @@ class AddLeadPage extends React.Component {
             <Label style={commonStyle.labelStyling}>{i18nMessages.customer_name_lbl}</Label>
             <Item>
               <Text
-                style={[commonStyle.dynamicComponentTextStyle,{color:"black"}]}
-                > {INPUT_CTL_CUSTOMER_NAME} </Text>
+                style={[commonStyle.dynamicComponentTextStyle, { color: "black" }]}
+              > {INPUT_CTL_CUSTOMER_NAME} </Text>
             </Item>
           </Col>
         </Row>
@@ -642,10 +666,10 @@ class AddLeadPage extends React.Component {
         <Row>
           <Col>
             <Item >
-            <Text
-                style={[commonStyle.dynamicComponentTextStyle,{color:"black"}]}
-                > {INPUT_CTL_REQUIREMENT} </Text>
-              
+              <Text
+                style={[commonStyle.dynamicComponentTextStyle, { color: "black" }]}
+              > {INPUT_CTL_REQUIREMENT} </Text>
+
             </Item>
           </Col>
         </Row>
