@@ -69,6 +69,8 @@ class AddLeadPage extends React.Component {
     this.onUserListLoaded = this.onUserListLoaded.bind(this);
     this.onUserListLoadedError = this.onUserListLoadedError.bind(this);
     this.validateLeadInputPayload = this.validateLeadInputPayload.bind(this);
+    this.getCustomerNameInputBox = this.getCustomerNameInputBox.bind(this);
+    this.getRequirementInputBox = this.getRequirementInputBox.bind(this);
   }
 
 
@@ -579,6 +581,103 @@ class AddLeadPage extends React.Component {
     )
   }
 
+  getCustomerNameInputBox() {
+    const { marketIntId, INPUT_CTL_CUSTOMER_NAME, INPUT_CTL_REQUIREMENT } = this.state;
+    if (
+      marketIntId &&
+      INPUT_CTL_CUSTOMER_NAME &&
+      INPUT_CTL_REQUIREMENT
+    ) {
+      return (
+        <Row>
+          <Col>
+            <Label style={commonStyle.labelStyling}>{i18nMessages.customer_name_lbl}</Label>
+            <Item>
+              <Text
+                style={[commonStyle.dynamicComponentTextStyle,{color:"black"}]}
+                > {INPUT_CTL_CUSTOMER_NAME} </Text>
+            </Item>
+          </Col>
+        </Row>
+      )
+    }
+
+    return (
+      <Row>
+        <Col>
+          <Label style={commonStyle.labelStyling}>{i18nMessages.customer_name_lbl}</Label>
+          <Item
+            error={this.state.ERROR_CUSTOMER_NAME}
+          >
+            <Input
+              style={commonStyle.dynamicComponentTextStyle}
+              value={this.state.CUSTOMER_NAME}
+              returnKeyType="next"
+              clearButtonMode="always"
+              placeholder="Customer Name"
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(value) => {
+                this.inputTextFieldChanged({
+                  type: 'CUSTOMER_NAME',
+                  value
+                });
+              }}
+            />
+          </Item>
+        </Col>
+      </Row>
+
+    );
+  }
+
+  getRequirementInputBox() {
+    const { marketIntId, INPUT_CTL_CUSTOMER_NAME, INPUT_CTL_REQUIREMENT } = this.state;
+    if (
+      marketIntId &&
+      INPUT_CTL_CUSTOMER_NAME &&
+      INPUT_CTL_REQUIREMENT
+    ) {
+      return (
+        <Row>
+          <Col>
+            <Item >
+            <Text
+                style={[commonStyle.dynamicComponentTextStyle,{color:"black"}]}
+                > {INPUT_CTL_REQUIREMENT} </Text>
+              
+            </Item>
+          </Col>
+        </Row>
+      );
+    }
+
+    return (
+      <Row>
+        <Col>
+          <Item
+            error={this.state.ERROR_REQUIREMENT}
+          >
+            <Textarea
+              style={commonStyle.dynamicComponentTextAreaStyle}
+              rowSpan={4}
+              bordered
+              placeholder="Enter Requirements"
+              onChangeText={(value) => {
+                this.inputTextFieldChanged({
+                  type: 'REQUIREMENT',
+                  value
+                });
+              }}
+            />
+
+          </Item>
+        </Col>
+      </Row>
+    );
+
+  }
+
   render() {
     const { isSelfApproved = false, referenceData = {} } = this.state;
     console.log("REF DATA ", referenceData);
@@ -621,53 +720,13 @@ class AddLeadPage extends React.Component {
                     {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.SOURCE)}
                   </Col>
                 </Row>
-                <Row>
-                  <Col>
-                    <Label style={commonStyle.labelStyling}>{i18nMessages.customer_name_lbl}</Label>
-                    <Item
-                      error={this.state.ERROR_CUSTOMER_NAME}
-                    >
-                      <Input
-                        style={commonStyle.dynamicComponentTextStyle}
-                        returnKeyType="next"
-                        clearButtonMode="always"
-                        placeholder="Customer Name"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        onChangeText={(value) => {
-                          this.inputTextFieldChanged({
-                            type: 'CUSTOMER_NAME',
-                            value
-                          });
-                        }}
-                      />
-                    </Item>
-                  </Col>
-                </Row>
+                {
+                  this.getCustomerNameInputBox()
+                }
 
                 <Row><Col><Text style={commonStyle.labelStyling} >{i18nMessages.requirement_project_lbl} </Text></Col></Row>
 
-                <Row>
-                  <Col>
-                    <Item
-                      error={this.state.ERROR_REQUIREMENT}
-                    >
-                      <Textarea
-                        style={commonStyle.dynamicComponentTextAreaStyle}
-                        rowSpan={4}
-                        bordered
-                        placeholder="Enter Requirements"
-                        onChangeText={(value) => {
-                          this.inputTextFieldChanged({
-                            type: 'REQUIREMENT',
-                            value
-                          });
-                        }}
-                      />
-
-                    </Item>
-                  </Col>
-                </Row>
+                {this.getRequirementInputBox()}
 
                 <Row>
                   <Col>
