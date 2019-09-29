@@ -228,7 +228,7 @@ class AddLeadPage extends React.Component {
       },
       "leadsSummaryRes": {
         "businessUnits": selectedBuList,
-        "salesRep": SALES_REP,
+        "salesRepId": SALES_REP,
         "industry": INDUSTRY,
         "estimate": ESTIMATE,
         "currency": CURRENCY
@@ -326,7 +326,7 @@ class AddLeadPage extends React.Component {
       case appconstant.DROP_DOWN_TYPE.SALES_REP:
         dataSource = userList;
         returnedView = <DropDownComponent
-          showAttribute='userName'
+          showAttribute='userDisplayName'
           returnAttribute='userId'
           dataSource={dataSource}
           updateToParent={this.onDropDownChange}
@@ -635,7 +635,6 @@ class AddLeadPage extends React.Component {
           >
             <Input
               style={commonStyle.dynamicComponentTextStyle}
-              value={this.state.CUSTOMER_NAME}
               returnKeyType="next"
               clearButtonMode="always"
               placeholder="Customer Name"
@@ -704,7 +703,7 @@ class AddLeadPage extends React.Component {
 
   render() {
     const { isSelfApproved = false, referenceData = {} } = this.state;
-    console.log("REF DATA ", referenceData);
+    // console.log("REF DATA ", referenceData);
     return (
       <Container style={styleContent.container}>
         {this.getHeaderSection()}
