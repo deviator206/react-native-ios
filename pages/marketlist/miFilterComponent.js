@@ -114,7 +114,8 @@ export default class miFilterComponent extends React.Component {
                     }
                 }}>
                 <View style={{ width: '100%',height:"75%" }}>
-                    <View style={[commonStyle.modalHeaderDiv, {
+                    <View style={[commonStyle.modalHeaderDiv, 
+                    {
                         marginTop:"10%"
                     }]}>
                         <View><Text note style={commonStyle.modalHeader}> Filter  </Text></View>

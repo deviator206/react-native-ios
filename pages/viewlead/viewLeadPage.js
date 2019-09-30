@@ -13,6 +13,7 @@ import i18nMessages from '../common/i18n';
 import SpinnerComponent from '../common/spinnerComponent';
 import FlatListComponent from '../common/flatListComponent';
 import styleContent from './viewLeadStyle';
+import { default as LeadsFilterComponent } from './viewLeadFilterComponent';
 
 
 
@@ -36,6 +37,8 @@ class ViewLeadPage extends React.Component {
         this.getStatusCircle = this.getStatusCircle.bind(this);
         this.getLeadContact = this.getLeadContact.bind(this);
         this.onReferenceDataFetched = this.onReferenceDataFetched.bind(this);
+        this.triggerFilterBasedSearch = this.triggerFilterBasedSearch.bind(this);
+        this.triggerResetFilterBasedSearch = this.triggerResetFilterBasedSearch.bind(this);
     }
 
     getSpinnerComponentView() {
@@ -75,14 +78,24 @@ class ViewLeadPage extends React.Component {
     onReferenceDataFetched(resp) {
         this.setState({
             referenceData: resp
-        });    
+        });
+    }
+    triggerFilterBasedSearch(ipfilterState) {
+    }
+
+    triggerResetFilterBasedSearch() {
+        this.setState({
+            filterVisible: false,
+            filterState: {}
+        });
+        this.loadAllLeads();
     }
 
     loadAllLeads() {
         this.setState({
             spinner: true
         });
-        this.refDataApi.fetchStructuredRefData({params: "type=BU"}).then(this.onReferenceDataFetched);
+        this.refDataApi.fetchStructuredRefData({ params: "type=BU" }).then(this.onReferenceDataFetched);
         this.leadApi.getLeads({ params: {} }).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError)
         // this.props.loadLeads({}).
     }
@@ -163,7 +176,7 @@ class ViewLeadPage extends React.Component {
     getViewLeads() {
 
         //const { resultSet, onSingleItemCliced , getStatusCircle, getLeadContact} = this.props;
-        const { resultSet, referenceData ={}} = this.state;
+        const { resultSet, referenceData = {} } = this.state;
         return (
             <FlatListComponent
                 resultSet={resultSet}
@@ -225,106 +238,16 @@ class ViewLeadPage extends React.Component {
                         </Grid>
                     </View>
                 </Content>
-                <FooterComponent  {...this.props} disableView={true} />
-
-                <Modal
-                    animationType="slide"
-                    transparent={false}
-                    visible={this.state.filterVisible}
-                    onRequestClose={() => {
-                        Alert.alert('Modal has been closed.');
-                    }}>
-                    <View style={{ width: '100%', height: "100%" }}>
-                        <View style={commonStyle.modalHeaderDiv}>
-                            <View><Text note style={commonStyle.modalHeader}> Filter View Leads </Text></View>
-                            <View>
-                                <TouchableHighlight
-                                    onPress={() => {
-                                        this.filerBtnToggled();
-                                    }}>
-                                    <Icon name="close" style={commonStyle.modalCloseBtn} />
-                                </TouchableHighlight>
-                            </View>
-                        </View>
-                        <View style={{ flex: 1, padding: 20 }}>
-                            <Grid style={commonStyle.formGrid}>
-                                <Row style={commonStyle.formGridLabel}>
-                                    <Col>
-                                        <Text note style={commonStyle.labelStyling}>{i18nMessages.status}</Text>
-                                    </Col>
-                                    <Col>
-                                        <Text note style={commonStyle.labelStyling}>{i18nMessages.tenure_lbl}</Text>
-                                    </Col>
-                                </Row>
-                                <Row style={commonStyle.formGridValue}>
-                                    <Col>
-                                        <Text>Status dropdown</Text>
-                                    </Col>
-                                    <Col>
-                                        <Text>Tenure dropdown</Text>
-                                    </Col>
-                                </Row>
-
-                                <Row style={commonStyle.formGridLabel}>
-                                    <Col>
-                                        <Text note style={commonStyle.labelStyling}>{i18nMessages.location}</Text>
-                                    </Col>
-                                </Row>
-                                <Row style={commonStyle.formGridValue}>
-                                    <Col><Text>Country AND State dropdown</Text></Col>
-                                </Row>
-
-
-                                <Row style={commonStyle.formGridLabel}>
-                                    <Col>
-                                        <Text note style={commonStyle.labelStyling}>{i18nMessages.bu_selection}</Text>
-                                    </Col>
-                                </Row>
-                                <Row style={commonStyle.formGridValue}>
-                                    <Col><Text>BU and Rep dropdown</Text></Col>
-                                </Row>
-                                <Row style={commonStyle.formGridLabel}>
-                                    <Col>
-                                        <Text note style={commonStyle.labelStyling}>{i18nMessages.industry}</Text>
-                                    </Col>
-                                </Row>
-                                <Row style={commonStyle.formGridValue}>
-                                    <Col><Text>Industry dropdown</Text></Col>
-                                </Row>
-
-
-                                <Row style={commonStyle.formGridLabel}>
-                                    <Col>
-                                        <Text note style={commonStyle.labelStyling}>{i18nMessages.source_type}</Text>
-                                    </Col>
-                                </Row>
-                                <Row style={commonStyle.formGridValue}>
-                                    <Col><Text>source dropdown</Text></Col>
-                                </Row>
-                            </Grid>
-                        </View>
-
-                        <View style={commonStyle.modalFooter}>
-                            <View style={commonStyle.modalButtonContent}>
-                                <View style={{ width: "40%" }}>
-                                    <TouchableHighlight
-                                        onPress={() => { }}>
-                                        <Text style={[commonStyle.modalTwoButtons, commonStyle.secondaryButton]}>Reset</Text>
-                                    </TouchableHighlight>
-                                </View>
-                                <View style={{ width: "40%" }}>
-                                    <TouchableHighlight
-                                        onPress={() => { }}>
-                                        <Text style={[commonStyle.modalTwoButtons, commonStyle.primaryButton]}>Apply</Text>
-                                    </TouchableHighlight>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-
-                </Modal>
-
+               
+                <LeadsFilterComponent
+                    toggleHandler={this.filerBtnToggled}
+                    filterVisible={this.state.filterVisible}
+                    applyFilterHandler={this.triggerFilterBasedSearch}
+                    resetFilterHandler={this.triggerResetFilterBasedSearch}
+                />
                 {this.getSpinnerComponentView()}
+
+                <FooterComponent  {...this.props} disableView={true} />
             </Container>
         )
     }
