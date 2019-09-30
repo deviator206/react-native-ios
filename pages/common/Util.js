@@ -22,6 +22,19 @@ const utilities = {
             });
         }
         return displayUnit; 
+    },
+    ignoreAttributeFromPayload:(attr, payload, checkVal = "all") => {
+        if(payload[`${attr}`] === checkVal){
+            delete payload[`${attr}`];
+        }
+        return payload;
+    },
+    ignoreAttributeFromPayloadForArray:(attr, payload, checkVal = "all") => {
+        if(payload[`${attr}`][0] === checkVal){
+            delete payload[`${attr}`];
+        }
+        return payload;
     }
+
 }
 export default utilities

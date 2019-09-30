@@ -10,6 +10,7 @@ import { default as appConstant } from '../common/consts';
 import FooterComponent from '../common/footerComponent';
 import HeaderComponent from '../common/headerComponent';
 import i18nMessages from '../common/i18n';
+import DropDownComponent from '../common/dropdownComponent';
 import SpinnerComponent from '../common/spinnerComponent';
 import FlatListComponent from '../common/flatListComponent';
 import styleContent from './viewLeadStyle';
@@ -20,7 +21,79 @@ export default class viewLeadFilterComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.getDropdownFor = this.getDropdownFor.bind(this);
+        this.onDropDownChange = this.onDropDownChange.bind(this);
+
     }
+
+    onDropDownChange({ type, value }) {
+        this.setState({
+            [type]: value
+        });
+    }
+
+
+    getDropdownFor(type) {
+        let returnedView = null;
+        let dataSource = [];
+        let defaultSelection = "";
+        const { savedState, referenceInfo } = this.props
+        let containsALL = false;
+        switch (type) {
+            case 'LEAD_STATUS_DROP_DOWN':
+                dataSource = (appConstant.LEAD_STATUS_DROP_DOWN) ? [...appConstant.LEAD_STATUS_DROP_DOWN] : [];
+
+                containsALL = false;
+                dataSource.forEach(singleSource => {
+                    if (singleSource.code === "all") {
+                        containsALL = true;
+                    }
+                });
+                if (!containsALL) {
+                    dataSource.unshift({
+                        name: 'ALL',
+                        code: 'all'
+                    });
+                }
+                defaultSelection = (savedState && savedState.LEAD_STATUS_DROP_DOWN) ? savedState.LEAD_STATUS_DROP_DOWN : ''
+                break;
+            case appConstant.DROP_DOWN_TYPE.TENURE:
+            case appConstant.DROP_DOWN_TYPE.BU_NAME:
+            case appConstant.DROP_DOWN_TYPE.COUNTRY:
+            case appConstant.DROP_DOWN_TYPE.SOURCE:
+            case appConstant.DROP_DOWN_TYPE.INDUSTRY:
+                dataSource = (referenceInfo && referenceInfo[type]) ? [...referenceInfo[type]] : [];
+                containsALL = false;
+                dataSource.forEach(singleSource => {
+                    if (singleSource.code === "all") {
+                        containsALL = true;
+                    }
+                });
+                if (!containsALL) {
+                    dataSource.unshift({
+                        name: 'ALL',
+                        code: 'all'
+                    });
+                }
+                defaultSelection = (savedState && savedState[type]) ? savedState[type] : ''
+                break;
+
+            default:
+                break;
+        }
+        if (dataSource.length > 0) {
+            returnedView = <DropDownComponent
+                defaultSelection={defaultSelection}
+                dataSource={dataSource}
+                updateToParent={this.onDropDownChange}
+                dropDownType={type}
+                showAttribute='name'
+                returnAttribute='code'
+            />;
+        }
+        return returnedView;
+    }
+
     render() {
         const { toggleHandler, applyFilterHandler, resetFilterHandler, } = this.props;
         return (
@@ -63,10 +136,10 @@ export default class viewLeadFilterComponent extends React.Component {
                             </Row>
                             <Row style={commonStyle.formGridValue}>
                                 <Col>
-                                    <Text>Status dropdown</Text>
+                                    {this.getDropdownFor('LEAD_STATUS_DROP_DOWN')}
                                 </Col>
                                 <Col>
-                                    <Text>Tenure dropdown</Text>
+                                    {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.TENURE)}
                                 </Col>
                             </Row>
 
@@ -76,7 +149,9 @@ export default class viewLeadFilterComponent extends React.Component {
                                 </Col>
                             </Row>
                             <Row style={commonStyle.formGridValue}>
-                                <Col><Text>Country AND State dropdown</Text></Col>
+                                <Col>
+                                    {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.COUNTRY)}
+                                </Col>
                             </Row>
 
 
@@ -86,7 +161,7 @@ export default class viewLeadFilterComponent extends React.Component {
                                 </Col>
                             </Row>
                             <Row style={commonStyle.formGridValue}>
-                                <Col><Text>BU and Rep dropdown</Text></Col>
+                                <Col>{this.getDropdownFor(appConstant.DROP_DOWN_TYPE.BU_NAME)}</Col>
                             </Row>
                             <Row style={commonStyle.formGridLabel}>
                                 <Col>
@@ -94,7 +169,9 @@ export default class viewLeadFilterComponent extends React.Component {
                                 </Col>
                             </Row>
                             <Row style={commonStyle.formGridValue}>
-                                <Col><Text>Industry dropdown</Text></Col>
+                                <Col>
+                                    {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.INDUSTRY)}
+                                </Col>
                             </Row>
 
 
@@ -104,7 +181,9 @@ export default class viewLeadFilterComponent extends React.Component {
                                 </Col>
                             </Row>
                             <Row style={commonStyle.formGridValue}>
-                                <Col><Text>source dropdown</Text></Col>
+                                <Col>
+                                    {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.SOURCE)}
+                                </Col>
                             </Row>
                         </Grid>
                     </View>

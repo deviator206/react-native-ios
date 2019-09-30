@@ -1,19 +1,20 @@
 import ServiceClass from "./Services";
+import BaseApi from "./BaseApi";
 
-class LeadApi {
+class LeadApi extends BaseApi  {
     constructor() {
+        super();
     }
-
     getStats(params) {
         return new Promise(function (resolve, reject) {
             ServiceClass.postLeadStats(params).then((resp) => {
                 if (resp && resp.data) {
                     resolve(resp.data)
                 } else {
-                    reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                    this.invalidSuccessRejectResponse(reject,resp);
                 }
             }).catch((err) => {
-                reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                this.errorHandlerRejectMechanism(reject, err);
             })
         }); 
     }
@@ -24,10 +25,24 @@ class LeadApi {
                 if (resp && resp.data) {
                     resolve(resp.data)
                 } else {
-                    reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                    this.invalidSuccessRejectResponse(reject,resp);
                 }
             }).catch((err) => {
-                reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                this.errorHandlerRejectMechanism(reject, err);
+            })
+        }); 
+    }
+
+    searchLeadsWithFilters(filterPayload) {
+        return new Promise(function (resolve, reject) {
+            ServiceClass.searchLeadsWithFilters(filterPayload).then((resp) => {
+                if (resp && resp.data) {
+                    resolve(resp.data)
+                } else {
+                    this.invalidSuccessRejectResponse(reject,resp);
+                }
+            }).catch((err) => {
+                this.errorHandlerRejectMechanism(reject, err);
             })
         }); 
     }
@@ -38,10 +53,10 @@ class LeadApi {
                 if (resp && resp.data) {
                     resolve(resp.data)
                 } else {
-                    reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                    this.invalidSuccessRejectResponse(reject,resp);
                 }
             }).catch((err) => {
-                reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                this.errorHandlerRejectMechanism(reject, err);
             })
         }); 
     }
@@ -53,10 +68,10 @@ class LeadApi {
                 if (resp && resp.data) {
                     resolve(resp.data)
                 } else {
-                    reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                    this.invalidSuccessRejectResponse(reject,resp);
                 }
             }).catch((err) => {
-                reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                this.errorHandlerRejectMechanism(reject, err);
             })
         }); 
     }
@@ -67,10 +82,10 @@ class LeadApi {
                 if (resp && resp.data) {
                     resolve(resp.data)
                 } else {
-                    reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                    this.invalidSuccessRejectResponse(reject,resp);
                 }
             }).catch((err) => {
-                reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                this.errorHandlerRejectMechanism(reject, err);
             })
         });
     }

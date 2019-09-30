@@ -18,6 +18,7 @@ const SERVICE_URL = {
     'CREATE_NEW_MI': 'marketIntelligence/',
     'CREATE_NEW_USER':'user/',
     'SEARCH_MI': 'search/marketIntelligence/',
+    'SEARCH_LEAD': 'search/leads/',
     'GET_LEAD_STATS': 'statistics/lead?',
     'FORGOT_PASSWORD':'/forgotpassword'
 }
@@ -91,6 +92,11 @@ class ServiceClass {
 
     static async getUsers() {
         return await axiosInstance.get(SERVICE_URL['GET_USERS']);
+    }
+
+    static async searchLeadsWithFilters(filterPayload) {
+        return await axiosInstance.post(SERVICE_URL['SEARCH_LEAD'], filterPayload);
+        // return await axiosInstance.post(SERVICE_URL['SEARCH_MI'], params);
     }
 
     static async getMI() {

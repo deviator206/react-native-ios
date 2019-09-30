@@ -44,6 +44,23 @@ const appconstant = {
         INVESTMENT: 'INVESTMENT',
         NEWSITEM: 'NEWSITEM'
     },
+    LEAD_STATUS_DROP_DOWN:[
+        {
+            name: 'APPROVED',
+            code: 'APP'
+        },
+        {
+            name: 'REJECTED',
+            code: 'REJ'
+        },{
+            name: 'PENDING',
+            code: 'DRAFT'
+        },
+        {
+            name: 'NEED_MORE',
+            code: 'NMI'
+        }
+    ],
     MI_STATUS_DROP_DOWN: [
         {
             name: 'Open For Discussion',

@@ -14,6 +14,7 @@ import SpinnerComponent from '../common/spinnerComponent';
 import FlatListComponent from '../common/flatListComponent';
 import styleContent from './viewLeadStyle';
 import { default as LeadsFilterComponent } from './viewLeadFilterComponent';
+import { default as Utils } from '../common/Util';
 
 
 
@@ -39,6 +40,11 @@ class ViewLeadPage extends React.Component {
         this.onReferenceDataFetched = this.onReferenceDataFetched.bind(this);
         this.triggerFilterBasedSearch = this.triggerFilterBasedSearch.bind(this);
         this.triggerResetFilterBasedSearch = this.triggerResetFilterBasedSearch.bind(this);
+        this.validateTheFilter = this.validateTheFilter.bind(this);
+        this.prepareInputPayload = this.prepareInputPayload.bind(this);
+
+        this.onSearchButtonClicked = this.onSearchButtonClicked.bind(this);
+        this.onSearchTextChange = this.onSearchTextChange.bind(this);
     }
 
     getSpinnerComponentView() {
@@ -75,12 +81,171 @@ class ViewLeadPage extends React.Component {
 
         });
     }
+
+    onSearchTextChange(value) {
+        this.setState({
+            searchInput: value
+        })
+    }
+
+    onSearchButtonClicked() {
+        const { searchInput = '' } = this.state;
+        if (searchInput && searchInput !== '') {
+            const filterPayload = {
+                "searchText": searchInput
+            }
+            this.triggerFilterBasedSearch(filterPayload)
+        }
+    }
+
     onReferenceDataFetched(resp) {
         this.setState({
             referenceData: resp
         });
     }
+    validateTheFilter(inputFilterState) {
+        let isChanged = false;
+        const newFilterState = {};
+        const { filterState = {} } = this.state;
+        const { searchText, LEAD_STATUS_DROP_DOWN,
+            TENURE, COUNTRY, BU, SOURCE, INDUSTRY } = filterState;
+
+        if (inputFilterState.LEAD_STATUS_DROP_DOWN && LEAD_STATUS_DROP_DOWN !== inputFilterState.LEAD_STATUS_DROP_DOWN) {
+            isChanged = true;
+            newFilterState['LEAD_STATUS_DROP_DOWN'] = inputFilterState.LEAD_STATUS_DROP_DOWN
+        }
+        if (inputFilterState.searchText && searchText !== inputFilterState.searchText) {
+            isChanged = true;
+            newFilterState['searchText'] = inputFilterState.searchText;
+        }
+
+        if (inputFilterState.TENURE && TENURE !== inputFilterState.TENURE) {
+            isChanged = true;
+            newFilterState['TENURE'] = inputFilterState.TENURE;
+        }
+
+        if (inputFilterState.COUNTRY && COUNTRY !== inputFilterState.COUNTRY) {
+            isChanged = true;
+            newFilterState['COUNTRY'] = inputFilterState.COUNTRY;
+        }
+
+        if (inputFilterState.BU && BU !== inputFilterState.BU) {
+            isChanged = true;
+            newFilterState['BU'] = inputFilterState.BU;
+        }
+
+        if (inputFilterState.SOURCE && SOURCE !== inputFilterState.SOURCE) {
+            isChanged = true;
+            newFilterState['SOURCE'] = inputFilterState.SOURCE;
+        }
+        if (inputFilterState.INDUSTRY && INDUSTRY !== inputFilterState.INDUSTRY) {
+            isChanged = true;
+            newFilterState['INDUSTRY'] = inputFilterState.INDUSTRY;
+        }
+
+        return (isChanged) ? newFilterState : isChanged;
+    }
+
+    prepareInputPayload(filterState) {
+        const { searchText, LEAD_STATUS_DROP_DOWN,
+            TENURE, COUNTRY, BU, SOURCE, INDUSTRY } = filterState;
+
+        let filterPayload = {};
+
+        if (searchText) {
+            filterPayload = {
+                ...filterPayload,
+                searchText: searchText
+            };
+            filterPayload = Utils.ignoreAttributeFromPayload('searchText', filterPayload);
+        }
+
+        if (LEAD_STATUS_DROP_DOWN) {
+            filterPayload = {
+                ...filterPayload,
+                status: LEAD_STATUS_DROP_DOWN
+            }
+            filterPayload = Utils.ignoreAttributeFromPayload('status', filterPayload);
+        }
+
+        if (TENURE) {
+            filterPayload = {
+                ...filterPayload,
+                tenure: TENURE
+            }
+            filterPayload = Utils.ignoreAttributeFromPayload('tenure', filterPayload);
+        }
+
+
+
+        if (COUNTRY) {
+            filterPayload = {
+                ...filterPayload,
+                country: COUNTRY
+            }
+            filterPayload = Utils.ignoreAttributeFromPayload('country', filterPayload);
+        }
+
+        if (INDUSTRY) {
+            filterPayload = {
+                ...filterPayload,
+                industry: INDUSTRY
+            }
+            filterPayload = Utils.ignoreAttributeFromPayload('industry', filterPayload);
+        }
+
+
+        if (SOURCE) {
+            filterPayload = {
+                ...filterPayload,
+                source: SOURCE
+            }
+            filterPayload = Utils.ignoreAttributeFromPayload('source', filterPayload);
+        }
+
+        if (BU) {
+            filterPayload = {
+                ...filterPayload,
+                businessUnits: [BU]
+            }
+            filterPayload = Utils.ignoreAttributeFromPayloadForArray('businessUnits', filterPayload);
+        }
+
+        return filterPayload;
+    }
+
     triggerFilterBasedSearch(ipfilterState) {
+        const { filterState = {} } = this.state;
+        const validationResponse = this.validateTheFilter(ipfilterState);
+        if (typeof (validationResponse) === "object") {
+            // console
+            const updatedState = {
+                ...filterState,
+                ...validationResponse
+            }
+
+            // prepare input
+            const filterPayload = this.prepareInputPayload(updatedState);
+            if (Object.keys(filterPayload).length > 0) {
+                // invoke rest
+                this.leadApi.searchLeadsWithFilters(filterPayload).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError);
+                this.setState({
+                    filterVisible: false,
+                    spinner: true,
+                    filterState: {
+                        ...updatedState
+                    }
+                });
+            } else {
+                this.setState({
+                    filterVisible: false,
+                    filterState: {
+                        ...updatedState
+                    }
+                });
+            }
+        }
+
     }
 
     triggerResetFilterBasedSearch() {
@@ -95,7 +260,7 @@ class ViewLeadPage extends React.Component {
         this.setState({
             spinner: true
         });
-        this.refDataApi.fetchStructuredRefData({ params: "type=BU" }).then(this.onReferenceDataFetched);
+        this.refDataApi.fetchStructuredRefData({ params: "type=SOURCE,CURRENCY,TENURE,COUNTRY,INDUSTRY,BU" }).then(this.onReferenceDataFetched);
         this.leadApi.getLeads({ params: {} }).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError)
         // this.props.loadLeads({}).
     }
@@ -194,6 +359,7 @@ class ViewLeadPage extends React.Component {
     }
     render() {
         const { navigation } = this.props;
+        const { resultSet, referenceData = {} } = this.state;
 
         return (
             <Container>
@@ -213,8 +379,20 @@ class ViewLeadPage extends React.Component {
                                                 fontFamily: 'Montserrat-Regular',
                                                 color: "#616161"
                                             }}
+                                            onChangeText={(value) => {
+                                                this.onSearchTextChange(value);
+                                            }}
                                         />
-                                        <Icon name="search" style={styleContent.iconStyling} />
+                                        <Button transparent
+                                            onPress={() => {
+                                                this.onSearchButtonClicked();
+                                            }}
+                                        >
+                                            <Icon name="search"
+                                                style={[styleContent.iconStyling, commonStyle.searchIcon]}
+                                            />
+                                        </Button>
+
                                     </Item>
                                 </Col>
                                 <Col  >
@@ -238,8 +416,10 @@ class ViewLeadPage extends React.Component {
                         </Grid>
                     </View>
                 </Content>
-               
+
                 <LeadsFilterComponent
+                    savedState={this.state.filterState}
+                    referenceInfo={referenceData}
                     toggleHandler={this.filerBtnToggled}
                     filterVisible={this.state.filterVisible}
                     applyFilterHandler={this.triggerFilterBasedSearch}
