@@ -150,14 +150,15 @@ export default class LoginPage extends Component {
     }
 
     render() {
-        let logoImg = require('../images/ametek_logo@1X.png');
+       //  let logoImg = require('../images/ametek_logo@1X.png');
+       //  <Image source={logoImg} style={styleContent.logo} />
         return (
             <Container style={styleContent.container}>
                 <Content padder
                     contentContainerStyle={styleContent.mainContent}
                     style={styleContent.fullWidth}>
                     <View style={styleContent.logoWrapper}>
-                        <Image source={logoImg} style={styleContent.logo} />
+                       
                     </View>
                     <View style={styleContent.loginUpperContent}>
                         <View style={styleContent.loginUpper}>

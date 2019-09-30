@@ -523,6 +523,7 @@ class LeadDetailsPage extends React.Component {
                   <Row style={styleContent.marginTopStyling}>
                     <Col>
                       <CheckBoxComponent
+                        currentState={ASSIGN_REP}
                         checkBoxLabel={i18nMessages.lbl_assign_rep}
                         controlType={appConstant.UPDATE_LEAD.ASSIGN_REP}
                         updateToParent={this.onCheckBoxChanged}
@@ -535,6 +536,7 @@ class LeadDetailsPage extends React.Component {
                   <Row>
                     <Col>
                       <CheckBoxComponent
+                        currentState={MODIFY_BU}
                         checkBoxLabel={i18nMessages.lbl_modify_bu}
                         controlType={appConstant.UPDATE_LEAD.MODIFY_BU}
                         updateToParent={this.onCheckBoxChanged} />
@@ -546,6 +548,7 @@ class LeadDetailsPage extends React.Component {
                   <Row>
                     <Col>
                       <CheckBoxComponent
+                        currentState={NOTIFY_BU}
                         checkBoxLabel={i18nMessages.lbl_notify_bu}
                         controlType={appConstant.UPDATE_LEAD.NOTIFY_BU}
                         updateToParent={this.onCheckBoxChanged}
@@ -587,7 +590,7 @@ class LeadDetailsPage extends React.Component {
         unitList.push((
           <Row>
             <Col>
-              <Text style={styleContent.primaryText}> {Utils.getFormattedUnit(singleUnit,referenceData,appConstant.DROP_DOWN_TYPE.BU_NAME) } </Text>
+              <Text style={styleContent.primaryText}> {Utils.getFormattedUnit(singleUnit, referenceData, appConstant.DROP_DOWN_TYPE.BU_NAME)} </Text>
             </Col>
           </Row>
         ));
@@ -639,12 +642,12 @@ class LeadDetailsPage extends React.Component {
                   <Row>
                     <Col>
                       <Text style={styleContent.primaryText}> {
-                                  (
-                                   leadDetails.leadsSummaryRes && 
-                                   leadDetails.leadsSummaryRes.salesRep && 
-                                   leadDetails.leadsSummaryRes.salesRep.userDisplayName) ? 
-                                   leadDetails.leadsSummaryRes.salesRep.userDisplayName: i18nMessages.info_not_assigned
-                                   } </Text>
+                        (
+                          leadDetails.leadsSummaryRes &&
+                          leadDetails.leadsSummaryRes.salesRep &&
+                          leadDetails.leadsSummaryRes.salesRep.userDisplayName) ?
+                          leadDetails.leadsSummaryRes.salesRep.userDisplayName : i18nMessages.info_not_assigned
+                      } </Text>
                     </Col>
 
                   </Row>
@@ -664,7 +667,7 @@ class LeadDetailsPage extends React.Component {
 
   getContactInfo() {
     // const { leadDetails } = this.state;
-    const leadDetails = { "id": 1, "source": "Marketing", "custName": "shicv", "description": "dingDong", "leadContact": {  "email": "rkumar@rksolustions.com", "phoneNumber": "9896777716", "country": "India", "state": "MH" }, "leadsSummaryRes": { "businessUnits": ["marketing", "sales"], "salesRep": "shivanshu", "industry": "it" }, "deleted": false, "creatorId": "123", "creationDate": "2019-06-04" };
+    const leadDetails = { "id": 1, "source": "Marketing", "custName": "shicv", "description": "dingDong", "leadContact": { "email": "rkumar@rksolustions.com", "phoneNumber": "9896777716", "country": "India", "state": "MH" }, "leadsSummaryRes": { "businessUnits": ["marketing", "sales"], "salesRep": "shivanshu", "industry": "it" }, "deleted": false, "creatorId": "123", "creationDate": "2019-06-04" };
     let returnedView;
     if (leadDetails && leadDetails.id && leadDetails.leadContact) {
       returnedView = (
@@ -678,7 +681,7 @@ class LeadDetailsPage extends React.Component {
                   </Row>
                   <Row>
                     <Col style={styleContent.colValue}>
-                      <Text style={styleContent.primaryText}> {(leadDetails.leadContact.name &&  leadDetails.leadContact.name !== '')? leadDetails.leadContact.name : i18nMessages.info_not_sure} </Text>
+                      <Text style={styleContent.primaryText}> {(leadDetails.leadContact.name && leadDetails.leadContact.name !== '') ? leadDetails.leadContact.name : i18nMessages.info_not_sure} </Text>
                       <Text style={styleContent.secondaryTextDesignation}>  {leadDetails.leadContact.designation} </Text>
                     </Col>
 
@@ -712,7 +715,7 @@ class LeadDetailsPage extends React.Component {
 
   }
   getCustomerInfo() {
-    const { leadDetails , referenceData} = this.state;
+    const { leadDetails, referenceData } = this.state;
     let returnedView;
     if (leadDetails && leadDetails.id) {
       returnedView = (
@@ -728,7 +731,7 @@ class LeadDetailsPage extends React.Component {
                     </Col>
                     <Col>
                       <Text style={styleContent.secondaryLabel} > SOURCE: </Text>
-                      <Text style={styleContent.requirement} > {leadDetails.source} </Text>
+                      <Text style={styleContent.requirement} > {referenceData ? Utils.getFormattedUnit(leadDetails.source, referenceData, appConstant.DROP_DOWN_TYPE.SOURCE) : leadDetails.source} </Text>
                     </Col>
 
                   </Row>
@@ -740,8 +743,8 @@ class LeadDetailsPage extends React.Component {
                   </Row>
 
                   <Row>
-                    <Col style={{width: "25%" }}><Text style={styleContent.secondaryLabel} > TENURE : </Text></Col>
-                    <Col style={{width: "75%" }}><Text style={styleContent.requirement} > {Utils.getFormattedUnit(leadDetails.tenure,referenceData,appConstant.DROP_DOWN_TYPE.TENURE)} </Text></Col>
+                    <Col style={{ width: "25%" }}><Text style={styleContent.secondaryLabel} > TENURE : </Text></Col>
+                    <Col style={{ width: "75%" }}><Text style={styleContent.requirement} > {referenceData ? Utils.getFormattedUnit(leadDetails.tenure, referenceData, appConstant.DROP_DOWN_TYPE.TENURE) : leadDetails.tenure} </Text></Col>
                   </Row>
 
                 </Grid>
@@ -811,7 +814,7 @@ function mapDispatchToProps(dispatch) {
     },
     loadRefData: (inputParams) => {
       return refDataApi.fetchRefData({
-        params: (inputParams) ? inputParams : "type=CURRENCY,BU,TENURE"
+        params: (inputParams) ? inputParams : "type=CURRENCY,BU,TENURE,SOURCE"
       }).then(result => {
         const refInfo = {};
         if (result && result.data) {
