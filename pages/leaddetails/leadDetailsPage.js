@@ -1,6 +1,7 @@
 import { Button, Card, CardItem, Col, Container, Content, Footer, Grid, Input, Item, Row, Text, Textarea, View } from 'native-base';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {default as MatIcon} from 'react-native-vector-icons/MaterialIcons';
 import { default as MaterialIcon } from 'react-native-vector-icons/MaterialIcons';
 import { default as FeatherIcon } from 'react-native-vector-icons/SimpleLineIcons';
 import { connect } from 'react-redux';
@@ -18,6 +19,7 @@ import ModalComponent from '../common/modalComponent';
 import SpinnerComponent from '../common/spinnerComponent';
 import styleContent from './leadDetailsPageStyle';
 import { default as Utils } from '../common/Util';
+import BUListComponent from '../addlead/BUListComponent';
 
 
 const leadApi = new LeadApi({ state: {} });
@@ -67,6 +69,11 @@ class LeadDetailsPage extends React.Component {
     this.onResponseUpdatedLead = this.onResponseUpdatedLead.bind(this);
     this.onErrorResponseUpdatedLead = this.onErrorResponseUpdatedLead.bind(this);
     this.getStatusCircle = this.getStatusCircle.bind(this);
+
+    this.getUnitAddedList = this.getUnitAddedList.bind(this);
+    this.onBuSelectionConfirmed = this.onBuSelectionConfirmed.bind(this);
+    this.updateBuRmoval = this.updateBuRmoval.bind(this);
+
   }
 
   onResponseUpdatedLead() {
@@ -82,6 +89,28 @@ class LeadDetailsPage extends React.Component {
     });
   }
 
+
+  onBuSelectionConfirmed() {
+    const { BU, selectedBuList = [] } = this.state;
+    if (BU && selectedBuList.indexOf(BU) === -1) {
+      selectedBuList.push(BU)
+    }
+    this.setState({
+      selectedBuList: selectedBuList
+    });
+  }
+
+  updateBuRmoval(value) {
+    const { selectedBuList = [] } = this.state;
+    const indexOfElement = selectedBuList.indexOf(value);
+    if (indexOfElement !== -1) {
+      selectedBuList.splice(indexOfElement, 1)
+    }
+    this.setState({
+      selectedBuList: selectedBuList
+    });
+
+  }
 
 
 
@@ -104,10 +133,18 @@ class LeadDetailsPage extends React.Component {
 
     let tempSummaryRes = {};
     if (MODIFY_BU) {
+      let finalBUList = [...selectedBuList];
+      if (leadDetails && leadDetails.leadsSummaryRes && leadDetails.leadsSummaryRes.businessUnits && leadDetails.leadsSummaryRes.businessUnits.length > 0) {
+        finalBUList = [...finalBUList, ...leadDetails.leadsSummaryRes.businessUnits];
+      } 
       tempSummaryRes = {
-        "businessUnits": selectedBuList
+        "businessUnits": finalBUList
       }
+
+      
     }
+    // add the default BU
+    
 
     if (NOTIFY_BU) {
       tempSummaryRes = {
@@ -260,6 +297,14 @@ class LeadDetailsPage extends React.Component {
 
   }
 
+  getUnitAddedList() {
+    const { selectedBuList = [], referenceData = {} } = this.state;
+    let dataSource = [];
+    dataSource = (referenceData && referenceData[appConstant.DROP_DOWN_TYPE.BU_NAME]) ? referenceData[appConstant.DROP_DOWN_TYPE.BU_NAME] : [];
+    return (
+      <BUListComponent businessUnitList={selectedBuList} dataSource={dataSource} onBuRemoval={this.updateBuRmoval} />
+    )
+  }
 
   getDropdownFor(type) {
     const { referenceData = {}, leadDetails } = this.state;
@@ -541,10 +586,58 @@ class LeadDetailsPage extends React.Component {
                         controlType={appConstant.UPDATE_LEAD.MODIFY_BU}
                         updateToParent={this.onCheckBoxChanged} />
                     </Col>
-                    <Col style={styleContent.marginTopStyling}>
-                      {MODIFY_BU && this.getDropdownFor(appConstant.DROP_DOWN_TYPE.BU_NAME)}
-                    </Col>
                   </Row>
+
+                  {MODIFY_BU && (
+                    <React.Fragment>
+                      <Row>
+                        <Col style={styleContent.marginTopStyling}>
+                          {MODIFY_BU && this.getDropdownFor(appConstant.DROP_DOWN_TYPE.BU_NAME)}
+
+                        </Col>
+                        <Col
+                        >
+                          <Button
+                            iconLeft
+                            style={{
+                              width: "80%",
+                              backgroundColor: "#EC2227",
+                              marginTop: "25%",
+                              marginLeft: "10%",
+                              flexDirection: "row",
+                              alignItems: "flex-start",
+                              paddingTop: 10
+                            }}
+                            onPress={this.onBuSelectionConfirmed}
+                          >
+                            <MatIcon name="add" style={{
+                              marginLeft: "15%",
+                              fontSize: 24,
+                              color: "white"
+                            }} />
+                            <Text
+                              style={
+                                {
+                                  marginRight: "30%",
+                                  paddingLeft: "0%",
+                                  fontSize: 14,
+                                  fontFamily: 'Montserrat-Medium',
+                                  paddingTop: 3
+                                }
+                              }
+                            > {i18nMessages.lbl_add_bu}</Text>
+                          </Button>
+
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          {this.getUnitAddedList()}
+                        </Col>
+                      </Row>
+                    </React.Fragment>
+                  )}
+
                   <Row>
                     <Col>
                       <CheckBoxComponent
