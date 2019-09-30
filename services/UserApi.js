@@ -1,33 +1,33 @@
 import ServiceClass from "./Services";
+import BaseApi from "./BaseApi";
 
-class UserApi {
+class UserApi extends BaseApi {
     constructor() {
+        super();
     }
 
     createUser(params) {
+        const that = this;
         return new Promise(function (resolve, reject) {
             ServiceClass.createNewUser(params).then((resp) => {
-                if (resp && resp.data) {
-                    resolve({"status":"YES"})
-                } else {
-                    reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
-                }
+                resolve({"status":"YES"});
             }).catch((err) => {
-                reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                that.errorHandlerRejectMechanism(reject, err);
             })
         }); 
     }
 
     getUserList() {
+        const that = this;
         return new Promise(function (resolve, reject) {
             ServiceClass.getUsers().then((resp) => {
                 if (resp && resp.data) {
                     resolve(resp.data)
                 } else {
-                    reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                    that.invalidSuccessRejectResponse(reject,resp);
                 }
             }).catch((err) => {
-                reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
+                that.errorHandlerRejectMechanism(reject, err);
             })
         }); 
     }
