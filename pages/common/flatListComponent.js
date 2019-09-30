@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import styleContent from './commonStyling';
 import { default as appConstant } from './consts';
 import { default as Utils } from './Util';
+import i18nMessages from './i18n';
 
 export default class FlatListComponent extends React.Component {
     constructor(props) {
@@ -114,7 +115,7 @@ export default class FlatListComponent extends React.Component {
     }
 
     gridViewBasedOnType(item) {
-        const { getStatusClass, getStatusCircle, getLeadContact, type = 'lead' } = this.props;
+        const { getStatusClass, referenceInfo, getStatusCircle, getLeadContact, type = 'lead' } = this.props;
         if (type == 'lead') {
             return (
                 <Grid>
@@ -160,7 +161,7 @@ export default class FlatListComponent extends React.Component {
                         </Col>
                         <Col style={styleContent.list_colValue} >
                             <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
-                            <Text style={styleContent.list_cardViewPrimaryValue} > {(item.leadsSummaryRes && item.leadsSummaryRes.salesRep && item.leadsSummaryRes.salesRep.userDisplayName) ? item.leadsSummaryRes.salesRep.userDisplayName : ''}  </Text>
+                            <Text style={styleContent.list_cardViewPrimaryValue} > {(item.leadsSummaryRes && item.leadsSummaryRes.salesRep && item.leadsSummaryRes.salesRep.userDisplayName) ? item.leadsSummaryRes.salesRep.userDisplayName : i18nMessages.info_not_assigned}  </Text>
                         </Col>
                     </Row>
                     <Row>
@@ -170,7 +171,7 @@ export default class FlatListComponent extends React.Component {
                         </Col>
                         <Col style={styleContent.list_colValue} >
                             <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
-                            <Text style={styleContent.list_cardViewPrimaryValue} > {item.leadsSummaryRes && item.leadsSummaryRes.businessUnits && item.leadsSummaryRes.businessUnits.length > 0 && item.leadsSummaryRes.businessUnits[0]}  </Text>
+                            <Text style={styleContent.list_cardViewPrimaryValue} > {item.leadsSummaryRes && item.leadsSummaryRes.businessUnits && item.leadsSummaryRes.businessUnits.length > 0 && Utils.getFormattedUnit(item.leadsSummaryRes.businessUnits[0],referenceInfo,appConstant.DROP_DOWN_TYPE.BU_NAME)}  </Text>
                         </Col>
 
                     </Row>
@@ -181,11 +182,17 @@ export default class FlatListComponent extends React.Component {
                         </Col>
                         <Col style={styleContent.list_colValue} >
                             <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
-                            <Text style={styleContent.list_cardViewPrimaryValue} > {item.updateDate}  </Text>
+                            <Text style={styleContent.list_cardViewPrimaryValue} > {Utils.getFormattedDate(new Date(item.updateDate))} </Text>
                         </Col>
 
                     </Row>
-                    <Row>
+
+                    
+                </Grid>
+            )
+
+            /**
+             * <Row>
                         <Col style={styleContent.list_colLabelOnly} >
                             <Text style={styleContent.list_cardViewPrimaryLabel}  > Inactive Days </Text>
                         </Col>
@@ -194,8 +201,7 @@ export default class FlatListComponent extends React.Component {
                             <Text style={styleContent.list_cardViewPrimaryValue} > {item.inactiveDuration}  </Text>
                         </Col>
                     </Row>
-                </Grid>
-            )
+             */
         } else {
             // MI 
            /*
@@ -295,7 +301,7 @@ export default class FlatListComponent extends React.Component {
 
 
     render() {
-        const { resultSet = [], onSingleItemCliced, getStatusClass, getStatusCircle, getLeadContact } = this.props;
+        const { resultSet = [], onSingleItemCliced} = this.props;
         return (
             <FlatList
                 data={resultSet}

@@ -44,7 +44,9 @@ const i18nMessages = {
     "lbl_employee_email":"Employee Email Id",
     "lbl_employee_full_name":"Employee Full Name",
     "lbl_employee_password":"Enter Password",
-    "lbl_create_user":"Create App User"
+    "lbl_create_user":"Create App User",
+    "info_not_sure":"Not Sure",
+    "info_not_assigned":"Not Assigned"
 
 }
 

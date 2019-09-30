@@ -11,6 +11,17 @@ const utilities = {
         }
 
         return newDate.getUTCFullYear()+"-"+month+"-"+day;
+    },
+    getFormattedUnit:(currentUnit, referenceInfo, type)=>{
+        let displayUnit = currentUnit;
+        if(referenceInfo && referenceInfo[type] && referenceInfo[type].length) {
+            referenceInfo[type].forEach(singleBU => {
+                if(currentUnit === singleBU.code) {
+                    displayUnit = singleBU.name
+                }
+            });
+        }
+        return displayUnit; 
     }
 }
 export default utilities

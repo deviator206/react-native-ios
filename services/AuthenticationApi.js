@@ -11,7 +11,7 @@ class AuthenticationApi  extends BaseApi {
                 ServiceClass.updateHeaderInformation(resp.data);
                 successHandler(resp.data);
             } else {
-                alert("VALIDATE THE RESPONSE")
+                this.invalidSuccessResponse(resp);
             }
         }).catch((err) => {
             this.errorHandlerMechanism(errorHandler, err);
@@ -25,7 +25,7 @@ class AuthenticationApi  extends BaseApi {
                 ServiceClass.updateHeaderInformation(resp.data);
                 successHandler(resp.data);
             } else {
-                alert("VALIDATE THE RESPONSE")
+                this.invalidSuccessResponse(resp);
             }
         }).catch((err) => {
           this.errorHandlerMechanism(errorHandler, err);

@@ -3,8 +3,8 @@ import React from 'react';
 import { Alert, FlatList, Modal, TouchableHighlight, View } from 'react-native';
 import { default as EntypoIcon } from 'react-native-vector-icons/Entypo';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
 import LeadApi from '../../services/LeadApi';
+import RefDataApi from '../../services/RefDataApi';
 import { default as commonStyle } from '../common/commonStyling';
 import { default as appConstant } from '../common/consts';
 import FooterComponent from '../common/footerComponent';
@@ -14,7 +14,7 @@ import SpinnerComponent from '../common/spinnerComponent';
 import FlatListComponent from '../common/flatListComponent';
 import styleContent from './viewLeadStyle';
 
-const leadApi = new LeadApi({ state: {} });
+
 
 class ViewLeadPage extends React.Component {
     constructor(props) {
@@ -23,6 +23,8 @@ class ViewLeadPage extends React.Component {
             filterVisible: false,
             spinner: false,
         };
+        this.leadApi = new LeadApi({ state: {} });
+        this.refDataApi = new RefDataApi({ state: {} });
         this.willFocusSubscription = null;
         this.filerBtnToggled = this.filerBtnToggled.bind(this);
         this.getStatusClass = this.getStatusClass.bind(this);
@@ -33,6 +35,7 @@ class ViewLeadPage extends React.Component {
         this.onLeadResponseError = this.onLeadResponseError.bind(this);
         this.getStatusCircle = this.getStatusCircle.bind(this);
         this.getLeadContact = this.getLeadContact.bind(this);
+        this.onReferenceDataFetched = this.onReferenceDataFetched.bind(this);
     }
 
     getSpinnerComponentView() {
@@ -56,146 +59,32 @@ class ViewLeadPage extends React.Component {
     }
 
     onLeadResponseSuccess(resp) {
-        const localResult = [
-            {
-              "attachment": "string",
-              "creationDate": "string",
-              "creator": {
-                "businessUnit": "string",
-                "email": "string",
-                "enabled": true,
-                "roles": [
-                  "string"
-                ],
-                "userDisplayName": "string",
-                "userId": 0,
-                "userName": "string"
-              },
-              "creatorId": 0,
-              "custName": "string",
-              "deleted": true,
-              "description": "string",
-              "id": 0,
-              "inactiveDuration": 0,
-              "leadContact": {
-                "country": "string",
-                "designation": "string",
-                "email": "string",
-                "id": 0,
-                "name": "string",
-                "phoneNumber": "string",
-                "state": "string"
-              },
-              "leadsSummaryRes": {
-                "budget": 0,
-                "businessUnits": [
-                  "string"
-                ],
-                "currency": "string",
-                "industry": "string",
-                "rootLeadId": 0,
-                "salesRep": {
-                  "businessUnit": "string",
-                  "email": "string",
-                  "enabled": true,
-                  "roles": [
-                    "string"
-                  ],
-                  "userDisplayName": "string",
-                  "userId": 0,
-                  "userName": "string"
-                },
-                "salesRepId": 0
-              },
-              "message": "string",
-              "source": "string",
-              "sourceInfo": "string",
-              "status": "string",
-              "tenure": "string",
-              "updateDate": "string",
-              "updatorId": 0
-            }
-          ];
         this.setState({
             spinner: false,
-            resultSet:localResult
+            resultSet: resp
         });
     }
 
     onLeadResponseError(error) {
-        console.log(error);
-        const localResult = [
-            {
-              "attachment": "string",
-              "creationDate": "string",
-              "creator": {
-                "businessUnit": "string",
-                "email": "string",
-                "enabled": true,
-                "roles": [
-                  "string"
-                ],
-                "userDisplayName": "string",
-                "userId": 0,
-                "userName": "string"
-              },
-              "creatorId": 0,
-              "custName": "string",
-              "deleted": true,
-              "description": "string",
-              "id": 0,
-              "inactiveDuration": 0,
-              "leadContact": {
-                "country": "string",
-                "designation": "string",
-                "email": "string",
-                "id": 0,
-                "name": "string",
-                "phoneNumber": "string",
-                "state": "string"
-              },
-              "leadsSummaryRes": {
-                "budget": 0,
-                "businessUnits": [
-                  "string"
-                ],
-                "currency": "string",
-                "industry": "string",
-                "rootLeadId": 0,
-                "salesRep": {
-                  "businessUnit": "string",
-                  "email": "string",
-                  "enabled": true,
-                  "roles": [
-                    "string"
-                  ],
-                  "userDisplayName": "string",
-                  "userId": 0,
-                  "userName": "string"
-                },
-                "salesRepId": 0
-              },
-              "message": "string",
-              "source": "string",
-              "sourceInfo": "string",
-              "status": "string",
-              "tenure": "string",
-              "updateDate": "string",
-              "updatorId": 0
-            }
-          ];
-
+        // console.log(error);
         this.setState({
-            spinner: false,
-            resultSet:localResult
+            spinner: false
+
         });
+    }
+    onReferenceDataFetched(resp) {
+        this.setState({
+            referenceData: resp
+        });    
     }
 
     loadAllLeads() {
         this.setState({
             spinner: true
         });
-        this.props.loadLeads({}).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError)
+        this.refDataApi.fetchStructuredRefData({params: "type=BU"}).then(this.onReferenceDataFetched);
+        this.leadApi.getLeads({ params: {} }).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError)
+        // this.props.loadLeads({}).
     }
     componentDidMount() {
         this.setState({
@@ -238,48 +127,55 @@ class ViewLeadPage extends React.Component {
     }
 
     getLeadContact(item) {
-        if(item.leadContact && item.leadContact.name)
-        {
-            return  (
+        if (item.leadContact && item.leadContact.name) {
+            return (
                 <Col style={styleContent.colValue} >
-            <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-            <Text style={styleContent.cardViewPrimaryValue} >{item.leadContact && item.leadContact.name}  </Text>
-        </Col>
+                    <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+                    <Text style={styleContent.cardViewPrimaryValue} >{item.leadContact && item.leadContact.name}  </Text>
+                </Col>
             )
-        } else if(item.leadContact && item.leadContact.email) {
-            return  (
+        } else if (item.leadContact && item.leadContact.email) {
+            return (
                 <Col style={styleContent.colValue} >
-            <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-            <Text style={styleContent.cardViewPrimaryValue} >{item.leadContact && item.leadContact.email}  </Text>
-        </Col>
+                    <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+                    <Text style={styleContent.cardViewPrimaryValue} >{item.leadContact && item.leadContact.email}  </Text>
+                </Col>
             )
-        } else if(item.leadContact && item.leadContact.phoneNumber) {
-            return  (
+        } else if (item.leadContact && item.leadContact.phoneNumber) {
+            return (
                 <Col style={styleContent.colValue} >
-            <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
-            <Text style={styleContent.cardViewPrimaryValue} >{item.leadContact && item.leadContact.phoneNumber}  </Text>
-        </Col>
+                    <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+                    <Text style={styleContent.cardViewPrimaryValue} >{item.leadContact && item.leadContact.phoneNumber}  </Text>
+                </Col>
             )
-        } 
-                                               
+        } else {
+            return (
+                <Col style={styleContent.colValue} >
+                    <Text style={styleContent.cardViewPrimaryValue} >:   </Text>
+                    <Text style={styleContent.cardViewPrimaryValue} >{i18nMessages.info_not_sure} </Text>
+                </Col>
+            )
+        }
+
     }
 
 
-    getViewLeads () {
+    getViewLeads() {
 
         //const { resultSet, onSingleItemCliced , getStatusCircle, getLeadContact} = this.props;
-        const { resultSet } = this.state;
+        const { resultSet, referenceData ={}} = this.state;
         return (
-            <FlatListComponent 
-            resultSet = {resultSet}
-            onSingleItemCliced = {(item)=>{
-                this.props.navigation.navigate("leaddetails", {
-                    leadId: item.id
-                });
-            }}
-            getStatusClass={this.getStatusClass}
-            getStatusCircle={this.getStatusCircle}
-            getLeadContact={this.getLeadContact}
+            <FlatListComponent
+                resultSet={resultSet}
+                onSingleItemCliced={(item) => {
+                    this.props.navigation.navigate("leaddetails", {
+                        leadId: item.id
+                    });
+                }}
+                referenceInfo={referenceData}
+                getStatusClass={this.getStatusClass}
+                getStatusCircle={this.getStatusCircle}
+                getLeadContact={this.getLeadContact}
             />
         )
     }
@@ -327,7 +223,7 @@ class ViewLeadPage extends React.Component {
                         <Grid style={styleContent.gridWrapper} >
                             {this.getViewLeads()}
                         </Grid>
-                    </View>    
+                    </View>
                 </Content>
                 <FooterComponent  {...this.props} disableView={true} />
 
@@ -433,34 +329,4 @@ class ViewLeadPage extends React.Component {
         )
     }
 }
-
-
-// This function provides a means of sending actions so that data in the Redux store
-// can be modified. In this example, calling this.props.addToCounter() will now dispatch
-// (send) an action so that the reducer can update the Redux state.
-function mapDispatchToProps(dispatch) {
-    return {
-        loadLeads: (inputParams) => {
-            return leadApi.getLeads({
-                params: inputParams
-            }).then((resp) => {
-                return resp;
-            })
-
-        },
-        dispatchAction: (param) => {
-            dispatch(param);
-        }
-    }
-}
-
-// This function provides access to data in the Redux state in the React component
-// In this example, the value of this.props.count will now always have the same value
-// As the count value in the Redux state
-function mapStateToProps(state) {
-    return {
-        count: state.count
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ViewLeadPage)
+export default ViewLeadPage;
