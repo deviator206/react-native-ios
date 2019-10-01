@@ -14,30 +14,30 @@ export default class CheckBoxComponent extends React.Component {
     }
     static getDerivedStateFromProps(props, state) {
         if (props.currentState !== state.checkedState) {
-          return {
-            checkedState: props.currentState,
-          };
+            return {
+                checkedState: props.currentState,
+            };
         }
-    
+
         // Return null if the state hasn't changed
         return null;
-      }
+    }
 
     componentDidMount() {
-        const {  updateToParent, controlType , currentState = false} = this.props;
+        const { updateToParent, controlType, currentState = false } = this.props;
         console.log("currentState::::", currentState);
         this.setState({
             checkedState: currentState
         });
         if (updateToParent) {
-            updateToParent({ type: controlType, value:false })
+            updateToParent({ type: controlType, value: false })
         }
     }
 
-  
+
     onSelectionChanged() {
-        const { updateToParent,controlType } = this.props;
-        const {checkedState} = this.state;
+        const { updateToParent, controlType } = this.props;
+        const { checkedState } = this.state;
         this.setState({
             checkedState: !checkedState
         });
@@ -49,29 +49,34 @@ export default class CheckBoxComponent extends React.Component {
 
     getView() {
         let returnedView;
-        const { checkedState = false} = this.state;
-        const {  checkBoxLabel = "DDE" , onCheckBoxChanged = this.onSelectionChanged, currentState } = this.props;
-        
+        const { checkedState = false } = this.state;
+        const { checkBoxLabel = "NO LABEL", onCheckBoxChanged = this.onSelectionChanged, currentState,
+            listItemStyle = {
+                padding: "0%",
+                marginLeft: "0%",
+                borderWidth: 0,
+                borderColor: "#FFFFFF"
+            },
+            checkBoxStyle = {
+                justifyContent: "space-around",
+                color:"white"
+            },
+            colorProp = "black"
+        } = this.props;
+
         returnedView = (
             <ListItem
-                style={{
-                    padding: "0%",
-                    marginLeft: "0%",
-                    borderWidth: 0,
-                    borderColor:"#FFFFFF"
-                }}
+                style={listItemStyle}
                 button
                 onPress={() => {
                     onCheckBoxChanged()
                 }}
             >
-                <CheckBox 
-                    checked={checkedState} 
-                    color="black" 
-                    style={{
-                    justifyContent:"space-around"
-                }}
-                 />
+                <CheckBox
+                    checked={checkedState}
+                    color={colorProp}
+                    style={checkBoxStyle}
+                />
                 <Body>
                     <Text style={commonStyle.darkLabelStyling} >{checkBoxLabel} </Text>
                 </Body>

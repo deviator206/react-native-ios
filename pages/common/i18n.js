@@ -46,7 +46,9 @@ const i18nMessages = {
     "lbl_employee_password":"Enter Password",
     "lbl_create_user":"Create App User",
     "info_not_sure":"Not Sure",
-    "info_not_assigned":"Not Assigned"
+    "info_not_assigned":"Not Assigned",
+
+    "lbl_self_generated":"Self Generated"
 
 }
 

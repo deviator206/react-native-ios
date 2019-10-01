@@ -13,6 +13,8 @@ import i18nMessages from '../common/i18n';
 import SpinnerComponent from '../common/spinnerComponent';
 import { default as Utils } from '../common/Util';
 import styleContent from './dashboardStyle';
+import { default as RBAPolicy } from '../common/rbaPolicy';
+import CheckBoxComponent from '../common/checkBoxComponent';
 
 const refDataApi = new RefDataApi({ state: {} });
 const userApi = new UserApi({ state: {} });
@@ -20,16 +22,16 @@ const userApi = new UserApi({ state: {} });
 const leadApi = new LeadApi({ state: {} });
 
 const formatDate = (date, type) => {
-    if(type === 'START_DATE') {
-        let month = date.getMonth()+1;
-        if(month > 1) {
+    if (type === 'START_DATE') {
+        let month = date.getMonth() + 1;
+        if (month > 1) {
             month = month - 1
         }
         return `${date.getFullYear()}/${date.getDate()}/${month}`;
     }
-    return `${date.getFullYear() }/${date.getDate()}/${date.getMonth()+1}`;
-    
-  };
+    return `${date.getFullYear()}/${date.getDate()}/${date.getMonth() + 1}`;
+
+};
 
 
 
@@ -56,24 +58,32 @@ class DashboardPage extends React.Component {
         this.onDateSelected = this.onDateSelected.bind(this);
         this.initiateRefineResult = this.initiateRefineResult.bind(this);
         this.onStatsLoaded = this.onStatsLoaded.bind(this);
+
+        this.getSelfModeDropdown = this.getSelfModeDropdown.bind(this);
+        this.getSalesRepSelectionDropdown = this.getSalesRepSelectionDropdown.bind(this);
+        this.getAllToAllDropdown = this.getAllToAllDropdown.bind(this);
+        this.getGeneralBUModelDropdown = this.getGeneralBUModelDropdown.bind(this);
+
     }
 
-    onStatsLoaded (resp) {
+    onStatsLoaded(resp) {
         console.log(resp);
-        const {leadStatusCountMap} = resp;
-        const {APP = 0, DRAFT =0 ,NMI = 0 ,REJ = 0 } = leadStatusCountMap;
+        const { leadStatusCountMap } = resp;
+        const { APP = 0, DRAFT = 0, NMI = 0, REJ = 0 } = leadStatusCountMap;
         const totalLeads = APP + DRAFT + NMI + REJ;
         const pending = DRAFT + NMI;
         this.setState({
             spinner: false,
             totalLeads,
-            assignedLeads : 0,
-            pendingLeads : pending,
-            approvedLeads : APP,
-            rejectedLeads : REJ
+            assignedLeads: 0,
+            pendingLeads: pending,
+            approvedLeads: APP,
+            rejectedLeads: REJ
         });
 
     }
+
+
 
     initiateRefineResult() {
         const {
@@ -85,17 +95,17 @@ class DashboardPage extends React.Component {
         } = this.state;
 
         let payload = {};
-        if(ORIGINATOR_BU && ORIGINATOR_BU !== '' &&  TARGET_BU && TARGET_BU !== '') {
+        if (ORIGINATOR_BU && ORIGINATOR_BU !== '' && TARGET_BU && TARGET_BU !== '') {
             payload["fromBu"] = ORIGINATOR_BU;
             payload["toBu"] = TARGET_BU;
         }
 
-        if(START_DATE && START_DATE !== '' &&  END_DATE && END_DATE !== '') {
+        if (START_DATE && START_DATE !== '' && END_DATE && END_DATE !== '') {
             payload["startDate"] = Utils.getFormattedDate(START_DATE);
             payload["endDate"] = Utils.getFormattedDate(END_DATE);
         }
 
-        if(SALES_REP && SALES_REP !== '' && SALES_REP !== '#_SELECT_REP_#') {
+        if (SALES_REP && SALES_REP !== '' && SALES_REP !== '#_SELECT_REP_#') {
             payload["salesRepId"] = SALES_REP;
         }
         //const { userInfo} = window.userInformation
@@ -104,7 +114,7 @@ class DashboardPage extends React.Component {
         this.setState({
             spinner: true
         });
-        this.props.loadLeadStats({payload,queryParams}).then(this.onStatsLoaded).catch(this.onResponseError)
+        this.props.loadLeadStats({ payload, queryParams }).then(this.onStatsLoaded).catch(this.onResponseError)
     }
 
     getSpinnerComponentView() {
@@ -124,7 +134,7 @@ class DashboardPage extends React.Component {
 
     onResponseFromReferenceData(resp) {
         let refReference = resp;
-        if(refReference[appConstant.DROP_DOWN_TYPE.BU_NAME]) {
+        if (refReference[appConstant.DROP_DOWN_TYPE.BU_NAME]) {
             let buReferenced = refReference[appConstant.DROP_DOWN_TYPE.BU_NAME];
             buReferenced.unshift({
                 "code": "#_ALL_#",
@@ -132,7 +142,7 @@ class DashboardPage extends React.Component {
             });
             refReference[appConstant.DROP_DOWN_TYPE.BU_NAME] = buReferenced;
         }
-        
+
         this.setState({
             referenceData: refReference
         });
@@ -199,6 +209,12 @@ class DashboardPage extends React.Component {
                 showAttributeVal = 'userDisplayName';
                 returnAttributeVal = 'userId';
                 break;
+            case 'GENERAL_BU_MODE':
+                dataSource = (appConstant.GENERAL_BU_MODE) ? appConstant.GENERAL_BU_MODE : [];
+                break;
+            case 'SELF_MODE':
+                dataSource = (appConstant.SELF_MODE) ? appConstant.SELF_MODE : [];
+                break;
             case 'ORIGINATOR_BU':
             case 'TARGET_BU':
                 dataSource = (referenceData && referenceData[appConstant.DROP_DOWN_TYPE.BU_NAME]) ? referenceData[appConstant.DROP_DOWN_TYPE.BU_NAME] : [];
@@ -246,6 +262,78 @@ class DashboardPage extends React.Component {
         const { navigation } = this.props;
         return (<HeaderComponent navigation={navigation} title="Dashboard" hamburger={true} sideMenuClickHandler={this.sideMenuClicked} />);
     }
+    getGeneralBUModelDropdown() {
+        if (RBAPolicy.getPolicyVisibility("general_bu_view_drop_down")) {
+            return (
+                <Row style={{
+                    marginTop: "5%",
+                    paddingHorizontal: "3%"
+                }}>
+                    <Col style={{
+                        marginRight: "5%"
+                    }}>
+                        <Text note style={styleContent.labelStyling}  > Lead Origin </Text>
+                        {this.getDropdownFor('GENERAL_BU_MODE')}
+                    </Col>
+                </Row>
+            );
+        }
+    }
+    getSelfModeDropdown() {
+        const { SELF_GENERATED_MODE = false } = this.state;
+        if (RBAPolicy.getPolicyVisibility("self_generated_checkbox")) {
+            return (
+                <Row style={{
+                    marginTop: "5%",
+                    paddingHorizontal: "3%"
+                }}>
+                    <Col style={{
+                        marginRight: "5%"
+                    }}>
+                        <Text note style={styleContent.labelStyling}  > Lead Origin </Text>
+                        {this.getDropdownFor('SELF_MODE')}
+                    </Col>
+                </Row>
+            );
+        }
+    }
+    getSalesRepSelectionDropdown() {
+        if (RBAPolicy.getPolicyVisibility("sales_rep_selection")) {
+            return (
+                <Row style={{
+                    marginTop: "5%",
+                    paddingHorizontal: "3%"
+                }}>
+                    <Col>
+                        <Text note style={styleContent.labelStyling}  > Representative</Text>
+                        {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.SALES_REP)}
+                    </Col>
+                </Row>
+            );
+        }
+    }
+
+    getAllToAllDropdown() {
+        if (RBAPolicy.getPolicyVisibility("report_all_bu_to_all")) {
+            return (
+                <Row style={{
+                    marginTop: "5%",
+                    paddingHorizontal: "3%"
+                }}>
+                    <Col style={{
+                        marginRight: "5%"
+                    }}>
+                        <Text note style={styleContent.labelStyling}  > Originator BU</Text>
+                        {this.getDropdownFor('ORIGINATOR_BU')}
+                    </Col>
+                    <Col>
+                        <Text note style={styleContent.labelStyling}  >Target BU</Text>
+                        {this.getDropdownFor('TARGET_BU')}
+                    </Col>
+                </Row>
+            );
+        }
+    }
 
     render() {
         const {
@@ -253,7 +341,7 @@ class DashboardPage extends React.Component {
             assignedLeads = 0,
             pendingLeads = 0,
             approvedLeads = 0,
-            rejectedLeads  = 0 
+            rejectedLeads = 0
         } = this.state;
         return (
             <Container >
@@ -290,34 +378,15 @@ class DashboardPage extends React.Component {
                     }>
 
                         <Grid style={styleContent.gridSection} >
+                            {this.getAllToAllDropdown()}
+                            {this.getSelfModeDropdown()}
+                            {this.getGeneralBUModelDropdown()}
 
-                            <Row style={{
-                                marginTop: "5%",
-                                paddingHorizontal: "3%"
-                            }}>
-                                <Col style={{
-                                    marginRight: "5%"
-                                }}>
-                                    <Text note style={styleContent.labelStyling}  > Originator BU</Text>
-                                    {this.getDropdownFor('ORIGINATOR_BU')}
-                                </Col>
-                                <Col>
-                                    <Text note style={styleContent.labelStyling}  >Target BU</Text>
-                                    {this.getDropdownFor('TARGET_BU')}
-                                </Col>
-                            </Row>
+
+                            {this.getSalesRepSelectionDropdown()}
 
 
 
-                            <Row style={{
-                                marginTop: "5%",
-                                paddingHorizontal: "3%"
-                            }}>
-                                <Col>
-                                    <Text note style={styleContent.labelStyling}  > Representative</Text>
-                                    {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.SALES_REP)}
-                                </Col>
-                            </Row>
 
                             <Row style={{
                                 marginTop: "5%",

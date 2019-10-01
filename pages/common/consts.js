@@ -5,6 +5,35 @@ const appconstant = {
     primaryOrange: "#F37C57",
     primaryGreen: "#8BBF45",
     mediumGrey: "#616161",
+    GENERAL_BU_MODE:[
+        {
+            name: "All",
+            code: "all"
+        },
+        {
+            name: "Team Internal",
+            code: "team_internal"
+        }, {
+            name: "Team External",
+            code: "team_external"
+        }, {
+            name: "Self Generated",
+            code: "self_generated"
+        }
+    ],
+    SELF_MODE: [
+        {
+            name: "Both",
+            code: "both"
+        },
+        {
+            name: "Self Generated",
+            code: "self_generated"
+        }, {
+            name: "Assigned To Me",
+            code: "assigned_to_me"
+        }],
+
     DROP_DOWN_TYPE: {
         TENURE: 'TENURE',
         SOURCE: 'SOURCE',
@@ -44,7 +73,7 @@ const appconstant = {
         INVESTMENT: 'INVESTMENT',
         NEWSITEM: 'NEWSITEM'
     },
-    LEAD_STATUS_DROP_DOWN:[
+    LEAD_STATUS_DROP_DOWN: [
         {
             name: 'APPROVED',
             code: 'APP'
@@ -52,7 +81,7 @@ const appconstant = {
         {
             name: 'REJECTED',
             code: 'REJ'
-        },{
+        }, {
             name: 'PENDING',
             code: 'DRAFT'
         },
@@ -105,10 +134,10 @@ const appconstant = {
             "code": "BD"
         }
     ],
-    ROLES_USER_TYPE_MAPPING:{
-        "SR":"SALES_REP",
-        "BD":"ADMIN",
-        "BH":"BU_HEAD"
+    ROLES_USER_TYPE_MAPPING: {
+        "SR": "SALES_REP",
+        "BD": "ADMIN",
+        "BH": "BU_HEAD"
     }
 
 }

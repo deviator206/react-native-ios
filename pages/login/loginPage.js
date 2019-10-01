@@ -7,6 +7,7 @@ import ModalComponent from '../common/modalComponent';
 import {default as i18nMessages} from '../common/i18n';
 import SpinnerComponent from '../common/spinnerComponent';
 import styleContent from './loginStyle';
+import {default as RBAPolicy} from '../common/rbaPolicy';
 
 
 export default class LoginPage extends Component {
@@ -140,6 +141,7 @@ export default class LoginPage extends Component {
 
     onLoginSuccess(data) {
         window.userInformation = data;
+        RBAPolicy.init();
         console.log("RESP:", window.userInformation);
         this.setState({
             spinner: false,

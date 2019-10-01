@@ -1,4 +1,6 @@
 import axios from 'axios';
+
+
 const SERVER_CONFIG = {
     hostPort: 'http://52.66.164.208:8080/',
     basePath: 'lmsApp-0.1.0/'
@@ -45,6 +47,8 @@ class ServiceClass {
             tokenType: headerInfo['tokenType'],
             'Content-Type': 'application/json'
         };
+        
+        
     }
     static createServiceURL(serviceKey) {
         return SERVER_CONFIG.hostPort + SERVER_CONFIG.basePath + SERVICE_URL[serviceKey];
