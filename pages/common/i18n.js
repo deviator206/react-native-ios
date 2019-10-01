@@ -48,7 +48,8 @@ const i18nMessages = {
     "info_not_sure":"Not Sure",
     "info_not_assigned":"Not Assigned",
 
-    "lbl_self_generated":"Self Generated"
+    "lbl_self_generated":"Self Generated",
+    "lbl_lead_origin":"Lead Origin"
 
 }
 

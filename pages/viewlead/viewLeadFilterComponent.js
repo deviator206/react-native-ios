@@ -14,6 +14,7 @@ import DropDownComponent from '../common/dropdownComponent';
 import SpinnerComponent from '../common/spinnerComponent';
 import FlatListComponent from '../common/flatListComponent';
 import styleContent from './viewLeadStyle';
+import { default as RBAPolicy } from '../common/rbaPolicy';
 
 
 
@@ -23,6 +24,8 @@ export default class viewLeadFilterComponent extends React.Component {
         this.state = {};
         this.getDropdownFor = this.getDropdownFor.bind(this);
         this.onDropDownChange = this.onDropDownChange.bind(this);
+        this.getRBABasedSelfModeView = this.getRBABasedSelfModeView.bind(this);
+        this.getRBABasedGeneralBUModeView = this.getRBABasedGeneralBUModeView.bind(this);
 
     }
 
@@ -56,6 +59,12 @@ export default class viewLeadFilterComponent extends React.Component {
                     });
                 }
                 defaultSelection = (savedState && savedState.LEAD_STATUS_DROP_DOWN) ? savedState.LEAD_STATUS_DROP_DOWN : ''
+                break;
+            case 'DROP_DOWN_SELF_MODE':
+                dataSource = (appConstant.SELF_MODE) ? [...appConstant.SELF_MODE] : [];
+                break;
+            case 'DROP_DOWN_GENERAL_BU_MODE':
+                dataSource = (appConstant.GENERAL_BU_MODE) ? [...appConstant.GENERAL_BU_MODE] : [];
                 break;
             case appConstant.DROP_DOWN_TYPE.TENURE:
             case appConstant.DROP_DOWN_TYPE.BU_NAME:
@@ -94,6 +103,44 @@ export default class viewLeadFilterComponent extends React.Component {
         return returnedView;
     }
 
+    getRBABasedSelfModeView() {
+        if (RBAPolicy.getPolicyVisibility("self_lead_view_mode"))  {
+            return (
+                <React.Fragment>
+                    <Row style={commonStyle.formGridLabel}>
+                        <Col>
+                            <Text note style={commonStyle.labelStyling}>{i18nMessages.lbl_lead_origin}</Text>
+                        </Col>
+                    </Row>
+                    <Row style={commonStyle.formGridValue}>
+                        <Col>
+                            {this.getDropdownFor('DROP_DOWN_SELF_MODE')}
+                        </Col>
+                    </Row>
+                </React.Fragment>
+            );
+        }
+    }
+
+    getRBABasedGeneralBUModeView() {
+        if (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode")) {
+            return (
+                <React.Fragment>
+                    <Row style={commonStyle.formGridLabel}>
+                        <Col>
+                            <Text note style={commonStyle.labelStyling}>{i18nMessages.lbl_lead_origin}</Text>
+                        </Col>
+                    </Row>
+                    <Row style={commonStyle.formGridValue}>
+                        <Col>
+                            {this.getDropdownFor('DROP_DOWN_GENERAL_BU_MODE')}
+                        </Col>
+                    </Row>
+                </React.Fragment>
+            );
+        }
+    }
+
     render() {
         const { toggleHandler, applyFilterHandler, resetFilterHandler, } = this.props;
         return (
@@ -126,6 +173,8 @@ export default class viewLeadFilterComponent extends React.Component {
                     </View>
                     <View style={{ flex: 1, padding: 20 }}>
                         <Grid style={commonStyle.formGrid}>
+                            {this.getRBABasedSelfModeView()}
+                            {this.getRBABasedGeneralBUModeView()}
                             <Row style={commonStyle.formGridLabel}>
                                 <Col>
                                     <Text note style={commonStyle.labelStyling}>{i18nMessages.status}</Text>
@@ -167,24 +216,20 @@ export default class viewLeadFilterComponent extends React.Component {
                                 <Col>
                                     <Text note style={commonStyle.labelStyling}>{i18nMessages.industry}</Text>
                                 </Col>
-                            </Row>
-                            <Row style={commonStyle.formGridValue}>
-                                <Col>
-                                    {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.INDUSTRY)}
-                                </Col>
-                            </Row>
-
-
-                            <Row style={commonStyle.formGridLabel}>
                                 <Col>
                                     <Text note style={commonStyle.labelStyling}>{i18nMessages.source_type}</Text>
                                 </Col>
                             </Row>
                             <Row style={commonStyle.formGridValue}>
                                 <Col>
+                                    {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.INDUSTRY)}
+                                </Col>
+                                <Col>
                                     {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.SOURCE)}
                                 </Col>
                             </Row>
+
+
                         </Grid>
                     </View>
 

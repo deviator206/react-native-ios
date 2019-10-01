@@ -263,7 +263,7 @@ class DashboardPage extends React.Component {
         return (<HeaderComponent navigation={navigation} title="Dashboard" hamburger={true} sideMenuClickHandler={this.sideMenuClicked} />);
     }
     getGeneralBUModelDropdown() {
-        if (RBAPolicy.getPolicyVisibility("general_bu_view_drop_down")) {
+        if (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode")) {
             return (
                 <Row style={{
                     marginTop: "5%",
@@ -280,8 +280,7 @@ class DashboardPage extends React.Component {
         }
     }
     getSelfModeDropdown() {
-        const { SELF_GENERATED_MODE = false } = this.state;
-        if (RBAPolicy.getPolicyVisibility("self_generated_checkbox")) {
+        if (RBAPolicy.getPolicyVisibility("self_lead_view_mode")) {
             return (
                 <Row style={{
                     marginTop: "5%",
