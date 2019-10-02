@@ -104,7 +104,7 @@ export default class viewLeadFilterComponent extends React.Component {
     }
 
     getRBABasedSelfModeView() {
-        if (RBAPolicy.getPolicyVisibility("self_lead_view_mode"))  {
+        if (RBAPolicy.getPolicyVisibility("self_lead_view_mode")) {
             return (
                 <React.Fragment>
                     <Row style={commonStyle.formGridLabel}>
@@ -153,13 +153,14 @@ export default class viewLeadFilterComponent extends React.Component {
                         toggleHandler()
                     }
                 }}>
-                <View style={{ marginTop: "10%", height: "90%" }}
+                <View style={{  "flex":1 }}
                 >
-                    <View tyle={commonStyle.modalHeaderDiv}>
+                    <View style={[commonStyle.modalHeaderDiv,
+                    {
+                        marginTop: "3%"
+                    }]}>
                         <View>
-                            <Text style={[commonStyle.modalHeader, {
-                                color: "black"
-                            }]}> Filter View Leads </Text></View>
+                            <Text style={commonStyle.modalHeader}> Filter View Leads </Text></View>
                         <View >
                             <TouchableHighlight
                                 onPress={() => {
@@ -175,19 +176,19 @@ export default class viewLeadFilterComponent extends React.Component {
                         <Grid style={commonStyle.formGrid}>
                             {this.getRBABasedSelfModeView()}
                             {this.getRBABasedGeneralBUModeView()}
-                            <Row style={commonStyle.formGridLabel}>
-                                <Col>
+                            <Row style={[commonStyle.formGridLabel,{ justifyContent:"space-between"}]}>
+                                <Col style={{width:"45%"}}>
                                     <Text note style={commonStyle.labelStyling}>{i18nMessages.status}</Text>
                                 </Col>
-                                <Col>
+                                <Col style={{width:"45%"}}>
                                     <Text note style={commonStyle.labelStyling}>{i18nMessages.tenure_lbl}</Text>
                                 </Col>
                             </Row>
-                            <Row style={commonStyle.formGridValue}>
-                                <Col>
+                            <Row style={[commonStyle.formGridValue,{ justifyContent:"space-between"}]}>
+                                <Col style={{width:"45%"}}>
                                     {this.getDropdownFor('LEAD_STATUS_DROP_DOWN')}
                                 </Col>
-                                <Col>
+                                <Col style={{width:"45%"}}>
                                     {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.TENURE)}
                                 </Col>
                             </Row>

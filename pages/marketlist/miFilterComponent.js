@@ -113,7 +113,7 @@ export default class miFilterComponent extends React.Component {
                         toggleHandler()
                     }
                 }}>
-                <View style={{ width: '100%',height:"75%" }}>
+                <View  style={{  "flex":1 }}>
                     <View style={[commonStyle.modalHeaderDiv, 
                     {
                         marginTop:"10%"

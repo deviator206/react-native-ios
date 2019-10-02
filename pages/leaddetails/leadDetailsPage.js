@@ -46,6 +46,9 @@ class LeadDetailsPage extends React.Component {
     this.overlayScreenView = this.overlayScreenView.bind(this);
     this.onFPModalClosed = this.onFPModalClosed.bind(this);
 
+    this.getRolePolicyMappedActions = this.getRolePolicyMappedActions.bind(this)
+
+
 
     this.onLeadResponseSuccess = this.onLeadResponseSuccess.bind(this);
     this.onLeadResponseError = this.onLeadResponseError.bind(this);
@@ -852,6 +855,12 @@ class LeadDetailsPage extends React.Component {
 
   }
 
+  getRolePolicyMappedActions () {
+    if(true) {
+      return this.getActionsInfo();
+    }
+  }
+
   render() {
     // {this.getActionsInfo()}
     const { navigation } = this.props;
@@ -867,6 +876,7 @@ class LeadDetailsPage extends React.Component {
             {this.getSalesRepInfo()}
             {this.getBusinessUnitInfo()}
             {this.getStatusInfo()}
+            {this.getRolePolicyMappedActions()}
             {this.getActionsInfo()}
 
           </Grid>
