@@ -1,7 +1,7 @@
 import { Button, Card, CardItem, Col, Container, Content, Footer, Grid, Input, Item, Row, Text, Textarea, View } from 'native-base';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {default as MatIcon} from 'react-native-vector-icons/MaterialIcons';
+import { default as MatIcon } from 'react-native-vector-icons/MaterialIcons';
 import { default as MaterialIcon } from 'react-native-vector-icons/MaterialIcons';
 import { default as FeatherIcon } from 'react-native-vector-icons/SimpleLineIcons';
 import { connect } from 'react-redux';
@@ -20,7 +20,7 @@ import SpinnerComponent from '../common/spinnerComponent';
 import styleContent from './leadDetailsPageStyle';
 import { default as Utils } from '../common/Util';
 import BUListComponent from '../addlead/BUListComponent';
-
+import { default as RBAPolicy } from '../common/rbaPolicy';
 
 const leadApi = new LeadApi({ state: {} });
 const userApi = new UserApi({ state: {} });
@@ -46,7 +46,7 @@ class LeadDetailsPage extends React.Component {
     this.overlayScreenView = this.overlayScreenView.bind(this);
     this.onFPModalClosed = this.onFPModalClosed.bind(this);
 
-    this.getRolePolicyMappedActions = this.getRolePolicyMappedActions.bind(this)
+    this.getRolePolicyMappedActionsForStatus = this.getRolePolicyMappedActionsForStatus.bind(this)
 
 
 
@@ -76,6 +76,11 @@ class LeadDetailsPage extends React.Component {
     this.getUnitAddedList = this.getUnitAddedList.bind(this);
     this.onBuSelectionConfirmed = this.onBuSelectionConfirmed.bind(this);
     this.updateBuRmoval = this.updateBuRmoval.bind(this);
+
+    this.getUpdatedBugetView = this.getUpdatedBugetView.bind(this);
+    this.getAssignSalesRepView = this.getAssignSalesRepView.bind(this);
+    this.addMoreBUView = this.addMoreBUView.bind(this);
+    this.notifyBUVIew = this.notifyBUVIew.bind(this);
 
   }
 
@@ -139,15 +144,15 @@ class LeadDetailsPage extends React.Component {
       let finalBUList = [...selectedBuList];
       if (leadDetails && leadDetails.leadsSummaryRes && leadDetails.leadsSummaryRes.businessUnits && leadDetails.leadsSummaryRes.businessUnits.length > 0) {
         finalBUList = [...finalBUList, ...leadDetails.leadsSummaryRes.businessUnits];
-      } 
+      }
       tempSummaryRes = {
         "businessUnits": finalBUList
       }
 
-      
+
     }
     // add the default BU
-    
+
 
     if (NOTIFY_BU) {
       tempSummaryRes = {
@@ -488,7 +493,7 @@ class LeadDetailsPage extends React.Component {
     return styleContent.needMoreStatusCircle
   }
 
-  getStatusInfo() {
+  getStatusInfo(disabledState) {
     const { leadDetails } = this.state;
     // const leadDetails = { "id": 1, "source": "Marketing", "custName": "shicv", "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.", "leadContact": { "name": "dingdong", "email": "a@b.com", "phoneNumber": "9764007637", "country": "India", "state": "MH" }, "leadsSummaryRes": { "businessUnits": ["marketing", "sales"], "salesRep": "shivanshu", "industry": "it" }, "deleted": false, "creatorId": "123", "creationDate": "2019-06-04" };
     let returnedView;
@@ -502,16 +507,36 @@ class LeadDetailsPage extends React.Component {
                   <Row>
                     <Text style={styleContent.secondaryLabel}> STATUS</Text>
                   </Row>
-                  <Row>
-                    <Col style={{ width: "60%" }}>
-                      {this.getDropdownForSplType(appConstant.DROP_DOWN_TYPE.LEAD_STATUS)}
-                    </Col>
-                    <Col style={{ width: "30%" }}></Col>
-                    <Col style={{ width: "10%" }}>
-                      <View style={this.getStatusCircle(leadDetails.status)} />
-                    </Col>
+                  {
+                    (disabledState &&
+                      (
+                        <Row>
+                          <Col style={{ width: "60%" }}>
+                            <Text>{leadDetails.status} </Text>
+                          </Col>
+                          <Col style={{ width: "30%" }}></Col>
+                          <Col style={{ width: "10%" }}>
+                            <View style={this.getStatusCircle(leadDetails.status)} />
+                          </Col>
 
-                  </Row>
+                        </Row>
+                      )
+                    )
+                  }{
+                    (!disabledState) && (
+                      <Row>
+                        <Col style={{ width: "60%" }}>
+                          {this.getDropdownForSplType(appConstant.DROP_DOWN_TYPE.LEAD_STATUS)}
+                        </Col>
+                        <Col style={{ width: "30%" }}></Col>
+                        <Col style={{ width: "10%" }}>
+                          <View style={this.getStatusCircle(leadDetails.status)} />
+                        </Col>
+
+                      </Row>
+                    )
+                  }
+
 
                 </Grid>
               </Col>
@@ -524,11 +549,179 @@ class LeadDetailsPage extends React.Component {
   }
 
 
+  getUpdatedBugetView() {
+    const { leadDetails } = this.state;
+    if (RBAPolicy.isAuthorizedForLeadRelatedAction('BUDGET_UPDATE', { leadDetails })) {
+      return (
+        <React.Fragment>
+          <Row >
+            <Text style={styleContent.secondaryLabel}> ESTIMATED BUDGET </Text>
+          </Row>
+          <Row>
+            <Col style={{
+              width: "50%"
+            }}>
+              <Item >
+                <Input
+                  style={styleContent.secondaryDarkText}
+                  returnKeyType="next"
+                  clearButtonMode="always"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  placeholder='Enter Amount'
+                  value={this.state && this.state.leadDetails && this.state.leadDetails.leadsSummaryRes && this.state.leadDetails.leadsSummaryRes.budget && (this.state.leadDetails.leadsSummaryRes.budget).toString()}
+                  onChangeText={(text) => {
+                    this.inputElementChanged(appConstant.UPDATE_LEAD.BUDGET, text);
+                  }}
 
+                />
+              </Item>
+            </Col>
+            <Col style={{
+              marginTop: "3%",
+              width: "30%",
+              marginLeft: "10%"
+            }}>
+              {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.CURRENCY)}
+            </Col>
+          </Row>
+
+        </React.Fragment>
+      )
+    }
+
+  }
+
+  getAssignSalesRepView() {
+    const { leadDetails, ASSIGN_REP = false } = this.state;
+    if (RBAPolicy.isAuthorizedForLeadRelatedAction('ASSIGN_SALES_REP', { leadDetails })) {
+      return (
+        <Row style={styleContent.marginTopStyling}>
+          <Col>
+            <CheckBoxComponent
+              currentState={ASSIGN_REP}
+              checkBoxLabel={i18nMessages.lbl_assign_rep}
+              controlType={appConstant.UPDATE_LEAD.ASSIGN_REP}
+              updateToParent={this.onCheckBoxChanged}
+            />
+          </Col>
+          <Col style={styleContent.marginTopStyling}>
+            {ASSIGN_REP && this.getDropdownForSplType(appConstant.DROP_DOWN_TYPE.SALES_REP)}
+          </Col>
+        </Row>
+      );
+    }
+  }
+
+  addMoreBUView() {
+    const { leadDetails, MODIFY_BU = false } = this.state;
+    if (RBAPolicy.isAuthorizedForLeadRelatedAction('ADD_MORE_BU', { leadDetails })) {
+      return (
+        <React.Fragment>
+          <Row>
+            <Col>
+              <CheckBoxComponent
+                currentState={MODIFY_BU}
+                checkBoxLabel={i18nMessages.lbl_modify_bu}
+                controlType={appConstant.UPDATE_LEAD.MODIFY_BU}
+                updateToParent={this.onCheckBoxChanged} />
+            </Col>
+          </Row>
+
+          {
+            MODIFY_BU && (
+              <React.Fragment>
+                <Row>
+                  <Col style={styleContent.marginTopStyling}>
+                    {MODIFY_BU && this.getDropdownFor(appConstant.DROP_DOWN_TYPE.BU_NAME)}
+
+                  </Col>
+                  <Col
+                  >
+                    <Button
+                      iconLeft
+                      style={{
+                        width: "80%",
+                        backgroundColor: "#EC2227",
+                        marginTop: "25%",
+                        marginLeft: "10%",
+                        flexDirection: "row",
+                        alignItems: "flex-start",
+                        paddingTop: 10
+                      }}
+                      onPress={this.onBuSelectionConfirmed}
+                    >
+                      <MatIcon name="add" style={{
+                        marginLeft: "15%",
+                        fontSize: 24,
+                        color: "white"
+                      }} />
+                      <Text
+                        style={
+                          {
+                            marginRight: "30%",
+                            paddingLeft: "0%",
+                            fontSize: 14,
+                            fontFamily: 'Montserrat-Medium',
+                            paddingTop: 3
+                          }
+                        }
+                      > {i18nMessages.lbl_add_bu}</Text>
+                    </Button>
+
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    {this.getUnitAddedList()}
+                  </Col>
+                </Row>
+              </React.Fragment>
+            )
+          }
+        </React.Fragment>
+      );
+    }
+  }
+  notifyBUVIew() {
+    const { leadDetails, NOTIFY_BU = false } = this.state;
+    if (RBAPolicy.isAuthorizedForLeadRelatedAction('NOTIFY_BU', { leadDetails })) {
+      return (
+        <React.Fragment>
+
+          <Row>
+            <Col>
+              <CheckBoxComponent
+                currentState={NOTIFY_BU}
+                checkBoxLabel={i18nMessages.lbl_notify_bu}
+                controlType={appConstant.UPDATE_LEAD.NOTIFY_BU}
+                updateToParent={this.onCheckBoxChanged}
+              />
+            </Col>
+          </Row>
+          {NOTIFY_BU && (
+            <Row>
+              <Col>
+                <Textarea
+                  style={commonStyle.dynamicComponentTextAreaStyle}
+                  rowSpan={4}
+                  bordered
+                  placeholder="Enter Message to be notified to BU"
+                  onChangeText={(text) => {
+                    this.inputElementChanged(appConstant.UPDATE_LEAD.NOTIFY_TEXT, text);
+                  }}
+                />
+              </Col>
+            </Row>
+          )}
+        </React.Fragment>
+      );
+    }
+  }
 
 
   getActionsInfo() {
-    const { leadDetails, MODIFY_BU = false, ASSIGN_REP = false, NOTIFY_BU = false } = this.state;
+    const { leadDetails} = this.state;
     let returnedView;
     if (leadDetails && leadDetails.id && leadDetails.leadsSummaryRes) {
       returnedView = (
@@ -537,135 +730,11 @@ class LeadDetailsPage extends React.Component {
             <CardItem>
               <Col>
                 <Grid>
-                  <Row >
-                    <Text style={styleContent.secondaryLabel}> ESTIMATED BUDGET </Text>
-                  </Row>
-                  <Row>
-                    <Col style={{
-                      width: "50%"
-                    }}>
-                      <Item >
-                        <Input
-                          style={styleContent.secondaryDarkText}
-                          returnKeyType="next"
-                          clearButtonMode="always"
-                          autoCapitalize="none"
-                          autoCorrect={false}
-                          placeholder='Enter Amount'
-                          value={this.state && this.state.leadDetails && this.state.leadDetails.leadsSummaryRes && this.state.leadDetails.leadsSummaryRes.budget && (this.state.leadDetails.leadsSummaryRes.budget).toString()}
-                          onChangeText={(text) => {
-                            this.inputElementChanged(appConstant.UPDATE_LEAD.BUDGET, text);
-                          }}
+                  {this.getUpdatedBugetView()}
+                  {this.getAssignSalesRepView()}
+                  {this.addMoreBUView()}
+                  {this.notifyBUVIew()}
 
-                        />
-                      </Item>
-                    </Col>
-                    <Col style={{
-                      marginTop: "3%",
-                      width: "30%",
-                      marginLeft: "10%"
-                    }}>
-                      {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.CURRENCY)}
-                    </Col>
-                  </Row>
-                  <Row style={styleContent.marginTopStyling}>
-                    <Col>
-                      <CheckBoxComponent
-                        currentState={ASSIGN_REP}
-                        checkBoxLabel={i18nMessages.lbl_assign_rep}
-                        controlType={appConstant.UPDATE_LEAD.ASSIGN_REP}
-                        updateToParent={this.onCheckBoxChanged}
-                      />
-                    </Col>
-                    <Col style={styleContent.marginTopStyling}>
-                      {ASSIGN_REP && this.getDropdownForSplType(appConstant.DROP_DOWN_TYPE.SALES_REP)}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <CheckBoxComponent
-                        currentState={MODIFY_BU}
-                        checkBoxLabel={i18nMessages.lbl_modify_bu}
-                        controlType={appConstant.UPDATE_LEAD.MODIFY_BU}
-                        updateToParent={this.onCheckBoxChanged} />
-                    </Col>
-                  </Row>
-
-                  {MODIFY_BU && (
-                    <React.Fragment>
-                      <Row>
-                        <Col style={styleContent.marginTopStyling}>
-                          {MODIFY_BU && this.getDropdownFor(appConstant.DROP_DOWN_TYPE.BU_NAME)}
-
-                        </Col>
-                        <Col
-                        >
-                          <Button
-                            iconLeft
-                            style={{
-                              width: "80%",
-                              backgroundColor: "#EC2227",
-                              marginTop: "25%",
-                              marginLeft: "10%",
-                              flexDirection: "row",
-                              alignItems: "flex-start",
-                              paddingTop: 10
-                            }}
-                            onPress={this.onBuSelectionConfirmed}
-                          >
-                            <MatIcon name="add" style={{
-                              marginLeft: "15%",
-                              fontSize: 24,
-                              color: "white"
-                            }} />
-                            <Text
-                              style={
-                                {
-                                  marginRight: "30%",
-                                  paddingLeft: "0%",
-                                  fontSize: 14,
-                                  fontFamily: 'Montserrat-Medium',
-                                  paddingTop: 3
-                                }
-                              }
-                            > {i18nMessages.lbl_add_bu}</Text>
-                          </Button>
-
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          {this.getUnitAddedList()}
-                        </Col>
-                      </Row>
-                    </React.Fragment>
-                  )}
-
-                  <Row>
-                    <Col>
-                      <CheckBoxComponent
-                        currentState={NOTIFY_BU}
-                        checkBoxLabel={i18nMessages.lbl_notify_bu}
-                        controlType={appConstant.UPDATE_LEAD.NOTIFY_BU}
-                        updateToParent={this.onCheckBoxChanged}
-                      />
-                    </Col>
-                  </Row>
-                  {NOTIFY_BU && (
-                    <Row>
-                      <Col>
-                        <Textarea
-                          style={commonStyle.dynamicComponentTextAreaStyle}
-                          rowSpan={4}
-                          bordered
-                          placeholder="Enter Message to be notified to BU"
-                          onChangeText={(text) => {
-                            this.inputElementChanged(appConstant.UPDATE_LEAD.NOTIFY_TEXT, text);
-                          }}
-                        />
-                      </Col>
-                    </Row>
-                  )}
                 </Grid>
               </Col>
             </CardItem>
@@ -762,8 +831,8 @@ class LeadDetailsPage extends React.Component {
 
 
   getContactInfo() {
-    // const { leadDetails } = this.state;
-    const leadDetails = { "id": 1, "source": "Marketing", "custName": "shicv", "description": "dingDong", "leadContact": { "email": "rkumar@rksolustions.com", "phoneNumber": "9896777716", "country": "India", "state": "MH" }, "leadsSummaryRes": { "businessUnits": ["marketing", "sales"], "salesRep": "shivanshu", "industry": "it" }, "deleted": false, "creatorId": "123", "creationDate": "2019-06-04" };
+    const { leadDetails } = this.state;
+    //const leadDetails = { "id": 1, "source": "Marketing", "custName": "shicv", "description": "dingDong", "leadContact": { "email": "rkumar@rksolustions.com", "phoneNumber": "9896777716", "country": "India", "state": "MH" }, "leadsSummaryRes": { "businessUnits": ["marketing", "sales"], "salesRep": "shivanshu", "industry": "it" }, "deleted": false, "creatorId": "123", "creationDate": "2019-06-04" };
     let returnedView;
     if (leadDetails && leadDetails.id && leadDetails.leadContact) {
       returnedView = (
@@ -855,14 +924,17 @@ class LeadDetailsPage extends React.Component {
 
   }
 
-  getRolePolicyMappedActions () {
-    if(true) {
-      return this.getActionsInfo();
+
+  getRolePolicyMappedActionsForStatus() {
+    const { leadDetails } = this.state;
+    if (RBAPolicy.isAuthorizedForLeadRelatedAction('STATUS_UPDATE', { leadDetails })) {
+      return this.getStatusInfo();
+    } else {
+      return this.getStatusInfo(true);
     }
   }
 
   render() {
-    // {this.getActionsInfo()}
     const { navigation } = this.props;
     return (
       <Container>
@@ -875,8 +947,7 @@ class LeadDetailsPage extends React.Component {
             {this.getContactInfo()}
             {this.getSalesRepInfo()}
             {this.getBusinessUnitInfo()}
-            {this.getStatusInfo()}
-            {this.getRolePolicyMappedActions()}
+            {this.getRolePolicyMappedActionsForStatus()}
             {this.getActionsInfo()}
 
           </Grid>
