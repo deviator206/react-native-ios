@@ -1,13 +1,13 @@
 import { Button, Card, CardItem, Col, Container, Content, Footer, Grid, Input, Item, Row, Text, Textarea, View } from 'native-base';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { default as MatIcon } from 'react-native-vector-icons/MaterialIcons';
-import { default as MaterialIcon } from 'react-native-vector-icons/MaterialIcons';
+import { default as MaterialIcon, default as MatIcon } from 'react-native-vector-icons/MaterialIcons';
 import { default as FeatherIcon } from 'react-native-vector-icons/SimpleLineIcons';
 import { connect } from 'react-redux';
 import LeadApi from '../../services/LeadApi';
 import RefDataApi from '../../services/RefDataApi';
 import UserApi from '../../services/UserApi';
+import BUListComponent from '../addlead/BUListComponent';
 import CheckBoxComponent from '../common/checkBoxComponent';
 import { default as commonStyle } from '../common/commonStyling';
 import appConfig from '../common/config';
@@ -16,11 +16,10 @@ import DropDownComponent from '../common/dropdownComponent';
 import HeaderComponent from '../common/headerComponent';
 import i18nMessages from '../common/i18n';
 import ModalComponent from '../common/modalComponent';
-import SpinnerComponent from '../common/spinnerComponent';
-import styleContent from './leadDetailsPageStyle';
-import { default as Utils } from '../common/Util';
-import BUListComponent from '../addlead/BUListComponent';
 import { default as RBAPolicy } from '../common/rbaPolicy';
+import SpinnerComponent from '../common/spinnerComponent';
+import { default as Utils } from '../common/Util';
+import styleContent from './leadDetailsPageStyle';
 
 const leadApi = new LeadApi({ state: {} });
 const userApi = new UserApi({ state: {} });
@@ -553,7 +552,9 @@ class LeadDetailsPage extends React.Component {
     const { leadDetails } = this.state;
     if (RBAPolicy.isAuthorizedForLeadRelatedAction('BUDGET_UPDATE', { leadDetails })) {
       return (
-        <React.Fragment>
+        <React.Fragment
+          
+        >
           <Row >
             <Text style={styleContent.secondaryLabel}> ESTIMATED BUDGET </Text>
           </Row>
@@ -586,7 +587,7 @@ class LeadDetailsPage extends React.Component {
             </Col>
           </Row>
 
-        </React.Fragment>
+          </React.Fragment>
       )
     }
 
@@ -617,7 +618,7 @@ class LeadDetailsPage extends React.Component {
     const { leadDetails, MODIFY_BU = false } = this.state;
     if (RBAPolicy.isAuthorizedForLeadRelatedAction('ADD_MORE_BU', { leadDetails })) {
       return (
-        <React.Fragment>
+        <Grid>
           <Row>
             <Col>
               <CheckBoxComponent
@@ -630,7 +631,7 @@ class LeadDetailsPage extends React.Component {
 
           {
             MODIFY_BU && (
-              <React.Fragment>
+              <Grid>
                 <Row>
                   <Col style={styleContent.marginTopStyling}>
                     {MODIFY_BU && this.getDropdownFor(appConstant.DROP_DOWN_TYPE.BU_NAME)}
@@ -676,10 +677,10 @@ class LeadDetailsPage extends React.Component {
                     {this.getUnitAddedList()}
                   </Col>
                 </Row>
-              </React.Fragment>
+              </Grid>
             )
           }
-        </React.Fragment>
+        </Grid>
       );
     }
   }
@@ -687,7 +688,7 @@ class LeadDetailsPage extends React.Component {
     const { leadDetails, NOTIFY_BU = false } = this.state;
     if (RBAPolicy.isAuthorizedForLeadRelatedAction('NOTIFY_BU', { leadDetails })) {
       return (
-        <React.Fragment>
+        <Grid>
 
           <Row>
             <Col>
@@ -714,7 +715,7 @@ class LeadDetailsPage extends React.Component {
               </Col>
             </Row>
           )}
-        </React.Fragment>
+        </Grid>
       );
     }
   }

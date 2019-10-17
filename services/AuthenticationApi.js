@@ -1,5 +1,5 @@
-import ServiceClass from "./Services";
 import BaseApi from "./BaseApi";
+import ServiceClass from "./Services";
 class AuthenticationApi  extends BaseApi {
     constructor() {
         super();
@@ -14,6 +14,7 @@ class AuthenticationApi  extends BaseApi {
                 this.invalidSuccessResponse(resp);
             }
         }).catch((err) => {
+            
             this.errorHandlerMechanism(errorHandler, err);
         })
     }

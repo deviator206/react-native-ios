@@ -7,7 +7,7 @@ const SERVER_CONFIG = {
 };
 
 const SERVICE_URL = {
-    'LOGIN': 'login/',
+    'LOGIN': 'login',
     'REF_DATA': 'refdata/',
     'CREATE_LEAD': 'rootlead/',
     'GET_LEADS': 'leads/',
@@ -43,7 +43,7 @@ class ServiceClass {
     static updateHeaderInformation(headerInfo) {
         axiosInstance.defaults.headers = {
             Accept: 'application/json',
-            accessToken: headerInfo['accessToken'],
+            Authorization: headerInfo["tokenType"]+" "+headerInfo['accessToken'],
             tokenType: headerInfo['tokenType'],
             'Content-Type': 'application/json'
         };
