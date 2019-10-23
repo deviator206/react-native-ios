@@ -71,7 +71,7 @@ class ServiceClass {
     }
 
     static async getLeads(params) {
-        return await axiosInstance.get(SERVICE_URL['GET_LEADS']);
+        return await axiosInstance.get(SERVICE_URL['GET_LEADS']+params);
     }
 
     static async getLeadDetails({ itemId }) {

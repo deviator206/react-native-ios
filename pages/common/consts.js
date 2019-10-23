@@ -28,10 +28,10 @@ const appconstant = {
         },
         {
             name: "Self Generated",
-            code: "self_generated"
+            code: "generated"
         }, {
             name: "Assigned To Me",
-            code: "assigned_to_me"
+            code: "assigned"
         }],
 
     DROP_DOWN_TYPE: {

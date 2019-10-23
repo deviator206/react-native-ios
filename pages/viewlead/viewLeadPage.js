@@ -1,20 +1,21 @@
-import { Button, Card, CardItem, Col, Container, Content, Grid, Input, Item, Row, Text } from 'native-base';
+import { Button, Col, Container, Content, Grid, Input, Item, Row, Text } from 'native-base';
 import React from 'react';
-import { Alert, FlatList, Modal, TouchableHighlight, View } from 'react-native';
+import { View } from 'react-native';
 import { default as EntypoIcon } from 'react-native-vector-icons/Entypo';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LeadApi from '../../services/LeadApi';
 import RefDataApi from '../../services/RefDataApi';
 import { default as commonStyle } from '../common/commonStyling';
 import { default as appConstant } from '../common/consts';
+import FlatListComponent from '../common/flatListComponent';
 import FooterComponent from '../common/footerComponent';
 import HeaderComponent from '../common/headerComponent';
 import i18nMessages from '../common/i18n';
+import { default as RBAPolicy } from '../common/rbaPolicy';
 import SpinnerComponent from '../common/spinnerComponent';
-import FlatListComponent from '../common/flatListComponent';
-import styleContent from './viewLeadStyle';
-import { default as LeadsFilterComponent } from './viewLeadFilterComponent';
 import { default as Utils } from '../common/Util';
+import { default as LeadsFilterComponent } from './viewLeadFilterComponent';
+import styleContent from './viewLeadStyle';
 
 
 
@@ -257,16 +258,26 @@ class ViewLeadPage extends React.Component {
     }
 
     loadAllLeads() {
+        const {filterState={}, userId =''} = this.state;
         this.setState({
             spinner: true
         });
         this.refDataApi.fetchStructuredRefData({ params: "type=SOURCE,CURRENCY,TENURE,COUNTRY,INDUSTRY,BU" }).then(this.onReferenceDataFetched);
-        this.leadApi.getLeads({ params: {} }).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError)
+        let params=""
+        if (RBAPolicy.getPolicyVisibility("self_lead_view_mode")) {
+            if(filterState['LEAD_STATUS_DROP_DOWN'] && filterState['LEAD_STATUS_DROP_DOWN'] !== ""){
+                params=`leadtype=${filterState['LEAD_STATUS_DROP_DOWN']}&userid=${userId}`;
+            } else {
+                params=`leadtype=both&userid=${userId}`;
+            }
+        }
+        this.leadApi.getLeads({ params }).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError)
         // this.props.loadLeads({}).
     }
     componentDidMount() {
         this.setState({
-            filterVisible: false
+            filterVisible: false,
+            userId:RBAPolicy.getCurrentUserId()
         });
         this.willFocusSubscription = this.props.navigation.addListener('willFocus', this.loadAllLeads);
     }
