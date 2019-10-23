@@ -4,10 +4,9 @@ import { Image } from "react-native";
 import AuthenticationApi from '../../services/AuthenticationApi';
 import { default as commonStyling } from '../common/commonStyling';
 import ModalComponent from '../common/modalComponent';
-import {default as i18nMessages} from '../common/i18n';
+import { default as RBAPolicy } from '../common/rbaPolicy';
 import SpinnerComponent from '../common/spinnerComponent';
 import styleContent from './loginStyle';
-import {default as RBAPolicy} from '../common/rbaPolicy';
 
 
 export default class LoginPage extends Component {
@@ -152,15 +151,14 @@ export default class LoginPage extends Component {
     }
 
     render() {
-       //  let logoImg = require('../images/ametek_logo@1X.png');
-       //  <Image source={logoImg} style={styleContent.logo} />
+        let logoImg = require('../images/ametek_logo@1X.png');
         return (
             <Container style={styleContent.container}>
                 <Content padder
                     contentContainerStyle={styleContent.mainContent}
                     style={styleContent.fullWidth}>
                     <View style={styleContent.logoWrapper}>
-                       
+                    <Image source={logoImg} style={styleContent.logo} />
                     </View>
                     <View style={styleContent.loginUpperContent}>
                         <View style={styleContent.loginUpper}>
