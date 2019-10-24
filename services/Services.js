@@ -87,7 +87,7 @@ class ServiceClass {
     }
 
     static async postUpdateMI({ itemId, payload }) {
-        return await axiosInstance.post(SERVICE_URL['UPDATE_MI'] + itemId, payload);
+        return await axiosInstance.put(SERVICE_URL['UPDATE_MI'] + itemId, payload);
     }
 
     static async postForgotPassword({ payload }) {
