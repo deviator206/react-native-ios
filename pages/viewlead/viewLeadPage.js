@@ -11,7 +11,6 @@ import FlatListComponent from '../common/flatListComponent';
 import FooterComponent from '../common/footerComponent';
 import HeaderComponent from '../common/headerComponent';
 import i18nMessages from '../common/i18n';
-import { default as RBAPolicy } from '../common/rbaPolicy';
 import SpinnerComponent from '../common/spinnerComponent';
 import { default as Utils } from '../common/Util';
 import { default as LeadsFilterComponent } from './viewLeadFilterComponent';
@@ -264,6 +263,7 @@ class ViewLeadPage extends React.Component {
         });
         this.refDataApi.fetchStructuredRefData({ params: "type=SOURCE,CURRENCY,TENURE,COUNTRY,INDUSTRY,BU" }).then(this.onReferenceDataFetched);
         let params=""
+        /*
         if (RBAPolicy.getPolicyVisibility("self_lead_view_mode")) {
             if(filterState['LEAD_STATUS_DROP_DOWN'] && filterState['LEAD_STATUS_DROP_DOWN'] !== ""){
                 params=`leadtype=${filterState['LEAD_STATUS_DROP_DOWN']}&userid=${userId}`;
@@ -271,13 +271,15 @@ class ViewLeadPage extends React.Component {
                 params=`leadtype=both&userid=${userId}`;
             }
         }
+        */
         this.leadApi.getLeads({ params }).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError)
         // this.props.loadLeads({}).
     }
     componentDidMount() {
         this.setState({
-            filterVisible: false,
-            userId:RBAPolicy.getCurrentUserId()
+            filterVisible: false
+            // ,
+            // userId:RBAPolicy.getCurrentUserId()
         });
         this.willFocusSubscription = this.props.navigation.addListener('willFocus', this.loadAllLeads);
     }

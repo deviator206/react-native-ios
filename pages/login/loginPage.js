@@ -164,7 +164,7 @@ export default class LoginPage extends Component {
                         <View style={styleContent.loginUpper}>
                             <Text style={styleContent.h1Login}>LOGIN</Text>
                             <View style={styleContent.hairline} />
-                            <Text style={styleContent.welcomeMsg}>Welcome message goes here Test the login window here Welcome mess</Text>
+                            <Text style={styleContent.welcomeMsg}>Welcome to AMETEK Insight, one stop shop for all your prospect, leads and market news</Text>
                         </View>
                         <View style={styleContent.loginMiddle}>
                             {this.getErrorView()}
