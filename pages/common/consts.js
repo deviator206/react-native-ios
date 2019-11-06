@@ -13,9 +13,14 @@ const appconstant = {
         {
             name: "Team Internal",
             code: "team_internal"
-        }, {
+        },
+         {
             name: "Team External",
             code: "team_external"
+        },
+        {
+            name: "Across ",
+            code: "team_across"
         }, {
             name: "Self Generated",
             code: "self_generated"
@@ -23,7 +28,7 @@ const appconstant = {
     ],
     SELF_MODE: [
         {
-            name: "Both",
+            name: "Assigned To My BU",
             code: "both"
         },
         {

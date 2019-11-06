@@ -63,6 +63,12 @@ class DashboardPage extends React.Component {
         this.getSalesRepSelectionDropdown = this.getSalesRepSelectionDropdown.bind(this);
         this.getAllToAllDropdown = this.getAllToAllDropdown.bind(this);
         this.getGeneralBUModelDropdown = this.getGeneralBUModelDropdown.bind(this);
+        this.getBUInputBasedOnMode = this.getBUInputBasedOnMode.bind(this);
+
+        this.preparePayloadForStats = this.preparePayloadForStats.bind(this);
+        this.iniateExtractResult = this.iniateExtractResult.bind(this);
+        this.getLeadOriginBasedOnSalesRep = this.getLeadOriginBasedOnSalesRep.bind(this);
+
 
     }
 
@@ -83,38 +89,122 @@ class DashboardPage extends React.Component {
 
     }
 
+    getBUInputBasedOnMode(GENERAL_BU_MODE) {
+        let fromBU;
+        let toBU;
+        switch (GENERAL_BU_MODE) {
+            case "team_internal":
+                fromBU = RBAPolicy.getCurrentBU();
+                toBU = RBAPolicy.getCurrentBU();
+                break;
+            case "team_external":
+                fromBU = RBAPolicy.getCurrentBU();
+                break;
+            case "team_across":
+                toBU = RBAPolicy.getCurrentBU()
+                break;
+            case "self_generated":
+                fromBU = RBAPolicy.getCurrentBU();
+                toBU = ""
+                break;
+            case "all":
+            default:
+                break;
+        }
+        return { fromBU, toBU };
+    }
 
+    getLeadOriginBasedOnSalesRep(SELF_MODE) {
+        let payloadInfo = {}
+        switch (SELF_MODE) {
+            case "both":
+                payloadInfo = {
+                    "toBU": RBAPolicy.getCurrentBU()
+                }
+                break;
+            case "generated":
+                payloadInfo = {
+                    "creatorId": RBAPolicy.getCurrentUserId()
+                }
+                break;
+            case "assigned":
+                payloadInfo = {
+                    "salesRepId": RBAPolicy.getCurrentUserId()
+                }
+                break;
 
-    initiateRefineResult() {
+        }
+
+        return payloadInfo;
+
+    }
+
+    preparePayloadForStats() {
         const {
             ORIGINATOR_BU,
             TARGET_BU,
             SALES_REP,
             START_DATE,
             END_DATE,
+            SELF_MODE,
+            GENERAL_BU_MODE
         } = this.state;
 
         let payload = {};
-        if (ORIGINATOR_BU && ORIGINATOR_BU !== '' && TARGET_BU && TARGET_BU !== '') {
+        if (RBAPolicy.getPolicyVisibility("self_lead_view_mode") &&
+            SELF_MODE
+        ) {
+            // Sales REP Dashboard based on  self generated and assigned to me
+            payload = {
+                ...payload,
+                ...this.getLeadOriginBasedOnSalesRep(SELF_MODE)
+            }
+
+        } else if (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode") &&
+            GENERAL_BU_MODE
+        ) {
+            // Sales REP Dashboard based on internal , external etc
+            const inputBUInfo = this.getBUInputBasedOnMode(GENERAL_BU_MODE);
+            payload["fromBu"] = inputBUInfo.fromBU;
+            payload["toBu"] = inputBUInfo.toBU;
+        } else if (ORIGINATOR_BU && 
+            ORIGINATOR_BU != '' && 
+            ORIGINATOR_BU != "#_ALL_#" &&
+            TARGET_BU && 
+            TARGET_BU != "#_ALL_#" &&
+            TARGET_BU != '') {
             payload["fromBu"] = ORIGINATOR_BU;
             payload["toBu"] = TARGET_BU;
         }
 
-        if (START_DATE && START_DATE !== '' && END_DATE && END_DATE !== '') {
+        if (START_DATE && START_DATE != '' && END_DATE && END_DATE != '') {
             payload["startDate"] = Utils.getFormattedDate(START_DATE);
             payload["endDate"] = Utils.getFormattedDate(END_DATE);
         }
 
-        if (SALES_REP && SALES_REP !== '' && SALES_REP !== '#_SELECT_REP_#') {
+        if (SALES_REP && SALES_REP != '' && SALES_REP !== '#_SELECT_REP_#') {
             payload["salesRepId"] = SALES_REP;
         }
+        return payload;
+    }
+
+    iniateExtractResult() {
+        const queryParams = "busummary=true";
+        this.setState({
+            spinner: true
+        });
+
+        leadApi.getStats({ payload: this.preparePayloadForStats(), queryParams }).then(this.onStatsLoaded);
+    }
+    initiateRefineResult() {
+
         //const { userInfo} = window.userInformation
         //const userId= (userInfo && userInfo.userId) ? userInfo.userId : ""
         const queryParams = "busummary=true";
         this.setState({
             spinner: true
         });
-        this.props.loadLeadStats({ payload, queryParams }).then(this.onStatsLoaded).catch(this.onResponseError)
+        this.props.loadLeadStats({ payload: this.preparePayloadForStats(), queryParams }).then(this.onStatsLoaded).catch(this.onResponseError)
     }
 
     getSpinnerComponentView() {
@@ -176,7 +266,12 @@ class DashboardPage extends React.Component {
         this.setState({
             spinner: true
         });
-        this.props.getUserList({}).then(this.onResponseSuccess).catch(this.onResponseError);
+
+        let inputParams = "";
+        if (RBAPolicy.getCurrentBU() && (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode") || RBAPolicy.getPolicyVisibility("self_lead_view_mode"))) {
+            inputParams = "bu=" + RBAPolicy.getCurrentBU();
+        }
+        this.props.getUserList(inputParams).then(this.onResponseSuccess).catch(this.onResponseError);
     }
 
     componentDidMount() {
@@ -507,6 +602,7 @@ class DashboardPage extends React.Component {
                             }>
                                 <Col >
                                     <Button transparent
+                                        onPress={this.iniateExtractResult}
                                         style={styleContent.roundedButton}>
                                         <Text style={styleContent.roundedButtonText}> Extract RESULTS</Text>
                                     </Button>
@@ -541,9 +637,7 @@ function mapDispatchToProps(dispatch) {
 
         },
         getUserList: (inputParams) => {
-            return userApi.getUserList({
-                params: inputParams
-            }).then((resp) => {
+            return userApi.getUserList(inputParams).then((resp) => {
                 return resp;
             })
         },

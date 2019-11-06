@@ -1,7 +1,8 @@
 import { Button, Container, ListItem, Text, View } from 'native-base';
 import React from 'react';
-import { FlatList, Image , TouchableHighlight} from "react-native";
+import { FlatList, Image , TouchableHighlight, AsyncStorage} from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { default as ApplicationConfiguration } from '../common/application.config';
 import styleContent from './sidemenuStyle';
 
 const routes = [
@@ -26,7 +27,7 @@ const routes = [
         icon: 'people-outline'
     },
     {
-        key: "login",
+        key: "logout",
         caption: "Logout",
         icon: 'exit-to-app'
     }
@@ -36,13 +37,33 @@ export default class SideMenuBar extends React.Component {
 
     constructor(props){
         super(props);
-        this.setState({ language: ''})
+        this.setState({ language: ''});
+        this.onSideMenuItemClicked = this.onSideMenuItemClicked.bind(this);
+        this.updateStoage = this.updateStoage.bind(this);
+    }
+
+    async updateStoage () {
+        try {
+            await AsyncStorage.removeItem(ApplicationConfiguration.runtimeConfig.KEY_FOR_USER_CRED);
+        } catch (e) {
+            alert('Failed To Logout.')
+        }
+    }
+    onSideMenuItemClicked(itemKey) {
+        if(itemKey == 'logout') {
+           this.updateStoage();
+            this.props.navigation.navigate('login')
+
+        }else {
+            this.props.navigation.navigate(itemKey)
+        }
+
     }
 
     render() {
         const { userInfo} = window.userInformation
         const userDisplayName= (userInfo && userInfo.userDisplayName) ? userInfo.userDisplayName : "NO DISPLAY NAME"
-        
+        const sideMenuItemClicked = this.onSideMenuItemClicked;
         return (
             <Container style={styleContent.container}>
                 
@@ -53,6 +74,7 @@ export default class SideMenuBar extends React.Component {
                 >
                                 <TouchableHighlight
                                     onPress={() => {
+                                       
                                         this.props.navigation.closeDrawer(); 
                                     }}>
                                    <Icon style={styleContent.closeBtn} name="close" />
@@ -72,7 +94,9 @@ export default class SideMenuBar extends React.Component {
                             button
                             onPress={() => { 
                                 console.log(item.key);
-                                this.props.navigation.navigate(item.key); }}
+                                sideMenuItemClicked(item.key);
+                            }}
+                                //this.props.navigation.navigate(item.key); }}
                         >
 
                             <Icon size={20} style={styleContent.iconStyling} name={item.icon} />

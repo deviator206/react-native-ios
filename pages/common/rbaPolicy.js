@@ -3,7 +3,8 @@ class PolicyProvider {
     constructor() {
         this.policyRules = {};
         this.policyActionMapping = {};
-        this.currentUserId =""
+        this.currentUserId = "";
+        this.currentUserBU = "";
         this.isOwnerOfLead = this.isOwnerOfLead.bind(this);
         this.init = this.init.bind(this);
         this.isAuthorizedForLeadRelatedAction = this.isAuthorizedForLeadRelatedAction.bind(this);
@@ -13,6 +14,7 @@ class PolicyProvider {
     init() {
         const buHead = {
             "general_bu_lead_view_mode": "show",
+            "sales_rep_selection": "show",
             "policy_action_mapping": {
                 "ASSIGNED": {
                     "STATUS_UPDATE": "yes",
@@ -75,17 +77,21 @@ class PolicyProvider {
 
             }
         }
-        this.currentUserId =  (window.userInformation &&
-                window.userInformation.userInfo &&
-                window.userInformation.userInfo.userId) ? window.userInformation.userInfo.userId : "";
+        this.currentUserId = (window.userInformation &&
+            window.userInformation.userInfo &&
+            window.userInformation.userInfo.userId) ? window.userInformation.userInfo.userId : "";
 
+        // set the BU
+        this.currentUserBU = (window.userInformation &&
+            window.userInformation.userInfo &&
+            window.userInformation.userInfo.businessUnit) ? window.userInformation.userInfo.businessUnit : "";
         // init post the user information is 
-        if (window.userInformation && 
-            window.userInformation.userInfo && 
+        if (window.userInformation &&
+            window.userInformation.userInfo &&
             window.userInformation.userInfo.policies) {
             this.policyRules = window.userInformation.userInfo.policies;
-            
-            
+
+
             if (window.userInformation.userInfo.roles &&
                 window.userInformation.userInfo.roles.indexOf("ADMIN") !== -1) {
                 this.policyRules = {
@@ -113,8 +119,12 @@ class PolicyProvider {
         this.policyActionMapping = {};
 
     }
-    getCurrentUserId(){
-       return this.currentUserId;
+    getCurrentUserId() {
+        return this.currentUserId;
+    }
+
+    getCurrentBU() {
+        return this.currentUserBU;
     }
     isOwnerOfLead(leadDetails) {
         if (leadDetails &&
@@ -152,10 +162,10 @@ class PolicyProvider {
     }
 }
 
-let policyProvider ;
+let policyProvider;
 if (!window.lms_app_policyProvider) {
- policyProvider = new PolicyProvider();
-  window.lms_app_policyProvider = policyProvider;
+    policyProvider = new PolicyProvider();
+    window.lms_app_policyProvider = policyProvider;
 } else {
     policyProvider = window.lms_app_policyProvider;
 }

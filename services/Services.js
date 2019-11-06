@@ -15,7 +15,7 @@ const SERVICE_URL = {
     'GET_MI': 'marketIntelligence/',
     'LEAD_DETAILS': 'lead/',
     'MI_DETAILS':'marketIntelligence/',
-    'GET_USERS': 'users/',
+    'GET_USERS': 'users?',
     'UPDATE_LEAD': 'lead/',
     'UPDATE_MI':'marketIntelligence/',
     'CREATE_NEW_MI': 'marketIntelligence/',
@@ -23,7 +23,8 @@ const SERVICE_URL = {
     'SEARCH_MI': 'search/marketIntelligence/',
     'SEARCH_LEAD': 'search/leads/',
     'GET_LEAD_STATS': 'statistics/lead?',
-    'FORGOT_PASSWORD':'/forgotpassword'
+    'FORGOT_PASSWORD':'/forgotpassword',
+    'EXTRACT_REPORT':'/report/lead'
 }
 
 const axiosInstance = axios.create({
@@ -95,8 +96,8 @@ class ServiceClass {
         return await axiosInstance.post(SERVICE_URL['FORGOT_PASSWORD'], payload);
     }
 
-    static async getUsers() {
-        return await axiosInstance.get(SERVICE_URL['GET_USERS']);
+    static async getUsers(params) {
+        return await axiosInstance.get(SERVICE_URL['GET_USERS']+params);
     }
 
     static async searchLeadsWithFilters(filterPayload) {
@@ -119,6 +120,10 @@ class ServiceClass {
 
     static async postLeadStats({payload, queryParams}) {
         return await axiosInstance.post(SERVICE_URL['GET_LEAD_STATS']+queryParams, payload);
+    }
+
+    static async postLeadExtractStats({payload, queryParams}) {
+        return await axiosInstance.post(SERVICE_URL['EXTRACT_REPORT']+queryParams, payload);
     }
 }
 export default ServiceClass;

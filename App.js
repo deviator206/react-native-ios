@@ -21,6 +21,9 @@ import NotificationListPage from './pages/notifications/notificationListPage';
 import SideMenuBar from './pages/sidemenu/sideMenu';
 import UserListPage from './pages/users/userListPage';
 import ViewLeadPage from './pages/viewlead/viewLeadPage';
+import EntryPage from './pages/entrypoint/EntryPage';
+
+
 import { default as configureStore } from './storage/store/createAppStore';
 
 
@@ -56,7 +59,7 @@ const AppNavigator = createStackNavigator({
     })
   },
   login: {
-    screen: LoginPage,
+    screen: EntryPage,
     key: 'login',
     navigationOptions: () => ({
       header: null
@@ -134,15 +137,6 @@ class App extends React.Component {
 }
 export default App;
 
-/**
- * 
- * 
-spring.datasource.driver-class-name=com.mysql.jdbc.Driver
-spring.datasource.url=jdbc:mysql://localhost:3306/leadManagement
-spring.datasource.username=leadManagement
-spring.datasource.password=lms.App=Am2tek
-#spring.datasource.defaultAutoCommit=false
 
- */
 
 

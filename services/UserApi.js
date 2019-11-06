@@ -17,10 +17,10 @@ class UserApi extends BaseApi {
         }); 
     }
 
-    getUserList() {
+    getUserList(params) {
         const that = this;
         return new Promise(function (resolve, reject) {
-            ServiceClass.getUsers().then((resp) => {
+            ServiceClass.getUsers(params).then((resp) => {
                 if (resp && resp.data) {
                     resolve(resp.data)
                 } else {

@@ -1,11 +1,12 @@
 import { Button, Container, Content, Icon, Input, Item, Text, View } from 'native-base';
 import React, { Component } from 'react';
-import { Image } from "react-native";
+import { Image , AsyncStorage} from "react-native";
 import AuthenticationApi from '../../services/AuthenticationApi';
 import { default as commonStyling } from '../common/commonStyling';
 import ModalComponent from '../common/modalComponent';
 import { default as RBAPolicy } from '../common/rbaPolicy';
 import SpinnerComponent from '../common/spinnerComponent';
+import { default as ApplicationConfiguration } from '../common/application.config';
 import styleContent from './loginStyle';
 
 
@@ -71,7 +72,7 @@ export default class LoginPage extends Component {
         const { showError = false, errMsg } = this.state;
         if (showError) {
             return (
-                <View  style={commonStyling.errorMsgContent}>
+                <View style={commonStyling.errorMsgContent}>
                     <Text style={commonStyling.errorMessageText}>{errMsg}</Text>
                 </View>
             )
@@ -111,7 +112,7 @@ export default class LoginPage extends Component {
     onSignInBtnClicked() {
         const { userName, password } = this.state;
         console.log(userName, "&&", password);
-        if (userName && password && userName !== "" && password !== "") {
+        if (userName && password && userName != "" && password != "") {
             this.setState({
                 spinner: true,
                 showError: false,
@@ -131,14 +132,23 @@ export default class LoginPage extends Component {
         } else {
 
             this.setState({
-                userNameMissing: (userName && userName !== '') ? false : true,
-                passwordMissing: (password && password !== '') ? false : true
+                userNameMissing: (userName && userName != '') ? false : true,
+                passwordMissing: (password && password != '') ? false : true
             });
         }
 
     }
 
-    onLoginSuccess(data) {
+    async onLoginSuccess(data) {
+        const { userName, password } = this.state;
+
+        try {
+            await AsyncStorage.setItem(ApplicationConfiguration.runtimeConfig.KEY_FOR_USER_CRED, JSON.stringify({ userName, password }));
+        } catch (e) {
+            alert('Failed to save LOGIN')
+        }
+
+
         window.userInformation = data;
         RBAPolicy.init();
         console.log("RESP:", window.userInformation);
@@ -158,7 +168,9 @@ export default class LoginPage extends Component {
                     contentContainerStyle={styleContent.mainContent}
                     style={styleContent.fullWidth}>
                     <View style={styleContent.logoWrapper}>
-                    <Image source={logoImg} style={styleContent.logo} />
+                        {
+                            // <Image source={logoImg} style={styleContent.logo} />
+                        }
                     </View>
                     <View style={styleContent.loginUpperContent}>
                         <View style={styleContent.loginUpper}>
@@ -168,26 +180,26 @@ export default class LoginPage extends Component {
                         </View>
                         <View style={styleContent.loginMiddle}>
                             {this.getErrorView()}
-                            <Item regular error={this.state.userNameMissing}  style={styleContent.loginInput}>
-                                <Icon active name='person' style={styleContent.iconLoginPage}/>
+                            <Item regular error={this.state.userNameMissing} style={styleContent.loginInput}>
+                                <Icon active name='person' style={styleContent.iconLoginPage} />
                                 <Input
                                     style={commonStyling.inputBoxStyle}
                                     containerStyle={commonStyling.fontMediumLabel}
                                     placeholder='Username'
-                                    placeholderTextColor="#b4b4b4" 
+                                    placeholderTextColor="#b4b4b4"
                                     returnKeyType="next"
                                     clearButtonMode="always"
                                     autoCapitalize="none"
                                     autoCorrect={false}
                                     onChangeText={(val) => { this.onUserNameChanged(val) }} />
                             </Item>
-                            <View style={{height: 12}}/>
-                            <Item regular error={this.state.passwordMissing}  style={styleContent.loginInput}>
-                                <Icon active name='lock' style={styleContent.iconLoginPage}/>
-                                <Input 
+                            <View style={{ height: 12 }} />
+                            <Item regular error={this.state.passwordMissing} style={styleContent.loginInput}>
+                                <Icon active name='lock' style={styleContent.iconLoginPage} />
+                                <Input
                                     style={commonStyling.inputBoxStyle}
                                     placeholder='Password'
-                                    placeholderTextColor="#b4b4b4" 
+                                    placeholderTextColor="#b4b4b4"
                                     secureTextEntry={true}
                                     clearButtonMode="always"
                                     autoCapitalize="none"
@@ -195,7 +207,7 @@ export default class LoginPage extends Component {
                                     onChangeText={(val) => { this.onPasswordChanged(val) }} />
                             </Item>
 
-                            <View  style={
+                            <View style={
                                 {
                                     width: "100%",
                                     paddingVertical: "2%",
@@ -203,19 +215,19 @@ export default class LoginPage extends Component {
                                 }
                             }>
                                 <Button style={styleContent.forgetPswdLinkButton}
-                            transparent
-                            onPress={
-                                () => {
-                                    this.toggleForgotPassword()
-                                }
-                            }>
-                                    <Text  style={styleContent.forgetPswdLink}>Forgot password</Text>
-                        </Button>
+                                    transparent
+                                    onPress={
+                                        () => {
+                                            this.toggleForgotPassword()
+                                        }
+                                    }>
+                                    <Text style={styleContent.forgetPswdLink}>Forgot password</Text>
+                                </Button>
                             </View>
                         </View>
                     </View>
                     <View style={styleContent.versionView}>
-                        
+
                         <Text style={styleContent.versionContent}> v0.0.0.2 </Text>
                     </View>
 
@@ -223,7 +235,7 @@ export default class LoginPage extends Component {
                         <Button style={styleContent.loginBtn}
                             onPress={() => this.onSignInBtnClicked()}>
                             <View style={styleContent.buttonTextView} >
-                                <Text style={styleContent.signInText} > SIGN IN </Text><Icon name="arrow-forward"  style={styleContent.signInIcon}/>
+                                <Text style={styleContent.signInText} > SIGN IN </Text><Icon name="arrow-forward" style={styleContent.signInIcon} />
                             </View>
                         </Button>
                     </View>
