@@ -129,6 +129,7 @@ export default class EntryPage extends Component {
 
     getStaticView() {
         const { userCredentials } = this.state;
+        let logoImg = require('../images/ametek_logo@1X.png');
 
         let StaticViewEle;
         if (userCredentials && userCredentials.userName && userCredentials.password) {
@@ -154,7 +155,7 @@ export default class EntryPage extends Component {
     }
 
     render() {
-        let logoImg = require('../images/ametek_logo@1X.png');
+      
         return (
             <React.Fragment>
                 <Container style={styleContent.container}>

@@ -63,11 +63,11 @@ class DashboardPage extends React.Component {
         this.getSalesRepSelectionDropdown = this.getSalesRepSelectionDropdown.bind(this);
         this.getAllToAllDropdown = this.getAllToAllDropdown.bind(this);
         this.getGeneralBUModelDropdown = this.getGeneralBUModelDropdown.bind(this);
-        this.getBUInputBasedOnMode = this.getBUInputBasedOnMode.bind(this);
+       
 
         this.preparePayloadForStats = this.preparePayloadForStats.bind(this);
         this.iniateExtractResult = this.iniateExtractResult.bind(this);
-        this.getLeadOriginBasedOnSalesRep = this.getLeadOriginBasedOnSalesRep.bind(this);
+       
 
 
     }
@@ -89,55 +89,7 @@ class DashboardPage extends React.Component {
 
     }
 
-    getBUInputBasedOnMode(GENERAL_BU_MODE) {
-        let fromBU;
-        let toBU;
-        switch (GENERAL_BU_MODE) {
-            case "team_internal":
-                fromBU = RBAPolicy.getCurrentBU();
-                toBU = RBAPolicy.getCurrentBU();
-                break;
-            case "team_external":
-                fromBU = RBAPolicy.getCurrentBU();
-                break;
-            case "team_across":
-                toBU = RBAPolicy.getCurrentBU()
-                break;
-            case "self_generated":
-                fromBU = RBAPolicy.getCurrentBU();
-                toBU = ""
-                break;
-            case "all":
-            default:
-                break;
-        }
-        return { fromBU, toBU };
-    }
-
-    getLeadOriginBasedOnSalesRep(SELF_MODE) {
-        let payloadInfo = {}
-        switch (SELF_MODE) {
-            case "both":
-                payloadInfo = {
-                    "toBU": RBAPolicy.getCurrentBU()
-                }
-                break;
-            case "generated":
-                payloadInfo = {
-                    "creatorId": RBAPolicy.getCurrentUserId()
-                }
-                break;
-            case "assigned":
-                payloadInfo = {
-                    "salesRepId": RBAPolicy.getCurrentUserId()
-                }
-                break;
-
-        }
-
-        return payloadInfo;
-
-    }
+    
 
     preparePayloadForStats() {
         const {
@@ -157,14 +109,14 @@ class DashboardPage extends React.Component {
             // Sales REP Dashboard based on  self generated and assigned to me
             payload = {
                 ...payload,
-                ...this.getLeadOriginBasedOnSalesRep(SELF_MODE)
+                ...Utils.getLeadOriginBasedOnSalesRep(SELF_MODE)
             }
 
         } else if (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode") &&
             GENERAL_BU_MODE
         ) {
             // Sales REP Dashboard based on internal , external etc
-            const inputBUInfo = this.getBUInputBasedOnMode(GENERAL_BU_MODE);
+            const inputBUInfo = Utils.getBUInputBasedOnMode(GENERAL_BU_MODE);
             payload["fromBu"] = inputBUInfo.fromBU;
             payload["toBu"] = inputBUInfo.toBU;
         } else if (ORIGINATOR_BU && 

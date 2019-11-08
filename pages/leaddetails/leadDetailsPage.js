@@ -3,7 +3,7 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { default as MaterialIcon, default as MatIcon } from 'react-native-vector-icons/MaterialIcons';
 import { default as FeatherIcon } from 'react-native-vector-icons/SimpleLineIcons';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import LeadApi from '../../services/LeadApi';
 import RefDataApi from '../../services/RefDataApi';
 import UserApi from '../../services/UserApi';
@@ -25,7 +25,7 @@ const leadApi = new LeadApi({ state: {} });
 const userApi = new UserApi({ state: {} });
 const refDataApi = new RefDataApi({ state: {} });
 
-class LeadDetailsPage extends React.Component {
+export default class LeadDetailsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -81,6 +81,46 @@ class LeadDetailsPage extends React.Component {
     this.addMoreBUView = this.addMoreBUView.bind(this);
     this.notifyBUVIew = this.notifyBUVIew.bind(this);
 
+    this.updateLead = this.updateLead.bind(this);
+    this.loadLeadDetailREST = this.loadLeadDetailREST.bind(this);
+    this.loadRefData = this.loadRefData.bind(this);
+    this.loadUserList = this.loadUserList.bind(this);
+
+  }
+
+  updateLead(params) {
+    return leadApi.updateLead(params).then((resp) => {
+      return resp;
+    })
+  }
+
+  loadLeadDetailREST(inputParams) {
+    return leadApi.getLeadDetails(inputParams).then((resp) => {
+      return resp;
+    })
+  }
+  loadRefData(inputParams) {
+    return refDataApi.fetchRefData({
+      params: (inputParams) ? inputParams : "type=CURRENCY,BU,TENURE,SOURCE"
+    }).then(result => {
+      const refInfo = {};
+      if (result && result.data) {
+        result.data.forEach((element) => {
+          if (element && element.type) {
+            if (!refInfo[element.type]) {
+              refInfo[element.type] = [];
+            }
+            refInfo[element.type].push(element);
+          }
+        });
+      }
+      return refInfo;
+    });
+  }
+  loadUserList() {
+    return userApi.getUserList().then(result => {
+      return result;
+    });
   }
 
   onResponseUpdatedLead() {
@@ -188,7 +228,7 @@ class LeadDetailsPage extends React.Component {
       spinner: true
     });
 
-    this.props.updateLead({ itemId: itemId, payload: inputPayload }).then(this.onResponseUpdatedLead).catch(this.onErrorResponseUpdatedLead);
+    this.updateLead({ itemId: itemId, payload: inputPayload }).then(this.onResponseUpdatedLead).catch(this.onErrorResponseUpdatedLead);
   }
 
 
@@ -350,9 +390,9 @@ class LeadDetailsPage extends React.Component {
       spinner: true,
       [appConstant.UPDATE_LEAD.BUDGET]: ''
     });
-    this.props.loadLeadDetail({ itemId }).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError);
-    this.props.loadUserList().then(this.onUserListLoaded).catch(this.onUserListLoadedError);
-    this.props.loadRefData().then(this.onResponseFromReferenceData).catch(this.onErrorResponseFromReferenceData);
+    this.loadLeadDetailREST({ itemId }).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError);
+    this.loadUserList().then(this.onUserListLoaded).catch(this.onUserListLoadedError);
+    this.loadRefData().then(this.onResponseFromReferenceData).catch(this.onErrorResponseFromReferenceData);
   }
 
   inputElementChanged(type, value) {
@@ -427,7 +467,7 @@ class LeadDetailsPage extends React.Component {
           spinner: true,
           dynamic_state_ref
         });
-        this.props.loadRefData("type=" + dynamic_state_ref).then(this.onStateLoaded).catch(this.onErrorResponseFromReferenceData);
+        this.loadRefData("type=" + dynamic_state_ref).then(this.onStateLoaded).catch(this.onErrorResponseFromReferenceData);
       }
     }
 
@@ -553,7 +593,7 @@ class LeadDetailsPage extends React.Component {
     if (RBAPolicy.isAuthorizedForLeadRelatedAction('BUDGET_UPDATE', { leadDetails })) {
       return (
         <React.Fragment
-          
+
         >
           <Row >
             <Text style={styleContent.secondaryLabel}> ESTIMATED BUDGET </Text>
@@ -587,7 +627,7 @@ class LeadDetailsPage extends React.Component {
             </Col>
           </Row>
 
-          </React.Fragment>
+        </React.Fragment>
       )
     }
 
@@ -722,7 +762,7 @@ class LeadDetailsPage extends React.Component {
 
 
   getActionsInfo() {
-    const { leadDetails} = this.state;
+    const { leadDetails, ASSIGN_REP = false } = this.state;
     let returnedView;
     if (leadDetails && leadDetails.id && leadDetails.leadsSummaryRes) {
       returnedView = (
@@ -731,10 +771,57 @@ class LeadDetailsPage extends React.Component {
             <CardItem>
               <Col>
                 <Grid>
-                  {this.getUpdatedBugetView()}
-                  {this.getAssignSalesRepView()}
-                  {this.addMoreBUView()}
-                  {this.notifyBUVIew()}
+                  <Row >
+                    <Text style={styleContent.secondaryLabel}> ESTIMATED BUDGET </Text>
+                  </Row>
+                  <Row>
+                    <Col style={{
+                      width: "50%"
+                    }}>
+                      <Item >
+                        <Input
+                          style={styleContent.secondaryDarkText}
+                          returnKeyType="next"
+                          clearButtonMode="always"
+                          autoCapitalize="none"
+                          autoCorrect={false}
+                          placeholder='Enter Amount'
+                          value={this.state && this.state.leadDetails && this.state.leadDetails.leadsSummaryRes && this.state.leadDetails.leadsSummaryRes.budget && (this.state.leadDetails.leadsSummaryRes.budget).toString()}
+                          onChangeText={(text) => {
+                            this.inputElementChanged(appConstant.UPDATE_LEAD.BUDGET, text);
+                          }}
+
+                        />
+                      </Item>
+                    </Col>
+                    <Col style={{
+                      marginTop: "3%",
+                      width: "30%",
+                      marginLeft: "10%"
+                    }}>
+                      {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.CURRENCY)}
+                    </Col>
+                  </Row>
+                  
+                  <Row style={styleContent.marginTopStyling}>
+                    <Col>
+                      <CheckBoxComponent
+                        currentState={ASSIGN_REP}
+                        checkBoxLabel={i18nMessages.lbl_assign_rep}
+                        controlType={appConstant.UPDATE_LEAD.ASSIGN_REP}
+                        updateToParent={this.onCheckBoxChanged}
+                      />
+                    </Col>
+                    <Col style={styleContent.marginTopStyling}>
+                      {ASSIGN_REP && this.getDropdownForSplType(appConstant.DROP_DOWN_TYPE.SALES_REP)}
+                    </Col>
+                  </Row>
+                  {
+                    // this.addMoreBUView()
+                    }
+                  { 
+                    // this.notifyBUVIew()
+                    }
 
                 </Grid>
               </Col>
@@ -982,7 +1069,7 @@ function mapDispatchToProps(dispatch) {
       })
     },
 
-    loadLeadDetail: (inputParams) => {
+    loadLeadDetailREST: (inputParams) => {
       return leadApi.getLeadDetails(inputParams).then((resp) => {
         return resp;
       })
@@ -1025,4 +1112,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LeadDetailsPage)
+// export default connect(mapStateToProps, mapDispatchToProps)(LeadDetailsPage)

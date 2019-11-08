@@ -1,4 +1,55 @@
+import { default as RBAPolicy } from '../common/rbaPolicy';
+
 const utilities = {
+    getBUInputBasedOnMode : (GENERAL_BU_MODE) => {
+        let fromBU;
+        let toBU;
+        switch (GENERAL_BU_MODE) {
+            case "team_internal":
+                fromBU = RBAPolicy.getCurrentBU();
+                toBU = RBAPolicy.getCurrentBU();
+                break;
+            case "team_external":
+                fromBU = RBAPolicy.getCurrentBU();
+                break;
+            case "team_across":
+                toBU = RBAPolicy.getCurrentBU()
+                break;
+            case "self_generated":
+                fromBU = RBAPolicy.getCurrentBU();
+                toBU = ""
+                break;
+            case "all":
+            default:
+                break;
+        }
+        return { fromBU, toBU };
+    },
+    getLeadOriginBasedOnSalesRep: (SELF_MODE) => {
+        let payloadInfo = {}
+        switch (SELF_MODE) {
+            case "both":
+                payloadInfo = {
+                    "toBU": RBAPolicy.getCurrentBU()
+                }
+                break;
+            case "generated":
+                payloadInfo = {
+                    "creatorId": RBAPolicy.getCurrentUserId()
+                }
+                break;
+            case "assigned":
+                payloadInfo = {
+                    "salesRepId": RBAPolicy.getCurrentUserId()
+                }
+                break;
+
+        }
+
+        return payloadInfo;
+
+    },
+
     getFormattedDate : (newDate = new Date()) =>{
         let month = newDate.getUTCMonth()+1;
         if(month< 10) {

@@ -16,7 +16,7 @@ import { default as Utils } from '../common/Util';
 import { default as LeadsFilterComponent } from './viewLeadFilterComponent';
 import styleContent from './viewLeadStyle';
 
-
+import { default as RBAPolicy } from '../common/rbaPolicy';
 
 class ViewLeadPage extends React.Component {
     constructor(props) {
@@ -45,6 +45,9 @@ class ViewLeadPage extends React.Component {
 
         this.onSearchButtonClicked = this.onSearchButtonClicked.bind(this);
         this.onSearchTextChange = this.onSearchTextChange.bind(this);
+
+        //making the input same as stats
+        this.preparePayloadForStats = this.preparePayloadForStats.bind(this);   
     }
 
     getSpinnerComponentView() {
@@ -103,6 +106,108 @@ class ViewLeadPage extends React.Component {
             referenceData: resp
         });
     }
+
+    getBUInputBasedOnMode(GENERAL_BU_MODE) {
+        let fromBU;
+        let toBU;
+        switch (GENERAL_BU_MODE) {
+            case "team_internal":
+                fromBU = RBAPolicy.getCurrentBU();
+                toBU = RBAPolicy.getCurrentBU();
+                break;
+            case "team_external":
+                fromBU = RBAPolicy.getCurrentBU();
+                break;
+            case "team_across":
+                toBU = RBAPolicy.getCurrentBU()
+                break;
+            case "self_generated":
+                fromBU = RBAPolicy.getCurrentBU();
+                toBU = ""
+                break;
+            case "all":
+            default:
+                break;
+        }
+        return { fromBU, toBU };
+    }
+
+    getLeadOriginBasedOnSalesRep(SELF_MODE) {
+        let payloadInfo = {}
+        switch (SELF_MODE) {
+            case "both":
+                payloadInfo = {
+                    "toBU": RBAPolicy.getCurrentBU()
+                }
+                break;
+            case "generated":
+                payloadInfo = {
+                    "creatorId": RBAPolicy.getCurrentUserId()
+                }
+                break;
+            case "assigned":
+                payloadInfo = {
+                    "salesRepId": RBAPolicy.getCurrentUserId()
+                }
+                break;
+
+        }
+
+        return payloadInfo;
+
+    }
+
+    preparePayloadForStats() {
+        const {
+            ORIGINATOR_BU,
+            TARGET_BU,
+            SALES_REP,
+            START_DATE,
+            END_DATE,
+            DROP_DOWN_SELF_MODE,
+            DROP_DOWN_GENERAL_BU_MODE
+        } = this.state;
+
+        let payload = {};
+        if (RBAPolicy.getPolicyVisibility("self_lead_view_mode") &&
+            SELF_MODE
+        ) {
+            // Sales REP Dashboard based on  self generated and assigned to me
+            payload = {
+                ...payload,
+                ...Utils.getLeadOriginBasedOnSalesRep(DROP_DOWN_SELF_MODE)
+            }
+
+        } else if (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode") &&
+            GENERAL_BU_MODE
+        ) {
+            // Sales REP Dashboard based on internal , external etc
+            const inputBUInfo = Utils.getBUInputBasedOnMode(DROP_DOWN_GENERAL_BU_MODE);
+            payload["fromBu"] = inputBUInfo.fromBU;
+            payload["toBu"] = inputBUInfo.toBU;
+        } else if (ORIGINATOR_BU && 
+            ORIGINATOR_BU != '' && 
+            ORIGINATOR_BU != "#_ALL_#" &&
+            TARGET_BU && 
+            TARGET_BU != "#_ALL_#" &&
+            TARGET_BU != '') {
+            payload["fromBu"] = ORIGINATOR_BU;
+            payload["toBu"] = TARGET_BU;
+        }
+
+        if (START_DATE && START_DATE != '' && END_DATE && END_DATE != '') {
+            payload["startDate"] = Utils.getFormattedDate(START_DATE);
+            payload["endDate"] = Utils.getFormattedDate(END_DATE);
+        }
+
+        if (SALES_REP && SALES_REP != '' && SALES_REP !== '#_SELECT_REP_#') {
+            payload["salesRepId"] = SALES_REP;
+        }
+        return payload;
+    }
+
+
+
     validateTheFilter(inputFilterState) {
         let isChanged = false;
         const newFilterState = {};
@@ -261,6 +366,7 @@ class ViewLeadPage extends React.Component {
         this.setState({
             spinner: true
         });
+        
         this.refDataApi.fetchStructuredRefData({ params: "type=SOURCE,CURRENCY,TENURE,COUNTRY,INDUSTRY,BU" }).then(this.onReferenceDataFetched);
         let params=""
         /*
@@ -272,7 +378,22 @@ class ViewLeadPage extends React.Component {
             }
         }
         */
-        this.leadApi.getLeads({ params }).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError)
+        // prepare input
+        const filterPayload = this.prepareInputPayload({
+                'LEAD_STATUS_DROP_DOWN':'',
+                'searchText':'',
+                'TENURE':'',
+                'COUNTRY':'', 
+                'BU':'', 
+                'SOURCE':'', 
+                'INDUSTRY':''
+            }
+        );
+        this.leadApi.searchLeadsWithFilters(filterPayload).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError)
+
+
+        
+        // this.leadApi.getLeads({ params }).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError)
         // this.props.loadLeads({}).
     }
     componentDidMount() {
