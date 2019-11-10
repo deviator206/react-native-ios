@@ -56,7 +56,7 @@ const utilities = {
             month = `0${month}`;
         }
         
-        let day = newDate.getUTCDay();
+        let day = newDate.getUTCDate();
         if(day< 10) {
             day = `0${day}`;
         }
