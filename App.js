@@ -7,13 +7,12 @@
  */
 import React from 'react';
 import { createAppContainer, createDrawerNavigator, createStackNavigator } from 'react-navigation';
-import { Provider } from 'react-redux';
 import AddLeadPage from './pages/addlead/addLeadPage';
 import AppBootstrap from './pages/bootstrap/AppBootstrap';
 import CreateUserPage from './pages/createuser/createUserPage';
 import DashboardPage from './pages/dashboard/dashboard';
+import EntryPage from './pages/entrypoint/EntryPage';
 import LeadDetailsPage from './pages/leaddetails/leadDetailsPage';
-import LoginPage from './pages/login/loginPage';
 import MiAddPage from './pages/marketadd/miAddPage';
 import MiDetailsPage from './pages/marketdetails/miDetailsPage';
 import MiListPage from './pages/marketlist/miListPage';
@@ -21,10 +20,8 @@ import NotificationListPage from './pages/notifications/notificationListPage';
 import SideMenuBar from './pages/sidemenu/sideMenu';
 import UserListPage from './pages/users/userListPage';
 import ViewLeadPage from './pages/viewlead/viewLeadPage';
-import EntryPage from './pages/entrypoint/EntryPage';
 
 
-import { default as configureStore } from './storage/store/createAppStore';
 
 
 console.disableYellowBox = true;
@@ -110,8 +107,8 @@ const AppNavigator = createStackNavigator({
 const AppContainer = createAppContainer(AppNavigator);
 
 
-const newStore = configureStore({});
-window.storeInstance = newStore;
+// const newStore = configureStore({});
+// window.storeInstance = newStore;
 class App extends React.Component {
 
   constructor(props) {
@@ -127,11 +124,9 @@ class App extends React.Component {
   }
   render() {
     return (
-      <Provider store={newStore}>
         <AppContainer
-
         />
-      </Provider>
+     
     );
   }
 }

@@ -1,7 +1,6 @@
 import { Button, Col, Container, Content, Footer, Grid, Input, Item, Label, Row, Text } from 'native-base';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
 import RefDataApi from '../../services/RefDataApi';
 import UserApi from '../../services/UserApi';
 import { default as commonStyle } from '../common/commonStyling';
@@ -14,11 +13,12 @@ import RadioButtonGroupComponent from '../common/radioButtonGroup';
 import SpinnerComponent from '../common/spinnerComponent';
 import styleContent from './createUserPageStyle';
 
+
 const refDataApi = new RefDataApi({ state: {} });
 const userApi = new UserApi({ state: {} });
 
 
-class CreateUserPage extends React.Component {
+export default class CreateUserPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -37,6 +37,34 @@ class CreateUserPage extends React.Component {
         this.overlayScreenView = this.overlayScreenView.bind(this);
         this.onFPModalClosed = this.onFPModalClosed.bind(this);
         this.onDropDownChange = this.onDropDownChange.bind(this);
+
+        this.loadRefData = this.loadRefData.bind(this);
+        this.createAppUser = this.createAppUser.bind(this);
+    }
+
+    createAppUser (inputPayload) {
+        return userApi.createUser(inputPayload).then((resp) => {
+            return resp;
+        });
+
+    }
+    loadRefData (inputParams)  {
+        return refDataApi.fetchRefData({
+            params: (inputParams) ? inputParams : "type=BU"
+        }).then(result => {
+            const refInfo = {};
+            if (result && result.data) {
+                result.data.forEach((element) => {
+                    if (element && element.type) {
+                        if (!refInfo[element.type]) {
+                            refInfo[element.type] = [];
+                        }
+                        refInfo[element.type].push(element);
+                    }
+                });
+            }
+            return refInfo;
+        });
     }
 
 
@@ -102,7 +130,7 @@ class CreateUserPage extends React.Component {
             spinner: true,
             CHILD_RADIO_BUTTON_VALUE: 'SR'
         });
-        this.props.loadRefData().then(this.onResponseFromReferenceData).catch(this.onErrorResponseFromReferenceData);
+        this.loadRefData().then(this.onResponseFromReferenceData).catch(this.onErrorResponseFromReferenceData);
     }
 
     onAppUserCreated(resp) {
@@ -146,9 +174,7 @@ class CreateUserPage extends React.Component {
                 ]
             };
 
-            this.props.createAppUser(payload).then(this.onAppUserCreated).catch(this.onAppUserCreationError);
-
-
+            this.createAppUser(payload).then(this.onAppUserCreated).catch(this.onAppUserCreationError);
         }
 
 
@@ -363,4 +389,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateUserPage)
+//export default connect(mapStateToProps, mapDispatchToProps)(CreateUserPage)

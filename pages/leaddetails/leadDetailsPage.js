@@ -3,7 +3,6 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { default as MaterialIcon, default as MatIcon } from 'react-native-vector-icons/MaterialIcons';
 import { default as FeatherIcon } from 'react-native-vector-icons/SimpleLineIcons';
-// import { connect } from 'react-redux';
 import LeadApi from '../../services/LeadApi';
 import RefDataApi from '../../services/RefDataApi';
 import UserApi from '../../services/UserApi';

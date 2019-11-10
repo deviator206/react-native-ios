@@ -3,11 +3,9 @@ import React from 'react';
 import { Alert, FlatList, Modal, TouchableHighlight, View } from 'react-native';
 import { default as FilterIcon } from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
 import MarketIntelligenceApi from '../../services/MarketIntelligenceApi';
 import UserApi from '../../services/UserApi';
 import { default as appConstant } from '../common/consts';
-import FooterComponent from '../common/footerComponent';
 import HeaderComponent from '../common/headerComponent';
 import SpinnerComponent from '../common/spinnerComponent';
 import styleContent from './userListPageStyle';
@@ -18,7 +16,7 @@ const userApi = new UserApi({ state: {} });
 
 
 
-class UserListPage extends React.Component {
+export default class UserListPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -35,6 +33,27 @@ class UserListPage extends React.Component {
         this.onResponseSuccess = this.onResponseSuccess.bind(this);
         this.onResponseError = this.onResponseError.bind(this);
         this.getStatusStyle = this.getStatusStyle.bind(this);
+
+
+        this.loadAllMI = this.loadAllMI.bind(this);
+        this.getUserList = this.getUserList.bind(this);
+    }
+
+
+    loadAllMI(inputParams) {
+        return marketIntelligenceApi.getMI({
+            params: inputParams
+        }).then((resp) => {
+            return resp;
+        })
+
+    }
+    getUserList (inputParams) {
+        return userApi.getUserList({
+            params: inputParams
+        }).then((resp) => {
+            return resp;
+        })
     }
 
     onResponseSuccess(resp) {
@@ -320,4 +339,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserListPage);
+// export default connect(mapStateToProps, mapDispatchToProps)(UserListPage);

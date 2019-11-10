@@ -1,24 +1,23 @@
-import { Button, Card, CardItem, Col, Container, Content, Grid, Input, Item, Row, Text, View } from 'native-base';
+import { Button, Col, Container, Content, Grid, Input, Item, Row, View } from 'native-base';
 import React from 'react';
-import { FlatList } from 'react-native';
 import { default as FilterIcon } from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
 import MarketIntelligenceApi from '../../services/MarketIntelligenceApi';
 import { default as commonStyle } from '../common/commonStyling';
 import { default as appConstant } from '../common/consts';
+import FlatListComponent from '../common/flatListComponent';
 import HeaderComponent from '../common/headerComponent';
 import SpinnerComponent from '../common/spinnerComponent';
 import { default as FilterComponent } from './miFilterComponent';
-import FlatListComponent from '../common/flatListComponent';
 import styleContent from './miListPageStyle';
+
 
 
 const marketIntelligenceApi = new MarketIntelligenceApi({ state: {} });
 
 
 
-class MiListPage extends React.Component {
+export default  class MiListPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -39,8 +38,26 @@ class MiListPage extends React.Component {
         this.triggerResetFilterBasedSearch = this.triggerResetFilterBasedSearch.bind(this);
         this.validateTheFilter = this.validateTheFilter.bind(this);
         this.prepareInputPayload = this.prepareInputPayload.bind(this);
+        this.loadAllMI = this.loadAllMI.bind(this);
+        this.searchMIList = this.searchMIList.bind(this);
 
     }
+
+    loadAllMI (inputParams) {
+        return marketIntelligenceApi.getMI({
+            params: inputParams
+        }).then((resp) => {
+            return resp;
+        })
+
+    }
+    searchMIList(filterPayload){
+        return marketIntelligenceApi.searchMIList(filterPayload).then((resp) => {
+            return resp;
+        })
+
+    }
+
 
     onResponseSuccess(resp) {
         this.setState({
@@ -167,7 +184,7 @@ class MiListPage extends React.Component {
 
             if(Object.keys(filterPayload).length > 0) {
                 // invoke rest
-                this.props.searchMIList(filterPayload).then(this.onResponseSuccess).catch(this.onResponseError);
+                this.searchMIList(filterPayload).then(this.onResponseSuccess).catch(this.onResponseError);
                 this.setState({
                     filterVisible: false,
                     spinner: true,
@@ -204,7 +221,7 @@ class MiListPage extends React.Component {
         this.setState({
             spinner: true
         });
-        this.props.loadAllMI().then(this.onResponseSuccess).catch(this.onResponseError)
+        this.loadAllMI().then(this.onResponseSuccess).catch(this.onResponseError)
     }
 
 
@@ -377,4 +394,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MiListPage);
+// export default connect(mapStateToProps, mapDispatchToProps)(MiListPage);

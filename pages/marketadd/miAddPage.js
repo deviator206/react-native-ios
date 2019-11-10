@@ -1,7 +1,6 @@
 import { Button, Col, Container, Content, Footer, Grid, Input, Item, Label, Row, Text, Textarea } from 'native-base';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
 import MarketIntelligenceApi from '../../services/MarketIntelligenceApi';
 import { default as commonStyle } from '../common/commonStyling';
 import { default as appConstant } from '../common/consts';
@@ -13,10 +12,11 @@ import SpinnerComponent from '../common/spinnerComponent';
 import { default as Utils } from '../common/Util';
 import styleContent from './miAddPageStyle';
 
+
 const marketIntelligenceApi = new MarketIntelligenceApi({ state: {} });
 
 
-class MiAddPage extends React.Component {
+export default  class MiAddPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -37,7 +37,15 @@ class MiAddPage extends React.Component {
         this.getSpinnerComponentView = this.getSpinnerComponentView.bind(this);
 
         this.willBlurSubscription = null;
+        this.createMI = this.createMI.bind(this);
+    }
 
+    createMI (inputPayload)  {
+        return marketIntelligenceApi.createNewMI({
+            params: inputPayload
+        }).then((resp) => {
+            return resp;
+        })
     }
 
     getSpinnerComponentView() {
@@ -315,4 +323,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MiAddPage)
+// export default connect(mapStateToProps, mapDispatchToProps)(MiAddPage)

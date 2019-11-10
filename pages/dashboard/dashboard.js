@@ -1,6 +1,5 @@
 import { Button, Card, Col, Container, Content, DatePicker, Grid, Row, Text, View } from 'native-base';
 import React from 'react';
-import { connect } from 'react-redux';
 import LeadApi from '../../services/LeadApi';
 import RefDataApi from '../../services/RefDataApi';
 import UserApi from '../../services/UserApi';
@@ -9,12 +8,11 @@ import { default as appConstant } from '../common/consts';
 import DropDownComponent from '../common/dropdownComponent';
 import FooterComponent from '../common/footerComponent';
 import HeaderComponent from '../common/headerComponent';
-import i18nMessages from '../common/i18n';
+import { default as RBAPolicy } from '../common/rbaPolicy';
 import SpinnerComponent from '../common/spinnerComponent';
 import { default as Utils } from '../common/Util';
 import styleContent from './dashboardStyle';
-import { default as RBAPolicy } from '../common/rbaPolicy';
-import CheckBoxComponent from '../common/checkBoxComponent';
+
 
 const refDataApi = new RefDataApi({ state: {} });
 const userApi = new UserApi({ state: {} });
@@ -35,7 +33,7 @@ const formatDate = (date, type) => {
 
 
 
-class DashboardPage extends React.Component {
+export default class DashboardPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -68,8 +66,40 @@ class DashboardPage extends React.Component {
         this.preparePayloadForStats = this.preparePayloadForStats.bind(this);
         this.iniateExtractResult = this.iniateExtractResult.bind(this);
        
+        this.loadLeadStats = this.loadLeadStats.bind(this);
+        this.getUserList = this.getUserList.bind(this);
+        this.loadRefData = this.loadRefData.bind(this);
 
+    }
 
+    loadLeadStats (inputPayload){
+        return leadApi.getStats(inputPayload).then((resp) => {
+            return resp;
+        })
+
+    }
+    getUserList (inputParams){
+        return userApi.getUserList(inputParams).then((resp) => {
+            return resp;
+        })
+    }
+    loadRefData (inputParams)  {
+        return refDataApi.fetchRefData({
+            params: (inputParams) ? inputParams : "type=BU"
+        }).then(result => {
+            const refInfo = {};
+            if (result && result.data) {
+                result.data.forEach((element) => {
+                    if (element && element.type) {
+                        if (!refInfo[element.type]) {
+                            refInfo[element.type] = [];
+                        }
+                        refInfo[element.type].push(element);
+                    }
+                });
+            }
+            return refInfo;
+        });
     }
 
     onStatsLoaded(resp) {
@@ -156,7 +186,7 @@ class DashboardPage extends React.Component {
         this.setState({
             spinner: true
         });
-        this.props.loadLeadStats({ payload: this.preparePayloadForStats(), queryParams }).then(this.onStatsLoaded).catch(this.onResponseError)
+        this.loadLeadStats({ payload: this.preparePayloadForStats(), queryParams }).then(this.onStatsLoaded).catch(this.onResponseError)
     }
 
     getSpinnerComponentView() {
@@ -223,12 +253,12 @@ class DashboardPage extends React.Component {
         if (RBAPolicy.getCurrentBU() && (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode") || RBAPolicy.getPolicyVisibility("self_lead_view_mode"))) {
             inputParams = "bu=" + RBAPolicy.getCurrentBU();
         }
-        this.props.getUserList(inputParams).then(this.onResponseSuccess).catch(this.onResponseError);
+        this.getUserList(inputParams).then(this.onResponseSuccess).catch(this.onResponseError);
     }
 
     componentDidMount() {
         this.setState({ spinner: false });
-        this.props.loadRefData().then(this.onResponseFromReferenceData).catch(this.onErrorResponseFromReferenceData);
+        this.loadRefData().then(this.onResponseFromReferenceData).catch(this.onErrorResponseFromReferenceData);
         this.willFocusSubscription = this.props.navigation.addListener('willFocus', this.loadAllUsers);
     }
 
@@ -626,4 +656,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage)
+// export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage)

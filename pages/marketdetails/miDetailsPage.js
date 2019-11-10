@@ -2,25 +2,23 @@ import { Button, Col, Container, Content, Footer, Grid, Row, Text, Textarea, Vie
 import React from 'react';
 import { FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
 import MarketIntelligenceApi from '../../services/MarketIntelligenceApi';
-import { default as Utils } from '../common/Util';
 import CheckBoxComponent from '../common/checkBoxComponent';
 import { default as commonStyle } from '../common/commonStyling';
 import { default as appConstant } from '../common/consts';
 import DropDownComponent from '../common/dropdownComponent';
+import FlatListComponent from '../common/flatListComponent';
 import HeaderComponent from '../common/headerComponent';
 import i18nMessages from '../common/i18n';
 import ModalComponent from '../common/modalComponent';
-import { default as MiInfoListComponent } from './miInfoListComponent';
 import SpinnerComponent from '../common/spinnerComponent';
 import styleContent from './miDetailsPageStyle';
-import FlatListComponent from '../common/flatListComponent';
+import { default as MiInfoListComponent } from './miInfoListComponent';
 
 const marketIntelligenceApi = new MarketIntelligenceApi({ state: {} });
 
 
-class MiDetailsPage extends React.Component {
+export default  class MiDetailsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -54,6 +52,20 @@ class MiDetailsPage extends React.Component {
 
         this.viewMoreButton = this.viewMoreButton.bind(this);
 
+        this.loadMIDetail = this.loadMIDetail.bind(this);
+        this.updateMarketIntelligence = this.updateMarketIntelligence.bind(this);
+
+
+    }
+    updateMarketIntelligence (inputPayload)  {
+        return marketIntelligenceApi.updateMI(inputPayload).then((resp) => {
+            return resp;
+        })
+    }
+    loadMIDetail (inputParams) {
+        return marketIntelligenceApi.getMIDetails(inputParams).then((resp) => {
+            return resp;
+        })
 
     }
 
@@ -97,7 +109,7 @@ class MiDetailsPage extends React.Component {
             spinner: true,
             ADD_MORE_INFO: false,
         });
-        this.props.loadMIDetail({ itemId }).then(this.onResponseSuccess).catch(this.onResponseError);
+        this.loadMIDetail({ itemId }).then(this.onResponseSuccess).catch(this.onResponseError);
     }
 
 
@@ -228,7 +240,7 @@ class MiDetailsPage extends React.Component {
                 spinner: true
             });
 
-            this.props.updateMarketIntelligence({
+            this.updateMarketIntelligence({
                 itemId,
                 payload
             }).then(this.onSuccessHandler).catch(this.onErrorHandler);
@@ -517,4 +529,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MiDetailsPage)
+// export default connect(mapStateToProps, mapDispatchToProps)(MiDetailsPage)

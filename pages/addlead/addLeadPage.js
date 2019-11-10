@@ -2,7 +2,6 @@ import { Body, Button, Card, CardItem, CheckBox, Col, Container, Content, DatePi
 import React from 'react';
 import { default as FeatherIcon } from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
 import LeadApi from '../../services/LeadApi';
 import RefDataApi from '../../services/RefDataApi';
 import UserApi from '../../services/UserApi';
@@ -26,7 +25,7 @@ const formatDate = date => {
   return `${date.getFullYear()}/${date.getDate()}/${date.getMonth() + 1}`;
 };
 
-class AddLeadPage extends React.Component {
+export default class AddLeadPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -71,8 +70,45 @@ class AddLeadPage extends React.Component {
     this.validateLeadInputPayload = this.validateLeadInputPayload.bind(this);
     this.getCustomerNameInputBox = this.getCustomerNameInputBox.bind(this);
     this.getRequirementInputBox = this.getRequirementInputBox.bind(this);
+
+    this.submitLead = this.submitLead.bind(this);
+    this.loadUserList = this.loadUserList.bind(this);
+    this.loadRefData = this.loadRefData.bind(this);
   }
 
+
+  submitLead(inputPayload)  {
+    return leadApi.createLead({
+      params: inputPayload
+    }).then((resp) => {
+      return resp;
+    })
+  }
+
+  loadRefData(inputParams)  {
+    return refDataApi.fetchRefData({
+      params: (inputParams) ? inputParams : "type=SOURCE,CURRENCY,TENURE,COUNTRY,INDUSTRY,BU"
+    }).then(result => {
+      const refInfo = {};
+      if (result && result.data) {
+        result.data.forEach((element) => {
+          if (element && element.type) {
+            if (!refInfo[element.type]) {
+              refInfo[element.type] = [];
+            }
+            refInfo[element.type].push(element);
+          }
+        });
+      }
+      return refInfo;
+    });
+  }
+
+  loadUserList ()  {
+    return userApi.getUserList().then(result => {
+      return result;
+    });
+  }
 
   inputTextFieldChanged({ type, value }) {
     this.setState({
@@ -252,7 +288,7 @@ class AddLeadPage extends React.Component {
       spinner: true
     });
 
-    this.props.submitLead(inputPayload).then(this.onResponseSubmitLead).catch(this.onErrorResponseSubmitLead);
+    this.submitLead(inputPayload).then(this.onResponseSubmitLead).catch(this.onErrorResponseSubmitLead);
   }
   shouldComponentUpdate(nextProps, nextState) {
     const { TENURE,
@@ -360,7 +396,7 @@ class AddLeadPage extends React.Component {
           spinner: true,
           dynamic_state_ref
         });
-        this.props.loadRefData("type=" + dynamic_state_ref).then(this.onStateLoaded).catch(this.onErrorResponseFromReferenceData);
+        this.loadRefData("type=" + dynamic_state_ref).then(this.onStateLoaded).catch(this.onErrorResponseFromReferenceData);
       }
     }
 
@@ -372,7 +408,7 @@ class AddLeadPage extends React.Component {
     const INPUT_CTL_CUSTOMER_NAME = navigation.getParam('INPUT_CTL_CUSTOMER_NAME', '');
     const INPUT_CTL_REQUIREMENT = navigation.getParam('INPUT_CTL_REQUIREMENT', '');
 
-    this.props.loadRefData().then(this.onResponseFromReferenceData).catch(this.onErrorResponseFromReferenceData);
+    this.loadRefData().then(this.onResponseFromReferenceData).catch(this.onErrorResponseFromReferenceData);
     const myBU = (window.userInformation &&
       window.userInformation.userInfo &&
       window.userInformation.userInfo.businessUnit) ? window.userInformation.userInfo.businessUnit : "";
@@ -536,7 +572,7 @@ class AddLeadPage extends React.Component {
     }
     if (userList.length <= 0 && !isSelfApproved) {
       newObject['spinner'] = true;
-      this.props.loadUserList().then(this.onUserListLoaded).catch(this.onUserListLoadedError);
+      this.loadUserList().then(this.onUserListLoaded).catch(this.onUserListLoadedError);
     }
     this.setState({
       ...newObject
@@ -1032,4 +1068,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddLeadPage)
+// export default connect(mapStateToProps, mapDispatchToProps)(AddLeadPage)
