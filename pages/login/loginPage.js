@@ -1,12 +1,12 @@
 import { Button, Container, Content, Icon, Input, Item, Text, View } from 'native-base';
 import React, { Component } from 'react';
-import { Image , AsyncStorage} from "react-native";
+import { AsyncStorage, Image } from "react-native";
 import AuthenticationApi from '../../services/AuthenticationApi';
+import { default as ApplicationConfiguration } from '../common/application.config';
 import { default as commonStyling } from '../common/commonStyling';
 import ModalComponent from '../common/modalComponent';
 import { default as RBAPolicy } from '../common/rbaPolicy';
 import SpinnerComponent from '../common/spinnerComponent';
-import { default as ApplicationConfiguration } from '../common/application.config';
 import styleContent from './loginStyle';
 
 
@@ -168,9 +168,7 @@ export default class LoginPage extends Component {
                     contentContainerStyle={styleContent.mainContent}
                     style={styleContent.fullWidth}>
                     <View style={styleContent.logoWrapper}>
-                        {
-                            // <Image source={logoImg} style={styleContent.logo} />
-                        }
+                        <Image source={logoImg} style={styleContent.logo} />
                     </View>
                     <View style={styleContent.loginUpperContent}>
                         <View style={styleContent.loginUpper}>

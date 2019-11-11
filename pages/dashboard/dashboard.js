@@ -154,9 +154,10 @@ export default class DashboardPage extends React.Component {
             GENERAL_BU_MODE
         ) {
             // Sales REP Dashboard based on internal , external etc
-            const inputBUInfo = Utils.getBUInputBasedOnMode(GENERAL_BU_MODE);
-            payload["fromBu"] = inputBUInfo.fromBu;
-            payload["toBu"] = inputBUInfo.toBu;
+            payload = {
+                ...payload,
+                ...Utils.getBUInputBasedOnMode(GENERAL_BU_MODE)
+            }
         } else if (ORIGINATOR_BU && 
             ORIGINATOR_BU != '' && 
             ORIGINATOR_BU != "#_ALL_#" &&

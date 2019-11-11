@@ -18,6 +18,7 @@ export default class viewLeadFilterComponent extends React.Component {
         this.onDropDownChange = this.onDropDownChange.bind(this);
         this.getRBABasedSelfModeView = this.getRBABasedSelfModeView.bind(this);
         this.getRBABasedGeneralBUModeView = this.getRBABasedGeneralBUModeView.bind(this);
+        this.getAllToAllDropdown = this.getAllToAllDropdown.bind(this);
 
     }
 
@@ -54,9 +55,20 @@ export default class viewLeadFilterComponent extends React.Component {
                 break;
             case 'DROP_DOWN_SELF_MODE':
                 dataSource = (appConstant.SELF_MODE) ? [...appConstant.SELF_MODE] : [];
+                defaultSelection = (savedState && savedState.DROP_DOWN_SELF_MODE) ? savedState.DROP_DOWN_SELF_MODE : ''
                 break;
             case 'DROP_DOWN_GENERAL_BU_MODE':
                 dataSource = (appConstant.GENERAL_BU_MODE) ? [...appConstant.GENERAL_BU_MODE] : [];
+                defaultSelection = (savedState && savedState.DROP_DOWN_GENERAL_BU_MODE) ? savedState.DROP_DOWN_GENERAL_BU_MODE : ''
+                break;
+            case 'ORIGINATOR_BU':
+                    dataSource = (referenceInfo && referenceInfo[appConstant.DROP_DOWN_TYPE.BU_NAME]) ? referenceInfo[appConstant.DROP_DOWN_TYPE.BU_NAME] : [];
+                    defaultSelection = (savedState && savedState.ORIGINATOR_BU) ? savedState.ORIGINATOR_BU : ''
+                break;
+            case 'TARGET_BU':
+                dataSource = (referenceInfo && referenceInfo[appConstant.DROP_DOWN_TYPE.BU_NAME]) ? referenceInfo[appConstant.DROP_DOWN_TYPE.BU_NAME] : [];
+                defaultSelection = (savedState && savedState.TARGET_BU) ? savedState.TARGET_BU : ''
+                break;
                 break;
             case appConstant.DROP_DOWN_TYPE.TENURE:
             case appConstant.DROP_DOWN_TYPE.BU_NAME:
@@ -114,6 +126,28 @@ export default class viewLeadFilterComponent extends React.Component {
         }
     }
 
+    getAllToAllDropdown() {
+        if (RBAPolicy.getPolicyVisibility("report_all_bu_to_all")) {
+            return (
+                <Row style={{
+                    marginTop: "5%",
+                    paddingHorizontal: "3%"
+                }}>
+                    <Col style={{
+                        marginRight: "5%"
+                    }}>
+                        <Text note style={commonStyle.labelStyling}  > Originator BU</Text>
+                        {this.getDropdownFor('ORIGINATOR_BU')}
+                    </Col>
+                    <Col>
+                        <Text note style={commonStyle.labelStyling}  >Target BU</Text>
+                        {this.getDropdownFor('TARGET_BU')}
+                    </Col>
+                </Row>
+            );
+        }
+    }
+
     getRBABasedGeneralBUModeView() {
         if (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode")) {
             return (
@@ -145,7 +179,7 @@ export default class viewLeadFilterComponent extends React.Component {
                         toggleHandler()
                     }
                 }}>
-                <View style={{  "flex":1 }}
+                <View style={{ "flex": 1 }}
                 >
                     <View style={[commonStyle.modalHeaderDiv,
                     {
@@ -168,19 +202,20 @@ export default class viewLeadFilterComponent extends React.Component {
                         <Grid style={commonStyle.formGrid}>
                             {this.getRBABasedSelfModeView()}
                             {this.getRBABasedGeneralBUModeView()}
-                            <Row style={[commonStyle.formGridLabel,{ justifyContent:"space-between"}]}>
-                                <Col style={{width:"45%"}}>
+                            {this.getAllToAllDropdown()}
+                            <Row style={[commonStyle.formGridLabel, { justifyContent: "space-between" }]}>
+                                <Col style={{ width: "45%" }}>
                                     <Text note style={commonStyle.labelStyling}>{i18nMessages.status}</Text>
                                 </Col>
-                                <Col style={{width:"45%"}}>
+                                <Col style={{ width: "45%" }}>
                                     <Text note style={commonStyle.labelStyling}>{i18nMessages.tenure_lbl}</Text>
                                 </Col>
                             </Row>
-                            <Row style={[commonStyle.formGridValue,{ justifyContent:"space-between"}]}>
-                                <Col style={{width:"45%"}}>
+                            <Row style={[commonStyle.formGridValue, { justifyContent: "space-between" }]}>
+                                <Col style={{ width: "45%" }}>
                                     {this.getDropdownFor('LEAD_STATUS_DROP_DOWN')}
                                 </Col>
-                                <Col style={{width:"45%"}}>
+                                <Col style={{ width: "45%" }}>
                                     {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.TENURE)}
                                 </Col>
                             </Row>
@@ -198,15 +233,15 @@ export default class viewLeadFilterComponent extends React.Component {
 
 
                             {
-                            /*<Row style={commonStyle.formGridLabel}>
-                                <Col>
-                                    <Text note style={commonStyle.labelStyling}>{i18nMessages.bu_selection}</Text>
-                                </Col>
-                            </Row>
-                            <Row style={commonStyle.formGridValue}>
-                                <Col>{this.getDropdownFor(appConstant.DROP_DOWN_TYPE.BU_NAME)}</Col>
-                            </Row>
-                            */
+                                /*<Row style={commonStyle.formGridLabel}>
+                                    <Col>
+                                        <Text note style={commonStyle.labelStyling}>{i18nMessages.bu_selection}</Text>
+                                    </Col>
+                                </Row>
+                                <Row style={commonStyle.formGridValue}>
+                                    <Col>{this.getDropdownFor(appConstant.DROP_DOWN_TYPE.BU_NAME)}</Col>
+                                </Row>
+                                */
                             }
                             <Row style={commonStyle.formGridLabel}>
                                 <Col>

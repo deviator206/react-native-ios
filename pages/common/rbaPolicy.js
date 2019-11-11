@@ -172,16 +172,34 @@ class PolicyProvider {
         if (options && options.leadDetails) {
             isOwner = this.isOwnerOfLead(options.leadDetails);
         }
+
+        let isSameBU = false;
+        if (options && 
+            options.leadDetails   && 
+            options.leadDetails.leadsSummaryRes && 
+            options.leadDetails.leadsSummaryRes.businessUnits &&
+            options.leadDetails.leadsSummaryRes.businessUnits.length > 0 && 
+            options.leadDetails.leadsSummaryRes.businessUnits[0] == this.currentUserBU ) {
+                isSameBU = true;
+        }
+
         // check if action is allowed
         const actionAllowed = this.isActionAllowed(appConstant.PAGE_ACTION_MAPPING[actionName]);
         // check for nonAssigned
-        const nonAssignedAction = this.isActionAllowed(appConstant.PAGE_ACTION_MAPPING[appConstant.PAGE_ACTION_MAPPING.NON_ASSIGNED_ACTIONS_ALLOWED])
+        const nonAssignedAction = this.isActionAllowed(appConstant.PAGE_ACTION_MAPPING[appConstant.PAGE_ACTION_MAPPING.NON_ASSIGNED_ACTIONS_ALLOWED]);
+        // across BU actions allowed
+        const acrossBUAction = this.isActionAllowed(appConstant.PAGE_ACTION_MAPPING[appConstant.PAGE_ACTION_MAPPING.ACROSS_BU_ACTIONS_ALLOWED])
+
         // if owner then return 
-        if(isOwner) {
-            return actionAllowed ; 
-        } 
-        console.log(nonAssignedAction , " :2:", actionAllowed);
-        return (nonAssignedAction && actionAllowed) ? true: false;
+        if(isSameBU) {
+            if(isOwner) {
+                return actionAllowed ; 
+            } 
+            return (nonAssignedAction && actionAllowed) ? true: false;
+        } else {
+            return (acrossBUAction && nonAssignedAction && actionAllowed) ? true: false;
+        }
+        
     }
 
     checkRoleMappingActions(id, options) {

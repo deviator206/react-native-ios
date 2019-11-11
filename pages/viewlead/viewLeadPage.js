@@ -45,8 +45,6 @@ class ViewLeadPage extends React.Component {
         this.onSearchButtonClicked = this.onSearchButtonClicked.bind(this);
         this.onSearchTextChange = this.onSearchTextChange.bind(this);
 
-        //making the input same as stats
-        this.preparePayloadForStats = this.preparePayloadForStats.bind(this);
     }
 
     getSpinnerComponentView() {
@@ -101,109 +99,22 @@ class ViewLeadPage extends React.Component {
     }
 
     onReferenceDataFetched(resp) {
+        let refReference = resp;
+        if (refReference[appConstant.DROP_DOWN_TYPE.BU_NAME]) {
+            let buReferenced = refReference[appConstant.DROP_DOWN_TYPE.BU_NAME];
+            buReferenced.unshift({
+                "code": "#_ALL_#",
+                "name": "ALL BU",
+            });
+            refReference[appConstant.DROP_DOWN_TYPE.BU_NAME] = buReferenced;
+        }
         this.setState({
-            referenceData: resp
+            referenceData: refReference
         });
     }
 
-    getBUInputBasedOnMode(GENERAL_BU_MODE) {
-        let fromBU;
-        let toBU;
-        switch (GENERAL_BU_MODE) {
-            case "team_internal":
-                fromBU = RBAPolicy.getCurrentBU();
-                toBU = RBAPolicy.getCurrentBU();
-                break;
-            case "team_external":
-                fromBU = RBAPolicy.getCurrentBU();
-                break;
-            case "team_across":
-                toBU = RBAPolicy.getCurrentBU()
-                break;
-            case "self_generated":
-                fromBU = RBAPolicy.getCurrentBU();
-                toBU = ""
-                break;
-            case "all":
-            default:
-                break;
-        }
-        return { fromBU, toBU };
-    }
 
-    getLeadOriginBasedOnSalesRep(SELF_MODE) {
-        let payloadInfo = {}
-        switch (SELF_MODE) {
-            case "both":
-                payloadInfo = {
-                    "toBU": RBAPolicy.getCurrentBU()
-                }
-                break;
-            case "generated":
-                payloadInfo = {
-                    "creatorId": RBAPolicy.getCurrentUserId()
-                }
-                break;
-            case "assigned":
-                payloadInfo = {
-                    "salesRepId": RBAPolicy.getCurrentUserId()
-                }
-                break;
 
-        }
-
-        return payloadInfo;
-
-    }
-
-    preparePayloadForStats() {
-        const {
-            ORIGINATOR_BU,
-            TARGET_BU,
-            SALES_REP,
-            START_DATE,
-            END_DATE,
-            DROP_DOWN_SELF_MODE,
-            DROP_DOWN_GENERAL_BU_MODE
-        } = this.state;
-
-        let payload = {};
-        if (RBAPolicy.getPolicyVisibility("self_lead_view_mode") &&
-            SELF_MODE
-        ) {
-            // Sales REP Dashboard based on  self generated and assigned to me
-            payload = {
-                ...payload,
-                ...Utils.getLeadOriginBasedOnSalesRep(DROP_DOWN_SELF_MODE)
-            }
-
-        } else if (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode") &&
-            GENERAL_BU_MODE
-        ) {
-            // Sales REP Dashboard based on internal , external etc
-            const inputBUInfo = Utils.getBUInputBasedOnMode(DROP_DOWN_GENERAL_BU_MODE);
-            payload["fromBu"] = inputBUInfo.fromBU;
-            payload["toBu"] = inputBUInfo.toBU;
-        } else if (ORIGINATOR_BU &&
-            ORIGINATOR_BU != '' &&
-            ORIGINATOR_BU != "#_ALL_#" &&
-            TARGET_BU &&
-            TARGET_BU != "#_ALL_#" &&
-            TARGET_BU != '') {
-            payload["fromBu"] = ORIGINATOR_BU;
-            payload["toBu"] = TARGET_BU;
-        }
-
-        if (START_DATE && START_DATE != '' && END_DATE && END_DATE != '') {
-            payload["startDate"] = Utils.getFormattedDate(START_DATE);
-            payload["endDate"] = Utils.getFormattedDate(END_DATE);
-        }
-
-        if (SALES_REP && SALES_REP != '' && SALES_REP !== '#_SELECT_REP_#') {
-            payload["salesRepId"] = SALES_REP;
-        }
-        return payload;
-    }
 
 
 
@@ -257,13 +168,13 @@ class ViewLeadPage extends React.Component {
             newFilterState['DROP_DOWN_GENERAL_BU_MODE'] = inputFilterState.DROP_DOWN_GENERAL_BU_MODE;
         }
 
-        
+
         if (inputFilterState.ORIGINATOR_BU && ORIGINATOR_BU !== inputFilterState.ORIGINATOR_BU) {
             isChanged = true;
             newFilterState['ORIGINATOR_BU'] = inputFilterState.ORIGINATOR_BU;
         }
 
-        
+
         if (inputFilterState.TARGET_BU && TARGET_BU !== inputFilterState.TARGET_BU) {
             isChanged = true;
             newFilterState['TARGET_BU'] = inputFilterState.TARGET_BU;
@@ -351,17 +262,22 @@ class ViewLeadPage extends React.Component {
             DROP_DOWN_GENERAL_BU_MODE
         ) {
             // Sales REP Dashboard based on internal , external etc
-            const inputBUInfo = Utils.getBUInputBasedOnMode(DROP_DOWN_GENERAL_BU_MODE);
-            filterPayload["fromBu"] = inputBUInfo.fromBu;
-            filterPayload["toBu"] = inputBUInfo.toBu;
-        } else if (ORIGINATOR_BU &&
-            ORIGINATOR_BU != '' &&
-            ORIGINATOR_BU != "#_ALL_#" &&
-            TARGET_BU &&
-            TARGET_BU != "#_ALL_#" &&
-            TARGET_BU != '') {
+            filterPayload = {
+                ...filterPayload,
+                ...Utils.getBUInputBasedOnMode(DROP_DOWN_GENERAL_BU_MODE)
+            }
+        } else {
+            if (ORIGINATOR_BU &&
+                ORIGINATOR_BU != '' &&
+                ORIGINATOR_BU != "#_ALL_#") {
                 filterPayload["fromBu"] = ORIGINATOR_BU;
+
+            }
+            if (TARGET_BU &&
+                TARGET_BU != "#_ALL_#" &&
+                TARGET_BU != '') {
                 filterPayload["toBu"] = TARGET_BU;
+            }
         }
 
 
@@ -418,17 +334,8 @@ class ViewLeadPage extends React.Component {
 
         this.refDataApi.fetchStructuredRefData({ params: "type=SOURCE,CURRENCY,TENURE,COUNTRY,INDUSTRY,BU" }).then(this.onReferenceDataFetched);
         let params = ""
-        /*
-        if (RBAPolicy.getPolicyVisibility("self_lead_view_mode")) {
-            if(filterState['LEAD_STATUS_DROP_DOWN'] && filterState['LEAD_STATUS_DROP_DOWN'] !== ""){
-                params=`leadtype=${filterState['LEAD_STATUS_DROP_DOWN']}&userid=${userId}`;
-            } else {
-                params=`leadtype=both&userid=${userId}`;
-            }
-        }
-        */
 
-        let basicInput ={
+        let basicInput = {
             'LEAD_STATUS_DROP_DOWN': '',
             'searchText': '',
             'TENURE': '',
@@ -437,25 +344,25 @@ class ViewLeadPage extends React.Component {
             'SOURCE': '',
             'INDUSTRY': ''
         }
-        if (RBAPolicy.getPolicyVisibility("self_lead_view_mode") 
-            
+        if (RBAPolicy.getPolicyVisibility("self_lead_view_mode")
+
         ) {
             // Sales REP Dashboard based on  self generated and assigned to me
             basicInput = {
                 ...basicInput,
-                DROP_DOWN_SELF_MODE:appConstant.SELF_MODE[0].code
+                DROP_DOWN_SELF_MODE: appConstant.SELF_MODE[0].code
 
             }
 
-        } else if (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode") 
-            
+        } else if (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode")
+
         ) {
             // Sales REP Dashboard based on internal , external etc
             basicInput = {
                 ...basicInput,
-                DROP_DOWN_GENERAL_BU_MODE:appConstant.GENERAL_BU_MODE[0].code
+                DROP_DOWN_GENERAL_BU_MODE: appConstant.GENERAL_BU_MODE[0].code
             }
-        } 
+        }
 
         // prepare input
         const filterPayload = this.prepareInputPayload(basicInput);
@@ -473,7 +380,7 @@ class ViewLeadPage extends React.Component {
             // ,
             // userId:RBAPolicy.getCurrentUserId()
         });
-        this.willFocusSubscription = this.props.navigation.addListener('willFocus', this.loadAllLeads);
+        this.willFocusSubscription = this.props.navigation.addListener('didFocus', this.loadAllLeads);
     }
 
     componentWillUnmount() {

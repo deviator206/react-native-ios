@@ -1,37 +1,51 @@
 import { default as RBAPolicy } from '../common/rbaPolicy';
 
 const utilities = {
-    getBUInputBasedOnMode : (GENERAL_BU_MODE) => {
-        let fromBu;
-        let toBu;
+    getBUInputBasedOnMode: (GENERAL_BU_MODE) => {
+        let payloadInfo = {}
         switch (GENERAL_BU_MODE) {
             case "team_internal":
-                fromBu = RBAPolicy.getCurrentBU();
-                toBu = RBAPolicy.getCurrentBU();
+                payloadInfo = {
+                    fromBu: RBAPolicy.getCurrentBU(),
+                    toBu: RBAPolicy.getCurrentBU()
+                }
+
                 break;
             case "team_external":
-                fromBu = RBAPolicy.getCurrentBU();
+                payloadInfo = {
+                    fromBu: RBAPolicy.getCurrentBU(),
+                }
+
+
                 break;
             case "team_across":
-                toBu = RBAPolicy.getCurrentBU()
+                payloadInfo = {
+                    toBu: RBAPolicy.getCurrentBU()
+                }
+
+
                 break;
             case "self_generated":
-                fromBu = RBAPolicy.getCurrentBU();
-                toBu = ""
+                payloadInfo = {
+                    creatorId: RBAPolicy.getCurrentUserId()
+                }
+
                 break;
             case "all":
-                    toBu = RBAPolicy.getCurrentBU();
+                payloadInfo = {
+                    toBu: RBAPolicy.getCurrentBU()
+                }
             default:
                 break;
         }
-        return { fromBu, toBu };
+        return payloadInfo;
     },
     getLeadOriginBasedOnSalesRep: (SELF_MODE) => {
         let payloadInfo = {}
         switch (SELF_MODE) {
             case "both":
                 payloadInfo = {
-                    "toBU": RBAPolicy.getCurrentBU()
+                    "toBu": RBAPolicy.getCurrentBU()
                 }
                 break;
             case "generated":
@@ -51,39 +65,39 @@ const utilities = {
 
     },
 
-    getFormattedDate : (newDate = new Date()) =>{
-        let month = newDate.getUTCMonth()+1;
-        if(month< 10) {
+    getFormattedDate: (newDate = new Date()) => {
+        let month = newDate.getUTCMonth() + 1;
+        if (month < 10) {
             month = `0${month}`;
         }
-        
+
         let day = newDate.getUTCDate();
-        if(day< 10) {
+        if (day < 10) {
             day = `0${day}`;
         }
 
-        return newDate.getUTCFullYear()+"-"+month+"-"+day;
+        return newDate.getUTCFullYear() + "-" + month + "-" + day;
     },
-    getFormattedUnit:(currentUnit, referenceInfo, type)=>{
+    getFormattedUnit: (currentUnit, referenceInfo, type) => {
         let displayUnit = currentUnit;
 
-        if(referenceInfo && referenceInfo[type] && referenceInfo[type].length) {
+        if (referenceInfo && referenceInfo[type] && referenceInfo[type].length) {
             referenceInfo[type].forEach(singleBU => {
-                if(currentUnit === singleBU.code) {
+                if (currentUnit === singleBU.code) {
                     displayUnit = singleBU.name
                 }
             });
         }
-        return displayUnit; 
+        return displayUnit;
     },
-    ignoreAttributeFromPayload:(attr, payload, checkVal = "all") => {
-        if(payload[`${attr}`] === checkVal){
+    ignoreAttributeFromPayload: (attr, payload, checkVal = "all") => {
+        if (payload[`${attr}`] === checkVal) {
             delete payload[`${attr}`];
         }
         return payload;
     },
-    ignoreAttributeFromPayloadForArray:(attr, payload, checkVal = "all") => {
-        if(payload[`${attr}`][0] === checkVal){
+    ignoreAttributeFromPayloadForArray: (attr, payload, checkVal = "all") => {
+        if (payload[`${attr}`][0] === checkVal) {
             delete payload[`${attr}`];
         }
         return payload;

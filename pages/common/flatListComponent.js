@@ -1,12 +1,11 @@
 
-import { Button, Card, CardItem, Col, Container, Content, Grid, Input, Item, Row, Text } from 'native-base';
+import { Card, CardItem, Col, Grid, Row, Text } from 'native-base';
 import React from 'react';
-import { Alert, FlatList, Modal, TouchableHighlight, View } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { FlatList, View } from 'react-native';
 import styleContent from './commonStyling';
 import { default as appConstant } from './consts';
-import { default as Utils } from './Util';
 import i18nMessages from './i18n';
+import { default as Utils } from './Util';
 
 export default class FlatListComponent extends React.Component {
     constructor(props) {
@@ -17,14 +16,14 @@ export default class FlatListComponent extends React.Component {
     static getTypeConstant(inputType) {
         let localType = 'UNKNOWN_TYPE'
         appConstant.MI_TYPE.forEach((singleType) => {
-            if(singleType.code === inputType) {
+            if (singleType.code === inputType) {
                 localType = singleType.name;
             }
         });
         return localType;
     }
 
-    static getMIListing(item, {getStatusClass}) {
+    static getMIListing(item, { getStatusClass }) {
         return (
             <Grid>
                 <Row>
@@ -95,7 +94,7 @@ export default class FlatListComponent extends React.Component {
                         </Row>
                     )
                 }
-                 <Row>
+                <Row>
                     <Col style={styleContent.list_colLabelOnly} >
                         <Text style={
                             styleContent.list_cardViewPrimaryLabel}  > Status </Text>
@@ -103,10 +102,10 @@ export default class FlatListComponent extends React.Component {
                     </Col>
                     <Col style={styleContent.list_colValue} >
                         <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
-                        <Text style={getStatusClass ? [styleContent.list_cardViewPrimaryValue,getStatusClass(item.status)] : [styleContent.list_cardViewPrimaryValue]} > {item.status}  </Text>
+                        <Text style={getStatusClass ? [styleContent.list_cardViewPrimaryValue, getStatusClass(item.status)] : [styleContent.list_cardViewPrimaryValue]} > {item.status}  </Text>
 
                     </Col>
-                    
+
                 </Row>
 
             </Grid>
@@ -171,23 +170,28 @@ export default class FlatListComponent extends React.Component {
                         </Col>
                         <Col style={styleContent.list_colValue} >
                             <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
-                            <Text style={styleContent.list_cardViewPrimaryValue} > {item.leadsSummaryRes && item.leadsSummaryRes.businessUnits && item.leadsSummaryRes.businessUnits.length > 0 && Utils.getFormattedUnit(item.leadsSummaryRes.businessUnits[0],referenceInfo,appConstant.DROP_DOWN_TYPE.BU_NAME)}  </Text>
+                            <Text style={styleContent.list_cardViewPrimaryValue} > {item.leadsSummaryRes && item.leadsSummaryRes.businessUnits && item.leadsSummaryRes.businessUnits.length > 0 && Utils.getFormattedUnit(item.leadsSummaryRes.businessUnits[0], referenceInfo, appConstant.DROP_DOWN_TYPE.BU_NAME)}  </Text>
                         </Col>
 
                     </Row>
-                    <Row>
-                        <Col style={styleContent.list_colLabelOnly} >
-                            <Text style={styleContent.list_cardViewPrimaryLabel}  > Last Updated </Text>
+                    {
+                        (item && item.updateDate) && (
+                            <Row>
+                                <Col style={styleContent.list_colLabelOnly} >
+                                    <Text style={styleContent.list_cardViewPrimaryLabel}  > Last Updated </Text>
 
-                        </Col>
-                        <Col style={styleContent.list_colValue} >
-                            <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
-                            <Text style={styleContent.list_cardViewPrimaryValue} > {Utils.getFormattedDate(new Date(item.updateDate))} </Text>
-                        </Col>
+                                </Col>
+                                <Col style={styleContent.list_colValue} >
+                                    <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
+                                    <Text style={styleContent.list_cardViewPrimaryValue} > {Utils.getFormattedDate(new Date(item.updateDate))} </Text>
+                                </Col>
 
-                    </Row>
+                            </Row>
+                        )
+                    }
 
-                    
+
+
                 </Grid>
             )
 
@@ -204,96 +208,96 @@ export default class FlatListComponent extends React.Component {
              */
         } else {
             // MI 
-           /*
-            return (
-                <Grid>
-                    <Row>
-                        <Col>
-                            <Text style={[styleContent.list_cardViewMainTitle, styleContent.camelCase]} > Market Intelligence #{item.id} </Text>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Text style={styleContent.list_cardViewSecondaryInfo}  > {item.description} </Text>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col style={styleContent.list_colLabelOnly} >
-                            <Text style={
-                                styleContent.list_cardViewPrimaryLabel}  > Type </Text>
-
-                        </Col>
-                        <Col style={styleContent.list_colValue} >
-                            <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
-                            <Text style={styleContent.list_cardViewPrimaryValue} > {item.type} </Text>
-
-                        </Col>
-
-                    </Row>
-
-                    {
-                        item && item.creationDate && (
-                            <Row>
-                                <Col style={styleContent.list_colLabelOnly} >
-                                    <Text style={styleContent.list_cardViewPrimaryLabel}  > Date </Text>
-
-                                </Col>
-                                <Col style={styleContent.list_colValue} >
-                                    <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
-                                    <Text style={styleContent.list_cardViewPrimaryValue} > {item.creationDate}  </Text>
-                                </Col>
-                            </Row>
-                        )
-                    }
-
-                    {
-                        item && item.name && (
-                            <Row>
-                                <Col style={styleContent.list_colLabelOnly} >
-                                    <Text style={styleContent.list_cardViewPrimaryLabel}  > Project Name </Text>
-
-                                </Col>
-                                <Col style={styleContent.list_colValue} >
-                                    <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
-                                    <Text style={styleContent.list_cardViewPrimaryValue} > {item.name}  </Text>
-                                </Col>
-                            </Row>
-                        )
-                    }
-
-                    {
-                        item && item.investment && (
-                            <Row>
-                                <Col style={styleContent.list_colLabelOnly} >
-                                    <Text style={styleContent.list_cardViewPrimaryLabel}  > Investment </Text>
-
-                                </Col>
-                                <Col style={styleContent.list_colValue} >
-                                    <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
-                                    <Text style={styleContent.list_cardViewPrimaryValue} > {item.investment}  </Text>
-                                </Col>
-                            </Row>
-                        )
-                    }
+            /*
+             return (
+                 <Grid>
                      <Row>
-                        <Col style={styleContent.list_colLabelOnly} >
-                            <Text style={
-                                styleContent.list_cardViewPrimaryLabel}  > Status </Text>
-
-                        </Col>
-                        <Col style={styleContent.list_colValue} >
-                            <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
-                            <Text style={[styleContent.list_cardViewPrimaryValue,getStatusClass(item.status)]} > {item.status}  </Text>
-
-                        </Col>
-                        
-                    </Row>
-
-                </Grid>
-
-            )
-            */
-            return FlatListComponent.getMIListing(item, {getStatusClass});
+                         <Col>
+                             <Text style={[styleContent.list_cardViewMainTitle, styleContent.camelCase]} > Market Intelligence #{item.id} </Text>
+                         </Col>
+                     </Row>
+                     <Row>
+                         <Col>
+                             <Text style={styleContent.list_cardViewSecondaryInfo}  > {item.description} </Text>
+                         </Col>
+                     </Row>
+                     <Row>
+                         <Col style={styleContent.list_colLabelOnly} >
+                             <Text style={
+                                 styleContent.list_cardViewPrimaryLabel}  > Type </Text>
+ 
+                         </Col>
+                         <Col style={styleContent.list_colValue} >
+                             <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
+                             <Text style={styleContent.list_cardViewPrimaryValue} > {item.type} </Text>
+ 
+                         </Col>
+ 
+                     </Row>
+ 
+                     {
+                         item && item.creationDate && (
+                             <Row>
+                                 <Col style={styleContent.list_colLabelOnly} >
+                                     <Text style={styleContent.list_cardViewPrimaryLabel}  > Date </Text>
+ 
+                                 </Col>
+                                 <Col style={styleContent.list_colValue} >
+                                     <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
+                                     <Text style={styleContent.list_cardViewPrimaryValue} > {item.creationDate}  </Text>
+                                 </Col>
+                             </Row>
+                         )
+                     }
+ 
+                     {
+                         item && item.name && (
+                             <Row>
+                                 <Col style={styleContent.list_colLabelOnly} >
+                                     <Text style={styleContent.list_cardViewPrimaryLabel}  > Project Name </Text>
+ 
+                                 </Col>
+                                 <Col style={styleContent.list_colValue} >
+                                     <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
+                                     <Text style={styleContent.list_cardViewPrimaryValue} > {item.name}  </Text>
+                                 </Col>
+                             </Row>
+                         )
+                     }
+ 
+                     {
+                         item && item.investment && (
+                             <Row>
+                                 <Col style={styleContent.list_colLabelOnly} >
+                                     <Text style={styleContent.list_cardViewPrimaryLabel}  > Investment </Text>
+ 
+                                 </Col>
+                                 <Col style={styleContent.list_colValue} >
+                                     <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
+                                     <Text style={styleContent.list_cardViewPrimaryValue} > {item.investment}  </Text>
+                                 </Col>
+                             </Row>
+                         )
+                     }
+                      <Row>
+                         <Col style={styleContent.list_colLabelOnly} >
+                             <Text style={
+                                 styleContent.list_cardViewPrimaryLabel}  > Status </Text>
+ 
+                         </Col>
+                         <Col style={styleContent.list_colValue} >
+                             <Text style={styleContent.list_cardViewPrimaryValue} >:   </Text>
+                             <Text style={[styleContent.list_cardViewPrimaryValue,getStatusClass(item.status)]} > {item.status}  </Text>
+ 
+                         </Col>
+                         
+                     </Row>
+ 
+                 </Grid>
+ 
+             )
+             */
+            return FlatListComponent.getMIListing(item, { getStatusClass });
         }
 
     }
@@ -301,7 +305,7 @@ export default class FlatListComponent extends React.Component {
 
 
     render() {
-        const { resultSet = [], onSingleItemCliced} = this.props;
+        const { resultSet = [], onSingleItemCliced } = this.props;
         return (
             <FlatList
                 data={resultSet}
