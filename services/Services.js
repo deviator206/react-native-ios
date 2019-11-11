@@ -24,7 +24,7 @@ const SERVICE_URL = {
     'SEARCH_LEAD': 'search/leads/',
     'GET_LEAD_STATS': 'statistics/lead?',
     'FORGOT_PASSWORD':'/forgotpassword',
-    'EXTRACT_REPORT':'/report/lead'
+    'EXTRACT_REPORT':'statistics/lead?'
 }
 
 const axiosInstance = axios.create({

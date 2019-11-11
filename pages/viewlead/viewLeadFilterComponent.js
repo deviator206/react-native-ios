@@ -1,19 +1,11 @@
-import { Button, Card, CardItem, Col, Container, Content, Grid, Input, Item, Row, Text } from 'native-base';
+import { Col, Grid, Row, Text } from 'native-base';
 import React from 'react';
-import { Alert, FlatList, Modal, TouchableHighlight, View } from 'react-native';
-import { default as EntypoIcon } from 'react-native-vector-icons/Entypo';
+import { Modal, TouchableHighlight, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import LeadApi from '../../services/LeadApi';
-import RefDataApi from '../../services/RefDataApi';
 import { default as commonStyle } from '../common/commonStyling';
 import { default as appConstant } from '../common/consts';
-import FooterComponent from '../common/footerComponent';
-import HeaderComponent from '../common/headerComponent';
-import i18nMessages from '../common/i18n';
 import DropDownComponent from '../common/dropdownComponent';
-import SpinnerComponent from '../common/spinnerComponent';
-import FlatListComponent from '../common/flatListComponent';
-import styleContent from './viewLeadStyle';
+import i18nMessages from '../common/i18n';
 import { default as RBAPolicy } from '../common/rbaPolicy';
 
 
@@ -205,7 +197,8 @@ export default class viewLeadFilterComponent extends React.Component {
                             </Row>
 
 
-                            <Row style={commonStyle.formGridLabel}>
+                            {
+                            /*<Row style={commonStyle.formGridLabel}>
                                 <Col>
                                     <Text note style={commonStyle.labelStyling}>{i18nMessages.bu_selection}</Text>
                                 </Col>
@@ -213,6 +206,8 @@ export default class viewLeadFilterComponent extends React.Component {
                             <Row style={commonStyle.formGridValue}>
                                 <Col>{this.getDropdownFor(appConstant.DROP_DOWN_TYPE.BU_NAME)}</Col>
                             </Row>
+                            */
+                            }
                             <Row style={commonStyle.formGridLabel}>
                                 <Col>
                                     <Text note style={commonStyle.labelStyling}>{i18nMessages.industry}</Text>

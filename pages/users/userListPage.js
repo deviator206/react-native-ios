@@ -1,7 +1,6 @@
 import { Button, Card, CardItem, Col, Container, Content, Grid, Input, Item, Row, Text } from 'native-base';
 import React from 'react';
 import { Alert, FlatList, Modal, TouchableHighlight, View } from 'react-native';
-import { default as FilterIcon } from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MarketIntelligenceApi from '../../services/MarketIntelligenceApi';
 import UserApi from '../../services/UserApi';
@@ -85,7 +84,7 @@ export default class UserListPage extends React.Component {
         this.setState({
             spinner: true
         });
-        this.props.getUserList({}).then(this.onResponseSuccess).catch(this.onResponseError)
+        this.getUserList({}).then(this.onResponseSuccess).catch(this.onResponseError)
     }
 
 
@@ -142,9 +141,10 @@ export default class UserListPage extends React.Component {
                             button
                             onPress={() => {
                                 // item.id
+                                /*
                                 this.props.navigation.navigate("midetails", {
                                     miId: item.userId
-                                });
+                                }); */
                             }}
                         >
                             <Card style={styleContent.gridCardWrapper} >
@@ -229,7 +229,9 @@ export default class UserListPage extends React.Component {
                                         </Button>
                                     </Item>
                                 </Col>
-                                <Col  >
+                                {
+                                /*
+                                    <Col  >
                                     <Button
                                         transparent
                                         onPress={() => {
@@ -239,6 +241,9 @@ export default class UserListPage extends React.Component {
                                         <FilterIcon name="filter-outline" style={styleContent.iconStylingBigger} />
                                     </Button>
                                 </Col>
+                                */
+                                }
+                                
                             </Row>
                         </Grid>
 

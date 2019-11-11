@@ -70,6 +70,8 @@ export default class DashboardPage extends React.Component {
         this.getUserList = this.getUserList.bind(this);
         this.loadRefData = this.loadRefData.bind(this);
 
+        this.onSimpleSuccessHandler =this.onSimpleSuccessHandler.bind(this);
+
     }
 
     loadLeadStats (inputPayload){
@@ -99,6 +101,12 @@ export default class DashboardPage extends React.Component {
                 });
             }
             return refInfo;
+        });
+    }
+
+    onSimpleSuccessHandler(){
+        this.setState({
+            spinner: false
         });
     }
 
@@ -171,12 +179,12 @@ export default class DashboardPage extends React.Component {
     }
 
     iniateExtractResult() {
-        const queryParams = "busummary=true";
+        const queryParams = "sendmail=true";
         this.setState({
             spinner: true
         });
 
-        leadApi.getStats({ payload: this.preparePayloadForStats(), queryParams }).then(this.onStatsLoaded);
+        leadApi.getStatsReport({ payload: this.preparePayloadForStats(), queryParams }).then(this.onSimpleSuccessHandler);
     }
     initiateRefineResult() {
 

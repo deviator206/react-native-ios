@@ -18,7 +18,7 @@ import { default as MiInfoListComponent } from './miInfoListComponent';
 const marketIntelligenceApi = new MarketIntelligenceApi({ state: {} });
 
 
-export default  class MiDetailsPage extends React.Component {
+export default class MiDetailsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -54,15 +54,16 @@ export default  class MiDetailsPage extends React.Component {
 
         this.loadMIDetail = this.loadMIDetail.bind(this);
         this.updateMarketIntelligence = this.updateMarketIntelligence.bind(this);
+        this.isActionsAllowed = this.isActionsAllowed.bind(this);
 
 
     }
-    updateMarketIntelligence (inputPayload)  {
+    updateMarketIntelligence(inputPayload) {
         return marketIntelligenceApi.updateMI(inputPayload).then((resp) => {
             return resp;
         })
     }
-    loadMIDetail (inputParams) {
+    loadMIDetail(inputParams) {
         return marketIntelligenceApi.getMIDetails(inputParams).then((resp) => {
             return resp;
         })
@@ -213,28 +214,25 @@ export default  class MiDetailsPage extends React.Component {
             payload["miInfoList"] = [
                 {
                     "info": INPUT_ADD_MORE_INFO,
-                    "creator": {
-                        "businessUnit": myBU,
-                        "userId": userId
-                    },
+                    "creatorId": userId
                 }
             ]
-        } else if(
-            CONVERT_TO_LEAD && 
-            INPUT_CTL_CUSTOMER_NAME && 
-            INPUT_CTL_CUSTOMER_NAME !== ''&&
+        } else if (
+            CONVERT_TO_LEAD &&
+            INPUT_CTL_CUSTOMER_NAME &&
+            INPUT_CTL_CUSTOMER_NAME !== '' &&
             INPUT_CTL_REQUIREMENT &&
             INPUT_CTL_REQUIREMENT !== ''
-            ) {
-                convertToLead = true;
-                this.props.navigation.navigate("addlead", {
-                    INPUT_CTL_CUSTOMER_NAME: INPUT_CTL_CUSTOMER_NAME,
-                    INPUT_CTL_REQUIREMENT:INPUT_CTL_REQUIREMENT,
-                    miId:itemId
-                });
-                return ;
+        ) {
+            convertToLead = true;
+            this.props.navigation.navigate("addlead", {
+                INPUT_CTL_CUSTOMER_NAME: INPUT_CTL_CUSTOMER_NAME,
+                INPUT_CTL_REQUIREMENT: INPUT_CTL_REQUIREMENT,
+                miId: itemId
+            });
+            return;
         }
-        
+
         if (hasInfoUpdated) {
             this.setState({
                 spinner: true
@@ -297,7 +295,7 @@ export default  class MiDetailsPage extends React.Component {
         const fullSet = (miDetails && miDetails.miInfoList) ? miDetails.miInfoList : [];
         let resultSet = [];
         if (fullSet.length > 1) {
-            resultSet = [...fullSet.slice(0,2) ];
+            resultSet = [...fullSet.slice(0, 2)];
         } else {
             resultSet = [...fullSet];
         }
@@ -351,6 +349,12 @@ export default  class MiDetailsPage extends React.Component {
         return null;
     }
 
+    isActionsAllowed() {
+        const { miDetails = {} } = this.state;
+        const { status = '' } = miDetails;
+        return (status.toUpperCase() != 'CLOSED') ? true : false;
+    }
+
     render() {
 
         const { ADD_MORE_INFO = false, CONVERT_TO_LEAD = false, miDetails } = this.state;
@@ -361,20 +365,20 @@ export default  class MiDetailsPage extends React.Component {
                 <HeaderComponent navigation={navigation} title="Market Intelligence" />
                 <Content style={styleContent.mainContent}>
 
-                    <Grid style={[commonStyle.gridWrapper,{
-                        marginLeft:"10%"
+                    <Grid style={[commonStyle.gridWrapper, {
+                        marginLeft: "10%"
                     }]}>
 
                         {
-                            miDetails && miDetails.id && 
-                            FlatListComponent.getMIListing(miDetails,{getStatusClass : this.getStatusStyle})
+                            miDetails && miDetails.id &&
+                            FlatListComponent.getMIListing(miDetails, { getStatusClass: this.getStatusStyle })
                         }
                     </Grid>
 
                     <Grid style={[styleContent.gridWrapper, {
                         height: "auto"
                     }]} >
-                        <Row><Col><Text  style={commonStyle.labelStyling} > Information : </Text></Col></Row>
+                        <Row><Col><Text style={commonStyle.labelStyling} > Information : </Text></Col></Row>
 
                         {this.getListedInfo()}
 
@@ -388,18 +392,22 @@ export default  class MiDetailsPage extends React.Component {
                             {this.viewMoreButton()}
                         </Row>
 
-                        <Row><Col><Text  style={commonStyle.labelStyling} > Actions:  </Text></Col></Row>
-                        <Row>
-                            <Col style={{ marginLeft: 10 }}>
-                                <CheckBoxComponent
-                                    currentState={ADD_MORE_INFO}
-                                    checkBoxLabel={i18nMessages.lbl_mi_info_add_more_info}
-                                    controlType={appConstant.MI_INFO.ADD_MORE_INFO}
-                                    updateToParent={this.onCheckBoxChanged}
-                                />
-                            </Col>
-                        </Row>
-                        {ADD_MORE_INFO && (
+                        {
+                            this.isActionsAllowed() && (<Row><Col><Text style={commonStyle.labelStyling} > Actions:  </Text></Col></Row>)
+                        }
+                        {this.isActionsAllowed() &&
+                            (<Row>
+                                <Col style={{ marginLeft: 10 }}>
+                                    <CheckBoxComponent
+                                        currentState={ADD_MORE_INFO}
+                                        checkBoxLabel={i18nMessages.lbl_mi_info_add_more_info}
+                                        controlType={appConstant.MI_INFO.ADD_MORE_INFO}
+                                        updateToParent={this.onCheckBoxChanged}
+                                    />
+                                </Col>
+                            </Row>)
+                        }
+                        {this.isActionsAllowed() && ADD_MORE_INFO && (
                             <Row>
                                 <Col>
                                     <Textarea
@@ -415,24 +423,26 @@ export default  class MiDetailsPage extends React.Component {
                             </Row>
                         )}
 
-                        <Row style={{ marginTop: 15 }}>
-                            <Col style={{ marginLeft: 10 }}>
-                                <CheckBoxComponent
-                                    currentState={CONVERT_TO_LEAD}
-                                    checkBoxLabel={i18nMessages.lbl_mi_info_convert_to_lead}
-                                    controlType={appConstant.MI_INFO.CONVERT_TO_LEAD}
-                                    updateToParent={this.onCheckBoxChanged}
-                                />
-                            </Col>
-                        </Row>
-                        {CONVERT_TO_LEAD && (
+                        {this.isActionsAllowed() &&
+                            (<Row style={{ marginTop: 15 }}>
+                                <Col style={{ marginLeft: 10 }}>
+                                    <CheckBoxComponent
+                                        currentState={CONVERT_TO_LEAD}
+                                        checkBoxLabel={i18nMessages.lbl_mi_info_convert_to_lead}
+                                        controlType={appConstant.MI_INFO.CONVERT_TO_LEAD}
+                                        updateToParent={this.onCheckBoxChanged}
+                                    />
+                                </Col>
+                            </Row>)
+                        }
+                        {this.isActionsAllowed() && CONVERT_TO_LEAD && (
                             <Row>
                                 <Col style={styleContent.marginHorizontalRow}>
                                     <Text style={commonStyle.darkLabelStyling}> Add Customer Name </Text>
                                 </Col>
                             </Row>
                         )}
-                        {CONVERT_TO_LEAD && (
+                        {this.isActionsAllowed() && CONVERT_TO_LEAD && (
                             <Row>
                                 <Col>
                                     <Textarea
@@ -448,14 +458,14 @@ export default  class MiDetailsPage extends React.Component {
                             </Row>
                         )}
 
-                        {CONVERT_TO_LEAD && (
+                        {this.isActionsAllowed() && CONVERT_TO_LEAD && (
                             <Row>
                                 <Col style={styleContent.marginHorizontalRow}>
                                     <Text style={commonStyle.darkLabelStyling}> Add final Description / Requirements </Text>
                                 </Col>
                             </Row>
                         )}
-                        {CONVERT_TO_LEAD && (
+                        {this.isActionsAllowed() && CONVERT_TO_LEAD && (
                             <Row style={{ marginBottom: 50 }}>
                                 <Col>
                                     <Textarea
@@ -475,15 +485,20 @@ export default  class MiDetailsPage extends React.Component {
 
                     </Grid>
                 </Content>
-                <Footer >
-                    <Button
-                        style={styleContent.addFooter}
-                        onPress={this.initiateMICreation}
+                {
+                    this.isActionsAllowed() &&
+                    (<Footer >
+
+                        <Button
+                            style={styleContent.addFooter}
+                            onPress={this.initiateMICreation}
                         >
-                        <Text style={styleContent.addFooterText}>UPDATE MI </Text>
-                        <Icon name="arrow-forward" style={{ color: "white", fontSize: 20 }} />
-                    </Button >
-                </Footer>
+                            <Text style={styleContent.addFooterText}>UPDATE MI </Text>
+                            <Icon name="arrow-forward" style={{ color: "white", fontSize: 20 }} />
+                        </Button >
+
+                    </Footer>)
+                }
 
                 <MiInfoListComponent
                     itemId={itemId}

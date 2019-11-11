@@ -1,12 +1,13 @@
-import { Button, Container, ListItem, Text, View } from 'native-base';
+import { Container, ListItem, Text, View } from 'native-base';
 import React from 'react';
-import { FlatList, Image , TouchableHighlight, AsyncStorage} from "react-native";
+import { AsyncStorage, FlatList, Image, TouchableHighlight } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { default as ApplicationConfiguration } from '../common/application.config';
 import styleContent from './sidemenuStyle';
 
-const routes = [
-    {
+
+/*
+ {
         key: "notificationlist",
         caption: "Notifications",
         icon: 'notifications'
@@ -16,6 +17,9 @@ const routes = [
         caption: "Profile Details",
         icon: 'person-outline'
     },
+*/
+const routes = [
+   
     {
         key: "milist",
         caption: "Market Intelligence",

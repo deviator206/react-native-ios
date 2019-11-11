@@ -2,28 +2,28 @@ import { default as RBAPolicy } from '../common/rbaPolicy';
 
 const utilities = {
     getBUInputBasedOnMode : (GENERAL_BU_MODE) => {
-        let fromBU;
-        let toBU;
+        let fromBu;
+        let toBu;
         switch (GENERAL_BU_MODE) {
             case "team_internal":
-                fromBU = RBAPolicy.getCurrentBU();
-                toBU = RBAPolicy.getCurrentBU();
+                fromBu = RBAPolicy.getCurrentBU();
+                toBu = RBAPolicy.getCurrentBU();
                 break;
             case "team_external":
-                fromBU = RBAPolicy.getCurrentBU();
+                fromBu = RBAPolicy.getCurrentBU();
                 break;
             case "team_across":
-                toBU = RBAPolicy.getCurrentBU()
+                toBu = RBAPolicy.getCurrentBU()
                 break;
             case "self_generated":
-                fromBU = RBAPolicy.getCurrentBU();
-                toBU = ""
+                fromBu = RBAPolicy.getCurrentBU();
+                toBu = ""
                 break;
             case "all":
             default:
                 break;
         }
-        return { fromBU, toBU };
+        return { fromBu, toBu };
     },
     getLeadOriginBasedOnSalesRep: (SELF_MODE) => {
         let payloadInfo = {}

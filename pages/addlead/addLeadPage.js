@@ -3,6 +3,7 @@ import React from 'react';
 import { default as FeatherIcon } from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LeadApi from '../../services/LeadApi';
+import MarketIntelligenceApi from '../../services/MarketIntelligenceApi';
 import RefDataApi from '../../services/RefDataApi';
 import UserApi from '../../services/UserApi';
 import { default as commonStyle } from '../common/commonStyling';
@@ -12,6 +13,7 @@ import DropDownComponent from '../common/dropdownComponent';
 import HeaderComponent from '../common/headerComponent';
 import i18nMessages from '../common/i18n';
 import ModalComponent from '../common/modalComponent';
+import { default as RBAPolicy } from '../common/rbaPolicy';
 import SpinnerComponent from '../common/spinnerComponent';
 import { default as Utils } from '../common/Util';
 import styleContent from './addLeadStyle';
@@ -21,6 +23,8 @@ import BUListComponent from './BUListComponent';
 const refDataApi = new RefDataApi({ state: {} });
 const leadApi = new LeadApi({ state: {} });
 const userApi = new UserApi({ state: {} });
+const marketIntelligenceApi = new MarketIntelligenceApi({ state: {} });
+
 const formatDate = date => {
   return `${date.getFullYear()}/${date.getDate()}/${date.getMonth() + 1}`;
 };
@@ -74,10 +78,18 @@ export default class AddLeadPage extends React.Component {
     this.submitLead = this.submitLead.bind(this);
     this.loadUserList = this.loadUserList.bind(this);
     this.loadRefData = this.loadRefData.bind(this);
+    this.updateMarketIntelligence = this.updateMarketIntelligence.bind(this);
+    this.onResponseSuccessBasic = this.onResponseSuccessBasic.bind(this);
+
+  }
+  updateMarketIntelligence(inputPayload) {
+    return marketIntelligenceApi.updateMI(inputPayload).then((resp) => {
+      return resp;
+    })
   }
 
 
-  submitLead(inputPayload)  {
+  submitLead(inputPayload) {
     return leadApi.createLead({
       params: inputPayload
     }).then((resp) => {
@@ -85,7 +97,7 @@ export default class AddLeadPage extends React.Component {
     })
   }
 
-  loadRefData(inputParams)  {
+  loadRefData(inputParams) {
     return refDataApi.fetchRefData({
       params: (inputParams) ? inputParams : "type=SOURCE,CURRENCY,TENURE,COUNTRY,INDUSTRY,BU"
     }).then(result => {
@@ -104,7 +116,7 @@ export default class AddLeadPage extends React.Component {
     });
   }
 
-  loadUserList ()  {
+  loadUserList() {
     return userApi.getUserList().then(result => {
       return result;
     });
@@ -116,11 +128,42 @@ export default class AddLeadPage extends React.Component {
     });
   }
 
-  onResponseSubmitLead(resp) {
+  onResponseSuccessBasic() {
     this.setState({
       spinner: false,
       showOverlay: true
     });
+  }
+
+  onResponseSubmitLead(resp) {
+    //{rootLeadId: 158, leads: Array(1)}
+    const { marketIntId, INPUT_CTL_CUSTOMER_NAME, INPUT_CTL_REQUIREMENT } = this.state;
+    if (
+      marketIntId &&
+      INPUT_CTL_CUSTOMER_NAME &&
+      INPUT_CTL_REQUIREMENT &&
+      resp && resp.rootLeadId
+    ) {
+      // 
+
+      const inputPayload = {
+        itemId: marketIntId,
+        payload: {
+          "id": marketIntId,
+          "rootLeadId": resp.rootLeadId,
+          "updatorId": RBAPolicy.getCurrentUserId()
+        }
+
+      };
+      this.updateMarketIntelligence(inputPayload).then(this.onResponseSuccessBasic).catch(this.onErrorResponseSubmitLead);
+
+    } else {
+      this.setState({
+        spinner: false,
+        showOverlay: true
+      });
+    }
+
   }
   onErrorResponseSubmitLead(resp) {
     this.setState({
@@ -223,7 +266,7 @@ export default class AddLeadPage extends React.Component {
       return (requirementValidation >= 1 && minContact > -1) ? true : false;
     }
 
-    
+
   }
 
   onLeadSubmit() {

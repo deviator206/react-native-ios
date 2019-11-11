@@ -1,5 +1,5 @@
-import ServiceClass from "./Services";
 import BaseApi from "./BaseApi";
+import ServiceClass from "./Services";
 
 class LeadApi extends BaseApi  {
     constructor() {
@@ -9,6 +9,21 @@ class LeadApi extends BaseApi  {
         const that = this;
         return new Promise(function (resolve, reject) {
             ServiceClass.postLeadStats(params).then((resp) => {
+                if (resp && resp.data) {
+                    resolve(resp.data)
+                } else {
+                    that.invalidSuccessRejectResponse(reject,resp);
+                }
+            }).catch((err) => {
+                that.errorHandlerRejectMechanism(reject, err);
+            })
+        }); 
+    }
+
+    getStatsReport(params) {
+        const that = this;
+        return new Promise(function (resolve, reject) {
+            ServiceClass.postLeadExtractStats(params).then((resp) => {
                 if (resp && resp.data) {
                     resolve(resp.data)
                 } else {

@@ -1,17 +1,11 @@
-import { Button, Col, Container, Content, Footer, Grid, Row, Text, Textarea, View } from 'native-base';
+import { Col, Grid, Row, Text, View } from 'native-base';
 import React from 'react';
-import { Alert, Modal, TouchableHighlight, FlatList } from 'react-native';
-import { default as FeatherIcon } from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { default as commonStyle } from '../common/commonStyling';
-import { default as appConstant } from '../common/consts';
-import DropDownComponent from '../common/dropdownComponent';
-import i18nMessages from '../common/i18n';
+import { FlatList, Modal } from 'react-native';
+import MarketIntelligenceApi from '../../services/MarketIntelligenceApi';
+import HeaderComponent from '../common/headerComponent';
+import SpinnerComponent from '../common/spinnerComponent';
 import { default as Utils } from '../common/Util';
 import styleContent from './miDetailsPageStyle';
-import SpinnerComponent from '../common/spinnerComponent';
-import HeaderComponent from '../common/headerComponent';
-import MarketIntelligenceApi from '../../services/MarketIntelligenceApi';
 
 const marketIntelligenceApi = new MarketIntelligenceApi({ state: {} });
 
@@ -130,7 +124,7 @@ export default class miInfoListComponent extends React.Component {
                 transparent={false}
                 visible={showModal}
                 onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
+                    // Alert.alert('Modal has been closed.');
                 }}>
                 <HeaderComponent
                     title="Message  List"

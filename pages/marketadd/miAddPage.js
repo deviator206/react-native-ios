@@ -140,7 +140,7 @@ export default  class MiAddPage extends React.Component {
             spinner: true
         });
 
-        this.props.createMI(inputPayload).then(this.onSuccessHandler).catch(this.onErrorHandler);
+        this.createMI(inputPayload).then(this.onSuccessHandler).catch(this.onErrorHandler);
     }
 
     onInputTextChanged(type, value) {
