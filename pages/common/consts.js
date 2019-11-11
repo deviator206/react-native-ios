@@ -5,7 +5,7 @@ const appconstant = {
     primaryOrange: "#F37C57",
     primaryGreen: "#8BBF45",
     mediumGrey: "#616161",
-    GENERAL_BU_MODE:[
+    GENERAL_BU_MODE: [
         {
             name: "All",
             code: "all"
@@ -14,7 +14,7 @@ const appconstant = {
             name: "Team Internal",
             code: "team_internal"
         },
-         {
+        {
             name: "Team External",
             code: "team_external"
         },
@@ -143,6 +143,19 @@ const appconstant = {
         "SR": "SALES_REP",
         "BD": "ADMIN",
         "BH": "BU_HEAD"
+    },
+    PAGE_ACTION_MAPPING: {
+        "ACROSS_BU_ACTIONS_ALLOWED": "ACROSS_BU_ACTIONS_ALLOWED",
+        "NON_ASSIGNED_ACTIONS_ALLOWED": "NON_ASSIGNED_ACTIONS_ALLOWED",
+        "VIEW_STATUS": "VIEW_STATUS",
+        "VIEW_ASSIGNED_SALES_REP": "VIEW_ASSIGNED_SALES_REP",
+        "VIEW_BUDGET": "VIEW_BUDGET",
+        "VIEW_BU": "VIEW_BU",
+        "STATUS_UPDATE": "STATUS_UPDATE",
+        "ASSIGN_SALES_REP": "ASSIGN_SALES_REP",
+        "BUDGET_UPDATE": "BUDGET_UPDATE",
+        "NOTIFY_BU": "NOTIFY_BU",
+        "ADD_MORE_BU": "ADD_MORE_BU"
     }
 
 }

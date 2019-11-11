@@ -1,8 +1,10 @@
+import { default as appConstant } from './consts';
 
 class PolicyProvider {
     constructor() {
         this.policyRules = {};
         this.policyActionMapping = {};
+        this.policyActions = {};
         this.currentUserId = "";
         this.currentUserBU = "";
         this.isOwnerOfLead = this.isOwnerOfLead.bind(this);
@@ -10,6 +12,10 @@ class PolicyProvider {
         this.isAuthorizedForLeadRelatedAction = this.isAuthorizedForLeadRelatedAction.bind(this);
         this.checkRoleMappingActions = this.checkRoleMappingActions.bind(this);
         this.getPolicyVisibility = this.getPolicyVisibility.bind(this);
+        this.isActionAllowed = this.isActionAllowed.bind(this);
+        this.isAuthorizedForAction = this.isAuthorizedForAction.bind(this);
+        this.getCurrentUserId = this.getCurrentUserId.bind(this);
+        this.getCurrentBU = this.getCurrentBU.bind(this);
     }
     init() {
         const buHead = {
@@ -91,11 +97,26 @@ class PolicyProvider {
             window.userInformation.userInfo.policies) {
             this.policyRules = window.userInformation.userInfo.policies;
 
+            this.policyActions = window.userInformation.userInfo.policyActions;
+
 
             if (window.userInformation.userInfo.roles &&
                 window.userInformation.userInfo.roles.indexOf("ADMIN") !== -1) {
                 this.policyRules = {
                     ...admin
+                }
+                this.policyActions = {
+                    "ACROSS_BU_ACTIONS_ALLOWED": "yes",
+                    "NON_ASSIGNED_ACTIONS_ALLOWED": "yes",
+                    "VIEW_STATUS": "yes",
+                    "VIEW_ASSIGNED_SALES_REP": "yes",
+                    "VIEW_BUDGET": "yes",
+                    "VIEW_BU": "yes",
+                    "STATUS_UPDATE": "yes",
+                    "ASSIGN_SALES_REP": "yes",
+                    "BUDGET_UPDATE": "yes",
+                    "NOTIFY_BU": "yes",
+                    "ADD_MORE_BU": "yes"
                 }
             }
             else if (window.userInformation.userInfo.roles &&
@@ -130,11 +151,7 @@ class PolicyProvider {
         if (leadDetails &&
             leadDetails.leadsSummaryRes &&
             leadDetails.leadsSummaryRes.salesRepId) {
-            const userId = (window.userInformation &&
-                window.userInformation.userInfo &&
-                window.userInformation.userInfo.userId) ? window.userInformation.userInfo.userId : "";
-
-            return (userId === leadDetails.leadsSummaryRes.salesRepId)
+            return (this.currentUserId === leadDetails.leadsSummaryRes.salesRepId)
         }
     }
 
@@ -142,6 +159,29 @@ class PolicyProvider {
         const type = (this.isOwnerOfLead(options.leadDetails)) ? 'ASSIGNED' : 'NOT_ASSIGNED';
         return this.checkRoleMappingActions(actionName, { type });
 
+    }
+    isActionAllowed(actionName){
+        return (
+            this.policyActions && 
+            this.policyActions[actionName] &&
+            (this.policyActions[actionName]).toUpperCase() === 'YES') ? true:false;
+    }
+    isAuthorizedForAction(actionName, options) {
+        // check if current user is the owner
+        let isOwner = false;
+        if (options && options.leadDetails) {
+            isOwner = this.isOwnerOfLead(options.leadDetails);
+        }
+        // check if action is allowed
+        const actionAllowed = this.isActionAllowed(appConstant.PAGE_ACTION_MAPPING[actionName]);
+        // check for nonAssigned
+        const nonAssignedAction = this.isActionAllowed(appConstant.PAGE_ACTION_MAPPING[appConstant.PAGE_ACTION_MAPPING.NON_ASSIGNED_ACTIONS_ALLOWED])
+        // if owner then return 
+        if(isOwner) {
+            return actionAllowed ; 
+        } 
+        console.log(nonAssignedAction , " :2:", actionAllowed);
+        return (nonAssignedAction && actionAllowed) ? true: false;
     }
 
     checkRoleMappingActions(id, options) {

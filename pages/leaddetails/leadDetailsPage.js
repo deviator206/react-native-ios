@@ -38,7 +38,7 @@ export default class LeadDetailsPage extends React.Component {
     this.getContactInfo = this.getContactInfo.bind(this);
     this.getSalesRepInfo = this.getSalesRepInfo.bind(this);
     this.getBusinessUnitInfo = this.getBusinessUnitInfo.bind(this);
-    this.getActionsInfo = this.getActionsInfo.bind(this);
+    
     this.getStatusInfo = this.getStatusInfo.bind(this);
     this.loadLeadDetail = this.loadLeadDetail.bind(this);
     this.overlayScreenView = this.overlayScreenView.bind(this);
@@ -85,6 +85,9 @@ export default class LeadDetailsPage extends React.Component {
     this.loadRefData = this.loadRefData.bind(this);
     this.loadUserList = this.loadUserList.bind(this);
 
+    this.getAuthorizationForBudgetLabel = this.getAuthorizationForBudgetLabel.bind(this);
+    this.getAuthorizationForBudgetInput = this.getAuthorizationForBudgetInput.bind(this);
+
   }
 
   updateLead(params) {
@@ -100,7 +103,7 @@ export default class LeadDetailsPage extends React.Component {
   }
   loadRefData(inputParams) {
     return refDataApi.fetchRefData({
-      params: (inputParams) ? inputParams : "type=CURRENCY,BU,TENURE,SOURCE"
+      params: (inputParams) ? inputParams : "type=CURRENCY,BU,TENURE,SOURCE,IND_STATE,COUNTRY"
     }).then(result => {
       const refInfo = {};
       if (result && result.data) {
@@ -175,7 +178,7 @@ export default class LeadDetailsPage extends React.Component {
       MODIFY_BU,
       NOTIFY_BU,
     } = this.state;
-    const { userId = "8" } = this.props;
+    
 
     let tempSummaryRes = {};
     if (MODIFY_BU) {
@@ -188,15 +191,6 @@ export default class LeadDetailsPage extends React.Component {
       }
 
 
-    }
-    // add the default BU
-
-
-    if (NOTIFY_BU) {
-      tempSummaryRes = {
-        ...tempSummaryRes,
-        "notificationText": NOTIFY_TEXT
-      }
     }
 
     if (ASSIGN_REP) {
@@ -213,14 +207,22 @@ export default class LeadDetailsPage extends React.Component {
       }
     }
 
-    const inputPayload = {
+    let inputPayload = {
       "id": itemId,
       "leadsSummaryRes": {
         ...tempSummaryRes,
-        "currency": CURRENCY
+        "currency": CURRENCY,
+        "rootLeadId": (leadDetails.leadsSummaryRes && leadDetails.leadsSummaryRes.rootLeadId )? leadDetails.leadsSummaryRes.rootLeadId: '',
       },
       status: LEAD_STATUS,
-      "creatorId": userId
+      "creatorId": RBAPolicy.getCurrentUserId()
+    }
+
+    if (NOTIFY_BU) {
+      inputPayload = {
+        ...inputPayload,
+        "message": NOTIFY_TEXT
+      }
     }
 
     this.setState({
@@ -259,13 +261,14 @@ export default class LeadDetailsPage extends React.Component {
 
   getFormattedAddress(leadContact) {
     const { state, country } = leadContact;
+    const { referenceData } = this.state;
     let address = '';
     if (state && state != '') {
-      address += " " + state
+      address += " " + (referenceData ? Utils.getFormattedUnit(state, referenceData, country.toUpperCase() + "_STATE") : state);
     }
 
     if (country && country != '') {
-      address += " " + country
+      address += "   " + (referenceData ? Utils.getFormattedUnit(country, referenceData, appConstant.DROP_DOWN_TYPE.COUNTRY) : country)
     }
 
     return address;
@@ -357,7 +360,7 @@ export default class LeadDetailsPage extends React.Component {
     let returnedView = null;
 
     let defaultSelection;
-    if (type === appConstant.DROP_DOWN_TYPE.CURRENCY) {
+    if (type === appConstant.DROP_DOWN_TYPE.CURRENCY && leadDetails && leadDetails.leadsSummaryRes) {
       const { leadsSummaryRes } = leadDetails;
       const currency = leadsSummaryRes.currency;
       defaultSelection = currency;
@@ -446,46 +449,18 @@ export default class LeadDetailsPage extends React.Component {
   }
 
   onDropDownChange({ type, value }) {
-    const { referenceData = [] } = this.state;
-
     this.setState({
       [type]: value
     });
-
-    if (type === appConstant.DROP_DOWN_TYPE.COUNTRY) {
-      const dynamic_state_ref = value + "_" + appConstant.DROP_DOWN_TYPE.STATE;
-      let dynamic_state_list = [];
-      if (referenceData[dynamic_state_ref] && referenceData[dynamic_state_ref].length <= 0) {
-        dynamic_state_list = referenceData[dynamic_state_ref];
-        this.setState({
-          dynamic_state_list,
-          dynamic_state_ref
-        });
-      } else {
-        this.setState({
-          spinner: true,
-          dynamic_state_ref
-        });
-        this.loadRefData("type=" + dynamic_state_ref).then(this.onStateLoaded).catch(this.onErrorResponseFromReferenceData);
-      }
-    }
 
   }
 
 
   getDropdownForSplType(type) {
-    const { dynamic_state_list = [], userList = [], leadDetails } = this.state;
+    const { userList = [], leadDetails } = this.state;
     let returnedView = null;
     let dataSource = [];
     switch (type) {
-      case appConstant.DROP_DOWN_TYPE.STATE:
-        dataSource = dynamic_state_list;
-        returnedView = <DropDownComponent
-          dataSource={dataSource}
-          updateToParent={this.onDropDownChange}
-          dropDownType={type}
-        />;
-        break;
       case appConstant.DROP_DOWN_TYPE.SALES_REP:
         dataSource = userList;
         returnedView = <DropDownComponent
@@ -655,7 +630,9 @@ export default class LeadDetailsPage extends React.Component {
 
   addMoreBUView() {
     const { leadDetails, MODIFY_BU = false } = this.state;
-    if (RBAPolicy.isAuthorizedForLeadRelatedAction('ADD_MORE_BU', { leadDetails })) {
+    if (
+      RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.ADD_MORE_BU, { leadDetails })
+    ) {
       return (
         <Grid>
           <Row>
@@ -725,7 +702,9 @@ export default class LeadDetailsPage extends React.Component {
   }
   notifyBUVIew() {
     const { leadDetails, NOTIFY_BU = false } = this.state;
-    if (RBAPolicy.isAuthorizedForLeadRelatedAction('NOTIFY_BU', { leadDetails })) {
+    if (
+      RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.NOTIFY_BU, { leadDetails })
+    ) {
       return (
         <Grid>
 
@@ -760,78 +739,7 @@ export default class LeadDetailsPage extends React.Component {
   }
 
 
-  getActionsInfo() {
-    const { leadDetails, ASSIGN_REP = false } = this.state;
-    let returnedView;
-    if (leadDetails && leadDetails.id && leadDetails.leadsSummaryRes) {
-      returnedView = (
-        <Row>
-          <Card style={styleContent.gridCardWrapper} >
-            <CardItem>
-              <Col>
-                <Grid>
-                  <Row >
-                    <Text style={styleContent.secondaryLabel}> ESTIMATED BUDGET </Text>
-                  </Row>
-                  <Row>
-                    <Col style={{
-                      width: "50%"
-                    }}>
-                      <Item >
-                        <Input
-                          style={styleContent.secondaryDarkText}
-                          returnKeyType="next"
-                          clearButtonMode="always"
-                          autoCapitalize="none"
-                          autoCorrect={false}
-                          placeholder='Enter Amount'
-                          value={this.state && this.state.leadDetails && this.state.leadDetails.leadsSummaryRes && this.state.leadDetails.leadsSummaryRes.budget && (this.state.leadDetails.leadsSummaryRes.budget).toString()}
-                          onChangeText={(text) => {
-                            this.inputElementChanged(appConstant.UPDATE_LEAD.BUDGET, text);
-                          }}
-
-                        />
-                      </Item>
-                    </Col>
-                    <Col style={{
-                      marginTop: "3%",
-                      width: "30%",
-                      marginLeft: "10%"
-                    }}>
-                      {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.CURRENCY)}
-                    </Col>
-                  </Row>
-                  
-                  <Row style={styleContent.marginTopStyling}>
-                    <Col>
-                      <CheckBoxComponent
-                        currentState={ASSIGN_REP}
-                        checkBoxLabel={i18nMessages.lbl_assign_rep}
-                        controlType={appConstant.UPDATE_LEAD.ASSIGN_REP}
-                        updateToParent={this.onCheckBoxChanged}
-                      />
-                    </Col>
-                    <Col style={styleContent.marginTopStyling}>
-                      {ASSIGN_REP && this.getDropdownForSplType(appConstant.DROP_DOWN_TYPE.SALES_REP)}
-                    </Col>
-                  </Row>
-                  {
-                    // this.addMoreBUView()
-                    }
-                  { 
-                    // this.notifyBUVIew()
-                    }
-
-                </Grid>
-              </Col>
-            </CardItem>
-          </Card>
-        </Row>
-      );
-    }
-    return returnedView;
-  }
-
+ 
   getBusinessUnitInfo() {
     const { leadDetails, referenceData } = this.state;
     // const leadDetails = { "id": 1, "source": "Marketing", "custName": "shicv", "description": "dingDong", "leadContact": { "name": "dingdong", "email": "a@b.com", "phoneNumber": "9764007637", "country": "India", "state": "MH" }, "leadsSummaryRes": { "businessUnits": ["Spectro", "atlas"], "salesRep": "shivanshu", "industry": "it" }, "deleted": false, "creatorId": "123", "creationDate": "2019-06-04" };
@@ -919,7 +827,6 @@ export default class LeadDetailsPage extends React.Component {
 
   getContactInfo() {
     const { leadDetails } = this.state;
-    //const leadDetails = { "id": 1, "source": "Marketing", "custName": "shicv", "description": "dingDong", "leadContact": { "email": "rkumar@rksolustions.com", "phoneNumber": "9896777716", "country": "India", "state": "MH" }, "leadsSummaryRes": { "businessUnits": ["marketing", "sales"], "salesRep": "shivanshu", "industry": "it" }, "deleted": false, "creatorId": "123", "creationDate": "2019-06-04" };
     let returnedView;
     if (leadDetails && leadDetails.id && leadDetails.leadContact) {
       returnedView = (
@@ -1014,10 +921,80 @@ export default class LeadDetailsPage extends React.Component {
 
   getRolePolicyMappedActionsForStatus() {
     const { leadDetails } = this.state;
-    if (RBAPolicy.isAuthorizedForLeadRelatedAction('STATUS_UPDATE', { leadDetails })) {
+    if (RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.STATUS_UPDATE, { leadDetails })) {
       return this.getStatusInfo();
-    } else {
+    } else if (RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.VIEW_STATUS, { leadDetails })) {
       return this.getStatusInfo(true);
+    }
+  }
+
+  getAuthorizationForBudgetInput() {
+    const { leadDetails } = this.state;
+    if (
+      RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.BUDGET_UPDATE, { leadDetails })
+    ) {
+      return (
+        <Row>
+          <Col style={{
+            width: "50%"
+          }}>
+            <Item >
+              <Input
+                style={styleContent.secondaryDarkText}
+                returnKeyType="next"
+                clearButtonMode="always"
+                autoCapitalize="none"
+                autoCorrect={false}
+                placeholder='Enter Amount'
+                value={this.state && this.state.leadDetails && this.state.leadDetails.leadsSummaryRes && this.state.leadDetails.leadsSummaryRes.budget && (this.state.leadDetails.leadsSummaryRes.budget).toString()}
+                onChangeText={(text) => {
+                  this.inputElementChanged(appConstant.UPDATE_LEAD.BUDGET, text);
+                }}
+
+              />
+            </Item>
+          </Col>
+          <Col style={{
+            marginTop: "3%",
+            width: "30%",
+            marginLeft: "10%"
+          }}>
+            {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.CURRENCY)}
+          </Col>
+        </Row>
+      );
+    } else if (
+      RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.VIEW_BUDGET, { leadDetails })
+    ) {
+      return (
+        <Row>
+          <Col style={{
+            width: "80%"
+          }}>
+            <Item >
+              <Text style={styleContent.secondaryLabel}>
+                {
+                  this.state && this.state.leadDetails && this.state.leadDetails.leadsSummaryRes && this.state.leadDetails.leadsSummaryRes.budget && (this.state.leadDetails.leadsSummaryRes.budget).toString() + " " +
+                  this.state && this.state.leadDetails && this.state.leadDetails.leadsSummaryRes && this.state.leadDetails.leadsSummaryRes.budget && (this.state.leadDetails.leadsSummaryRes.currency).toString()
+                }
+              </Text>
+            </Item>
+          </Col>
+        </Row>
+      );
+    }
+  }
+  getAuthorizationForBudgetLabel() {
+    const { leadDetails } = this.state;
+    if (
+      RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.BUDGET_UPDATE, { leadDetails }) ||
+      RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.VIEW_BUDGET, { leadDetails })
+    ) {
+      return (
+        <Row >
+          <Text style={styleContent.secondaryLabel}> ESTIMATED BUDGET </Text>
+        </Row>
+      );
     }
   }
 
@@ -1035,7 +1012,26 @@ export default class LeadDetailsPage extends React.Component {
             {this.getSalesRepInfo()}
             {this.getBusinessUnitInfo()}
             {this.getRolePolicyMappedActionsForStatus()}
-            {this.getActionsInfo()}
+            
+
+            <Row>
+              <Card style={styleContent.gridCardWrapper} >
+                <CardItem>
+                  <Col>
+                    <Grid>
+                      {this.getAuthorizationForBudgetLabel()}
+                      {this.getAuthorizationForBudgetInput()}
+                      {this.addMoreBUView()}
+                      {this.notifyBUVIew()}
+
+
+
+
+                    </Grid>
+                  </Col>
+                </CardItem>
+              </Card>
+            </Row>
 
           </Grid>
           <Footer>
@@ -1075,7 +1071,7 @@ function mapDispatchToProps(dispatch) {
     },
     loadRefData: (inputParams) => {
       return refDataApi.fetchRefData({
-        params: (inputParams) ? inputParams : "type=CURRENCY,BU,TENURE,SOURCE"
+        params: (inputParams) ? inputParams : "type=CURRENCY,BU,TENURE,SOURCE,IND_STATE"
       }).then(result => {
         const refInfo = {};
         if (result && result.data) {

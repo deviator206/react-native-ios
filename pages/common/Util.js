@@ -66,6 +66,7 @@ const utilities = {
     },
     getFormattedUnit:(currentUnit, referenceInfo, type)=>{
         let displayUnit = currentUnit;
+
         if(referenceInfo && referenceInfo[type] && referenceInfo[type].length) {
             referenceInfo[type].forEach(singleBU => {
                 if(currentUnit === singleBU.code) {
