@@ -27,6 +27,7 @@ export default class EntryPage extends Component {
         this.authenticateApi = new AuthenticationApi();
 
         this.getStaticView = this.getStaticView.bind(this);
+        this.getLandingView = this.getLandingView.bind(this);
 
         this.willFocusSubscription = null;
 
@@ -101,12 +102,14 @@ export default class EntryPage extends Component {
 
 
     getJustLoaderView() {
-        const { userCredentials } = this.state;
-        let LoginView;
-        if (userCredentials && userCredentials.userName && userCredentials.password) {
-            LoginView = (<LoginPage />)
-        }
-        return LoginView
+        let logoImg = require('../images/ametek_logo@1X.png');
+        return (
+            <View style={styleContent.logoWrapper}>
+                {
+                    (<Image source={logoImg} style={styleContent.logo} />)
+                }
+            </View>
+        )
     }
 
     async getUserCredentials() {
@@ -125,6 +128,16 @@ export default class EntryPage extends Component {
     }
     componentDidMount() {
         this.willFocusSubscription = this.props.navigation.addListener('willFocus', this.getUserCredentials);
+    }
+
+    getLandingView() {
+        const { userCredentials } = this.state;
+        if (userCredentials && userCredentials.userName && userCredentials.password) {
+            return this.getStaticView();
+        } else  if (!userCredentials || !userCredentials.userName || !userCredentials.password) {
+            return this.getLoginComponent();
+        }
+        return this.getJustLoaderView();
     }
 
     getStaticView() {
@@ -155,21 +168,15 @@ export default class EntryPage extends Component {
     }
 
     render() {
-      
         return (
-            <React.Fragment>
-                <Container style={styleContent.container}>
-                    <Content padder
-                        contentContainerStyle={styleContent.mainContent}
-                        style={styleContent.fullWidth}>
-                        {this.getStaticView()}
+            <Container style={styleContent.container}>
+                <Content padder
+                    contentContainerStyle={styleContent.mainContent}
+                    style={styleContent.fullWidth}>
+                    {this.getLandingView()}
+                </Content>
 
-                        {this.getLoginComponent()}
-                    </Content>
-
-                </Container>
-
-            </React.Fragment>
+            </Container>
         );
     }
 

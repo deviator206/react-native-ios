@@ -38,7 +38,7 @@ export default class LeadDetailsPage extends React.Component {
     this.getContactInfo = this.getContactInfo.bind(this);
     this.getSalesRepInfo = this.getSalesRepInfo.bind(this);
     this.getBusinessUnitInfo = this.getBusinessUnitInfo.bind(this);
-    
+
     this.getStatusInfo = this.getStatusInfo.bind(this);
     this.loadLeadDetail = this.loadLeadDetail.bind(this);
     this.overlayScreenView = this.overlayScreenView.bind(this);
@@ -75,7 +75,6 @@ export default class LeadDetailsPage extends React.Component {
     this.onBuSelectionConfirmed = this.onBuSelectionConfirmed.bind(this);
     this.updateBuRmoval = this.updateBuRmoval.bind(this);
 
-    this.getUpdatedBugetView = this.getUpdatedBugetView.bind(this);
     this.getAssignSalesRepView = this.getAssignSalesRepView.bind(this);
     this.addMoreBUView = this.addMoreBUView.bind(this);
     this.notifyBUVIew = this.notifyBUVIew.bind(this);
@@ -87,6 +86,8 @@ export default class LeadDetailsPage extends React.Component {
 
     this.getAuthorizationForBudgetLabel = this.getAuthorizationForBudgetLabel.bind(this);
     this.getAuthorizationForBudgetInput = this.getAuthorizationForBudgetInput.bind(this);
+
+    this.getFooterBasedOnActionAllowed = this.getFooterBasedOnActionAllowed.bind(this);
 
   }
 
@@ -178,7 +179,7 @@ export default class LeadDetailsPage extends React.Component {
       MODIFY_BU,
       NOTIFY_BU,
     } = this.state;
-    
+
 
     let tempSummaryRes = {};
     if (MODIFY_BU) {
@@ -196,7 +197,7 @@ export default class LeadDetailsPage extends React.Component {
     if (ASSIGN_REP) {
       tempSummaryRes = {
         ...tempSummaryRes,
-        "salesRep": SALES_REP,
+        "salesRepId": SALES_REP,
       }
     }
 
@@ -212,10 +213,10 @@ export default class LeadDetailsPage extends React.Component {
       "leadsSummaryRes": {
         ...tempSummaryRes,
         "currency": CURRENCY,
-        "rootLeadId": (leadDetails.leadsSummaryRes && leadDetails.leadsSummaryRes.rootLeadId )? leadDetails.leadsSummaryRes.rootLeadId: '',
+        "rootLeadId": (leadDetails.leadsSummaryRes && leadDetails.leadsSummaryRes.rootLeadId) ? leadDetails.leadsSummaryRes.rootLeadId : '',
       },
       status: LEAD_STATUS,
-      "creatorId": RBAPolicy.getCurrentUserId()
+      "updatorId": RBAPolicy.getCurrentUserId()
     }
 
     if (NOTIFY_BU) {
@@ -562,54 +563,13 @@ export default class LeadDetailsPage extends React.Component {
   }
 
 
-  getUpdatedBugetView() {
-    const { leadDetails } = this.state;
-    if (RBAPolicy.isAuthorizedForLeadRelatedAction('BUDGET_UPDATE', { leadDetails })) {
-      return (
-        <React.Fragment
 
-        >
-          <Row >
-            <Text style={styleContent.secondaryLabel}> ESTIMATED BUDGET </Text>
-          </Row>
-          <Row>
-            <Col style={{
-              width: "50%"
-            }}>
-              <Item >
-                <Input
-                  style={styleContent.secondaryDarkText}
-                  returnKeyType="next"
-                  clearButtonMode="always"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  placeholder='Enter Amount'
-                  value={this.state && this.state.leadDetails && this.state.leadDetails.leadsSummaryRes && this.state.leadDetails.leadsSummaryRes.budget && (this.state.leadDetails.leadsSummaryRes.budget).toString()}
-                  onChangeText={(text) => {
-                    this.inputElementChanged(appConstant.UPDATE_LEAD.BUDGET, text);
-                  }}
-
-                />
-              </Item>
-            </Col>
-            <Col style={{
-              marginTop: "3%",
-              width: "30%",
-              marginLeft: "10%"
-            }}>
-              {this.getDropdownFor(appConstant.DROP_DOWN_TYPE.CURRENCY)}
-            </Col>
-          </Row>
-
-        </React.Fragment>
-      )
-    }
-
-  }
 
   getAssignSalesRepView() {
     const { leadDetails, ASSIGN_REP = false } = this.state;
-    if (RBAPolicy.isAuthorizedForLeadRelatedAction('ASSIGN_SALES_REP', { leadDetails })) {
+    if (
+      RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.ASSIGN_SALES_REP, { leadDetails })
+    ) {
       return (
         <Row style={styleContent.marginTopStyling}>
           <Col>
@@ -739,7 +699,7 @@ export default class LeadDetailsPage extends React.Component {
   }
 
 
- 
+
   getBusinessUnitInfo() {
     const { leadDetails, referenceData } = this.state;
     // const leadDetails = { "id": 1, "source": "Marketing", "custName": "shicv", "description": "dingDong", "leadContact": { "name": "dingdong", "email": "a@b.com", "phoneNumber": "9764007637", "country": "India", "state": "MH" }, "leadsSummaryRes": { "businessUnits": ["Spectro", "atlas"], "salesRep": "shivanshu", "industry": "it" }, "deleted": false, "creatorId": "123", "creationDate": "2019-06-04" };
@@ -998,6 +958,20 @@ export default class LeadDetailsPage extends React.Component {
     }
   }
 
+  getFooterBasedOnActionAllowed() {
+    const { leadDetails } = this.state;
+    let allowedToUpdate = false;
+    if (
+      RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.BUDGET_UPDATE, { leadDetails }) ||
+      RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.STATUS_UPDATE, { leadDetails }) ||
+      RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.NOTIFY_BU, { leadDetails }) ||
+      RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.ADD_MORE_BU, { leadDetails })
+    ) {
+      allowedToUpdate = true;
+    }
+    return allowedToUpdate;
+  }
+
   render() {
     const { navigation } = this.props;
     return (
@@ -1012,7 +986,7 @@ export default class LeadDetailsPage extends React.Component {
             {this.getSalesRepInfo()}
             {this.getBusinessUnitInfo()}
             {this.getRolePolicyMappedActionsForStatus()}
-            
+
 
             <Row>
               <Card style={styleContent.gridCardWrapper} >
@@ -1021,12 +995,9 @@ export default class LeadDetailsPage extends React.Component {
                     <Grid>
                       {this.getAuthorizationForBudgetLabel()}
                       {this.getAuthorizationForBudgetInput()}
+                      {this.getAssignSalesRepView()}
                       {this.addMoreBUView()}
                       {this.notifyBUVIew()}
-
-
-
-
                     </Grid>
                   </Col>
                 </CardItem>
@@ -1034,15 +1005,20 @@ export default class LeadDetailsPage extends React.Component {
             </Row>
 
           </Grid>
-          <Footer>
-            <Button
-              style={styleContent.addLeadFooter}
-              onPress={this.onLeadUpdate}
-            >
-              <Text style={styleContent.addLeadFooterText}>UPDATE LEAD </Text>
-              <MaterialIcon name="arrow-forward" style={{ color: "white", fontSize: 20 }} />
-            </Button >
-          </Footer>
+          {
+            this.getFooterBasedOnActionAllowed() && (
+              <Footer>
+                <Button
+                  style={styleContent.addLeadFooter}
+                  onPress={this.onLeadUpdate}
+                >
+                  <Text style={styleContent.addLeadFooterText}>UPDATE LEAD </Text>
+                  <MaterialIcon name="arrow-forward" style={{ color: "white", fontSize: 20 }} />
+                </Button >
+              </Footer>
+            )
+          }
+
         </Content>
         {this.overlayScreenView()}
         {this.getSpinnerComponentView()}
@@ -1050,61 +1026,3 @@ export default class LeadDetailsPage extends React.Component {
     );
   }
 }
-
-
-// This function provides a means of sending actions so that data in the Redux store
-// can be modified. In this example, calling this.props.addToCounter() will now dispatch
-// (send) an action so that the reducer can update the Redux state.
-function mapDispatchToProps(dispatch) {
-  return {
-
-    updateLead: (params) => {
-      return leadApi.updateLead(params).then((resp) => {
-        return resp;
-      })
-    },
-
-    loadLeadDetailREST: (inputParams) => {
-      return leadApi.getLeadDetails(inputParams).then((resp) => {
-        return resp;
-      })
-    },
-    loadRefData: (inputParams) => {
-      return refDataApi.fetchRefData({
-        params: (inputParams) ? inputParams : "type=CURRENCY,BU,TENURE,SOURCE,IND_STATE"
-      }).then(result => {
-        const refInfo = {};
-        if (result && result.data) {
-          result.data.forEach((element) => {
-            if (element && element.type) {
-              if (!refInfo[element.type]) {
-                refInfo[element.type] = [];
-              }
-              refInfo[element.type].push(element);
-            }
-          });
-        }
-        return refInfo;
-      });
-    },
-    loadUserList: () => {
-      return userApi.getUserList().then(result => {
-        return result;
-      });
-    },
-    dispatchAction: (param) => {
-      dispatch(param);
-    }
-  }
-}
-
-// This function provides access to data in the Redux state in the React component
-// In this example, the value of this.props.count will now always have the same value
-// As the count value in the Redux state
-function mapStateToProps(state) {
-  return {
-    count: state.count
-  }
-}
-
-// export default connect(mapStateToProps, mapDispatchToProps)(LeadDetailsPage)
