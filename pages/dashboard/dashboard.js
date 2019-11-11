@@ -158,14 +158,18 @@ export default class DashboardPage extends React.Component {
                 ...payload,
                 ...Utils.getBUInputBasedOnMode(GENERAL_BU_MODE)
             }
-        } else if (ORIGINATOR_BU && 
-            ORIGINATOR_BU != '' && 
-            ORIGINATOR_BU != "#_ALL_#" &&
-            TARGET_BU && 
-            TARGET_BU != "#_ALL_#" &&
-            TARGET_BU != '') {
-            payload["fromBu"] = ORIGINATOR_BU;
-            payload["toBu"] = TARGET_BU;
+        } else{
+            if (ORIGINATOR_BU &&
+                ORIGINATOR_BU != '' &&
+                ORIGINATOR_BU != "#_ALL_#") {
+                    payload["fromBu"] = ORIGINATOR_BU;
+
+            }
+            if (TARGET_BU &&
+                TARGET_BU != "#_ALL_#" &&
+                TARGET_BU != '') {
+                    payload["toBu"] = TARGET_BU;
+            }
         }
 
         if (START_DATE && START_DATE != '' && END_DATE && END_DATE != '') {

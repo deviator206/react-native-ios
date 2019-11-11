@@ -105,19 +105,6 @@ class PolicyProvider {
                 this.policyRules = {
                     ...admin
                 }
-                this.policyActions = {
-                    "ACROSS_BU_ACTIONS_ALLOWED": "yes",
-                    "NON_ASSIGNED_ACTIONS_ALLOWED": "yes",
-                    "VIEW_STATUS": "yes",
-                    "VIEW_ASSIGNED_SALES_REP": "yes",
-                    "VIEW_BUDGET": "yes",
-                    "VIEW_BU": "yes",
-                    "STATUS_UPDATE": "yes",
-                    "ASSIGN_SALES_REP": "yes",
-                    "BUDGET_UPDATE": "yes",
-                    "NOTIFY_BU": "yes",
-                    "ADD_MORE_BU": "yes"
-                }
             }
             else if (window.userInformation.userInfo.roles &&
                 window.userInformation.userInfo.roles.indexOf("BU_HEAD") !== -1) {
