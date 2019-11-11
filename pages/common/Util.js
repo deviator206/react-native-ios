@@ -20,6 +20,7 @@ const utilities = {
                 toBu = ""
                 break;
             case "all":
+                    toBu = RBAPolicy.getCurrentBU();
             default:
                 break;
         }

@@ -11,12 +11,11 @@ import FlatListComponent from '../common/flatListComponent';
 import FooterComponent from '../common/footerComponent';
 import HeaderComponent from '../common/headerComponent';
 import i18nMessages from '../common/i18n';
+import { default as RBAPolicy } from '../common/rbaPolicy';
 import SpinnerComponent from '../common/spinnerComponent';
 import { default as Utils } from '../common/Util';
 import { default as LeadsFilterComponent } from './viewLeadFilterComponent';
 import styleContent from './viewLeadStyle';
-
-import { default as RBAPolicy } from '../common/rbaPolicy';
 
 class ViewLeadPage extends React.Component {
     constructor(props) {
@@ -47,7 +46,7 @@ class ViewLeadPage extends React.Component {
         this.onSearchTextChange = this.onSearchTextChange.bind(this);
 
         //making the input same as stats
-        this.preparePayloadForStats = this.preparePayloadForStats.bind(this);   
+        this.preparePayloadForStats = this.preparePayloadForStats.bind(this);
     }
 
     getSpinnerComponentView() {
@@ -185,10 +184,10 @@ class ViewLeadPage extends React.Component {
             const inputBUInfo = Utils.getBUInputBasedOnMode(DROP_DOWN_GENERAL_BU_MODE);
             payload["fromBu"] = inputBUInfo.fromBU;
             payload["toBu"] = inputBUInfo.toBU;
-        } else if (ORIGINATOR_BU && 
-            ORIGINATOR_BU != '' && 
+        } else if (ORIGINATOR_BU &&
+            ORIGINATOR_BU != '' &&
             ORIGINATOR_BU != "#_ALL_#" &&
-            TARGET_BU && 
+            TARGET_BU &&
             TARGET_BU != "#_ALL_#" &&
             TARGET_BU != '') {
             payload["fromBu"] = ORIGINATOR_BU;
@@ -213,7 +212,7 @@ class ViewLeadPage extends React.Component {
         const newFilterState = {};
         const { filterState = {} } = this.state;
         const { searchText, LEAD_STATUS_DROP_DOWN,
-            TENURE, COUNTRY, BU, SOURCE, INDUSTRY } = filterState;
+            TENURE, COUNTRY, BU, SOURCE, INDUSTRY, DROP_DOWN_SELF_MODE, DROP_DOWN_GENERAL_BU_MODE, ORIGINATOR_BU, TARGET_BU } = filterState;
 
         if (inputFilterState.LEAD_STATUS_DROP_DOWN && LEAD_STATUS_DROP_DOWN !== inputFilterState.LEAD_STATUS_DROP_DOWN) {
             isChanged = true;
@@ -247,13 +246,36 @@ class ViewLeadPage extends React.Component {
             isChanged = true;
             newFilterState['INDUSTRY'] = inputFilterState.INDUSTRY;
         }
+        // , DROP_DOWN_GENERAL_BU_MODE, ORIGINATOR_BU, 
+        if (inputFilterState.DROP_DOWN_SELF_MODE && DROP_DOWN_SELF_MODE !== inputFilterState.DROP_DOWN_SELF_MODE) {
+            isChanged = true;
+            newFilterState['DROP_DOWN_SELF_MODE'] = inputFilterState.DROP_DOWN_SELF_MODE;
+        }
+
+        if (inputFilterState.DROP_DOWN_GENERAL_BU_MODE && DROP_DOWN_GENERAL_BU_MODE !== inputFilterState.DROP_DOWN_GENERAL_BU_MODE) {
+            isChanged = true;
+            newFilterState['DROP_DOWN_GENERAL_BU_MODE'] = inputFilterState.DROP_DOWN_GENERAL_BU_MODE;
+        }
+
+        
+        if (inputFilterState.ORIGINATOR_BU && ORIGINATOR_BU !== inputFilterState.ORIGINATOR_BU) {
+            isChanged = true;
+            newFilterState['ORIGINATOR_BU'] = inputFilterState.ORIGINATOR_BU;
+        }
+
+        
+        if (inputFilterState.TARGET_BU && TARGET_BU !== inputFilterState.TARGET_BU) {
+            isChanged = true;
+            newFilterState['TARGET_BU'] = inputFilterState.TARGET_BU;
+        }
+
 
         return (isChanged) ? newFilterState : isChanged;
     }
 
     prepareInputPayload(filterState) {
         const { searchText, LEAD_STATUS_DROP_DOWN,
-            TENURE, COUNTRY, BU, SOURCE, INDUSTRY } = filterState;
+            TENURE, COUNTRY, BU, SOURCE, INDUSTRY, DROP_DOWN_SELF_MODE, DROP_DOWN_GENERAL_BU_MODE, ORIGINATOR_BU, TARGET_BU } = filterState;
 
         let filterPayload = {};
 
@@ -308,13 +330,40 @@ class ViewLeadPage extends React.Component {
             filterPayload = Utils.ignoreAttributeFromPayload('source', filterPayload);
         }
 
-        if (BU) {
+        /*if (BU) {
             filterPayload = {
                 ...filterPayload,
                 businessUnits: [BU]
             }
             filterPayload = Utils.ignoreAttributeFromPayloadForArray('businessUnits', filterPayload);
+        }*/
+
+        if (RBAPolicy.getPolicyVisibility("self_lead_view_mode") &&
+            DROP_DOWN_SELF_MODE
+        ) {
+            // Sales REP Dashboard based on  self generated and assigned to me
+            filterPayload = {
+                ...filterPayload,
+                ...Utils.getLeadOriginBasedOnSalesRep(DROP_DOWN_SELF_MODE)
+            }
+
+        } else if (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode") &&
+            DROP_DOWN_GENERAL_BU_MODE
+        ) {
+            // Sales REP Dashboard based on internal , external etc
+            const inputBUInfo = Utils.getBUInputBasedOnMode(DROP_DOWN_GENERAL_BU_MODE);
+            filterPayload["fromBu"] = inputBUInfo.fromBu;
+            filterPayload["toBu"] = inputBUInfo.toBu;
+        } else if (ORIGINATOR_BU &&
+            ORIGINATOR_BU != '' &&
+            ORIGINATOR_BU != "#_ALL_#" &&
+            TARGET_BU &&
+            TARGET_BU != "#_ALL_#" &&
+            TARGET_BU != '') {
+                filterPayload["fromBu"] = ORIGINATOR_BU;
+                filterPayload["toBu"] = TARGET_BU;
         }
+
 
         return filterPayload;
     }
@@ -362,13 +411,13 @@ class ViewLeadPage extends React.Component {
     }
 
     loadAllLeads() {
-        const {filterState={}, userId =''} = this.state;
+        const { filterState = {}, userId = '' } = this.state;
         this.setState({
             spinner: true
         });
-        
+
         this.refDataApi.fetchStructuredRefData({ params: "type=SOURCE,CURRENCY,TENURE,COUNTRY,INDUSTRY,BU" }).then(this.onReferenceDataFetched);
-        let params=""
+        let params = ""
         /*
         if (RBAPolicy.getPolicyVisibility("self_lead_view_mode")) {
             if(filterState['LEAD_STATUS_DROP_DOWN'] && filterState['LEAD_STATUS_DROP_DOWN'] !== ""){
@@ -378,21 +427,43 @@ class ViewLeadPage extends React.Component {
             }
         }
         */
-        // prepare input
-        const filterPayload = this.prepareInputPayload({
-                'LEAD_STATUS_DROP_DOWN':'',
-                'searchText':'',
-                'TENURE':'',
-                'COUNTRY':'', 
-                'BU':'', 
-                'SOURCE':'', 
-                'INDUSTRY':''
+
+        let basicInput ={
+            'LEAD_STATUS_DROP_DOWN': '',
+            'searchText': '',
+            'TENURE': '',
+            'COUNTRY': '',
+            'BU': '',
+            'SOURCE': '',
+            'INDUSTRY': ''
+        }
+        if (RBAPolicy.getPolicyVisibility("self_lead_view_mode") 
+            
+        ) {
+            // Sales REP Dashboard based on  self generated and assigned to me
+            basicInput = {
+                ...basicInput,
+                DROP_DOWN_SELF_MODE:appConstant.SELF_MODE[0].code
+
             }
-        );
+
+        } else if (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode") 
+            
+        ) {
+            // Sales REP Dashboard based on internal , external etc
+            basicInput = {
+                ...basicInput,
+                DROP_DOWN_GENERAL_BU_MODE:appConstant.GENERAL_BU_MODE[0].code
+            }
+        } 
+
+        // prepare input
+        const filterPayload = this.prepareInputPayload(basicInput);
+
         this.leadApi.searchLeadsWithFilters(filterPayload).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError)
 
 
-        
+
         // this.leadApi.getLeads({ params }).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError)
         // this.props.loadLeads({}).
     }
