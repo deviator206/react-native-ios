@@ -120,8 +120,8 @@ export default class LeadDetailsPage extends React.Component {
       return refInfo;
     });
   }
-  loadUserList() {
-    return userApi.getUserList().then(result => {
+  loadUserList(params) {
+    return userApi.getUserList(params).then(result => {
       return result;
     });
   }
@@ -276,6 +276,16 @@ export default class LeadDetailsPage extends React.Component {
   }
 
   onLeadResponseSuccess(resp) {
+    const isSRChange = RBAPolicy.isAuthorizedForAction(appConstant.PAGE_ACTION_MAPPING.ASSIGN_SALES_REP, { leadDetails: resp });
+    if (resp &&
+      resp.leadsSummaryRes &&
+      isSRChange &&
+      resp.leadsSummaryRes.businessUnits &&
+      resp.leadsSummaryRes.businessUnits.length > 0 &&
+      resp.leadsSummaryRes.businessUnits[0]) {
+      this.loadUserList(resp.leadsSummaryRes.businessUnits[0]).then(this.onUserListLoaded).catch(this.onUserListLoadedError);
+    }
+
     this.setState({
       spinner: false,
       leadDetails: resp,
@@ -291,6 +301,7 @@ export default class LeadDetailsPage extends React.Component {
 
   onUserListLoaded(resp) {
     this.setState({
+      spinner: false,
       userList: resp
     });
 
@@ -394,7 +405,7 @@ export default class LeadDetailsPage extends React.Component {
       [appConstant.UPDATE_LEAD.BUDGET]: ''
     });
     this.loadLeadDetailREST({ itemId }).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError);
-    this.loadUserList().then(this.onUserListLoaded).catch(this.onUserListLoadedError);
+    // this.loadUserList().then(this.onUserListLoaded).catch(this.onUserListLoadedError);
     this.loadRefData().then(this.onResponseFromReferenceData).catch(this.onErrorResponseFromReferenceData);
   }
 

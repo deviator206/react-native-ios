@@ -6,6 +6,7 @@ import MarketIntelligenceApi from '../../services/MarketIntelligenceApi';
 import UserApi from '../../services/UserApi';
 import { default as appConstant } from '../common/consts';
 import HeaderComponent from '../common/headerComponent';
+import { default as RBAPolicy } from '../common/rbaPolicy';
 import SpinnerComponent from '../common/spinnerComponent';
 import styleContent from './userListPageStyle';
 
@@ -34,23 +35,13 @@ export default class UserListPage extends React.Component {
         this.getStatusStyle = this.getStatusStyle.bind(this);
 
 
-        this.loadAllMI = this.loadAllMI.bind(this);
+        
         this.getUserList = this.getUserList.bind(this);
     }
 
 
-    loadAllMI(inputParams) {
-        return marketIntelligenceApi.getMI({
-            params: inputParams
-        }).then((resp) => {
-            return resp;
-        })
-
-    }
     getUserList (inputParams) {
-        return userApi.getUserList({
-            params: inputParams
-        }).then((resp) => {
+        return userApi.getUserList(inputParams).then((resp) => {
             return resp;
         })
     }
@@ -81,10 +72,17 @@ export default class UserListPage extends React.Component {
         }
     }
     onLoadAllMarketInt(filterParams) {
-        this.setState({
-            spinner: true
-        });
-        this.getUserList({}).then(this.onResponseSuccess).catch(this.onResponseError)
+        let params =""
+        if (RBAPolicy.getPolicyVisibility("general_bu_lead_view_mode")) {
+            params="bu="+RBAPolicy.getCurrentBU();
+        } 
+
+        if (!RBAPolicy.getPolicyVisibility("self_lead_view_mode")) {
+            this.setState({
+                spinner: true
+            });
+            this.getUserList(params).then(this.onResponseSuccess).catch(this.onResponseError)
+        }
     }
 
 
@@ -99,7 +97,7 @@ export default class UserListPage extends React.Component {
         this.setState({
             filterVisible: false
         });
-        this.willFocusSubscription = this.props.navigation.addListener('willFocus', this.onLoadAllMarketInt);
+        this.willFocusSubscription = this.props.navigation.addListener('didFocus', this.onLoadAllMarketInt);
     }
 
     componentWillUnmount() {
