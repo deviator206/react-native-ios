@@ -170,7 +170,7 @@ export default class EntryPage extends Component {
     render() {
         return (
             <Container style={styleContent.container}>
-                <Content padder
+                <Content 
                     contentContainerStyle={styleContent.mainContent}
                     style={styleContent.fullWidth}>
                     {this.getLandingView()}

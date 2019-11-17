@@ -1,6 +1,6 @@
 
 import { StyleSheet } from 'react-native';
-import {default as AppConst} from './consts';
+import { default as AppConst } from './consts';
 const styleContent = StyleSheet.create({
     fontMediumLabel: {
         backgroundColor: '#fff',
@@ -218,14 +218,17 @@ const styleContent = StyleSheet.create({
     },
     modalBody: {
         backgroundColor: "#FFFFFF",
-        padding: 25
+        padding: 25,
+        height:"50%"
     },
     modalTextBox: {
         marginBottom: 30
     },
     modalFooter:{
-        width:"100%",
-        height: 50
+        width:"80%",
+        height: 50,
+        alignSelf:"center",
+        
     },
     modalButtonContent: {
         height: 50,

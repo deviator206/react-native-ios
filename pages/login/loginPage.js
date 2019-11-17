@@ -163,84 +163,89 @@ export default class LoginPage extends Component {
     render() {
         let logoImg = require('../images/ametek_logo@1X.png');
         return (
-            <Container style={styleContent.container}>
-                <Content padder
-                    contentContainerStyle={styleContent.mainContent}
-                    style={styleContent.fullWidth}>
-                    <View style={styleContent.logoWrapper}>
-                        <Image source={logoImg} style={styleContent.logo} />
-                    </View>
-                    <View style={styleContent.loginUpperContent}>
-                        <View style={styleContent.loginUpper}>
-                            <Text style={styleContent.h1Login}>LOGIN</Text>
-                            <View style={styleContent.hairline} />
-                            <Text style={styleContent.welcomeMsg}>Welcome to AMETEK Insight, one stop shop for all your prospect, leads and market news</Text>
+            <React.Fragment>
+                <Container style={styleContent.container}>
+                    <Content
+                        contentContainerStyle={styleContent.mainContent}
+                        style={styleContent.fullWidth}>
+                        <View style={styleContent.logoWrapper}>
+                            <Image source={logoImg} style={styleContent.logo} />
                         </View>
-                        <View style={styleContent.loginMiddle}>
-                            {this.getErrorView()}
-                            <Item regular error={this.state.userNameMissing} style={styleContent.loginInput}>
-                                <Icon active name='person' style={styleContent.iconLoginPage} />
-                                <Input
-                                    style={commonStyling.inputBoxStyle}
-                                    containerStyle={commonStyling.fontMediumLabel}
-                                    placeholder='Username'
-                                    placeholderTextColor="#b4b4b4"
-                                    returnKeyType="next"
-                                    clearButtonMode="always"
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    onChangeText={(val) => { this.onUserNameChanged(val) }} />
-                            </Item>
-                            <View style={{ height: 12 }} />
-                            <Item regular error={this.state.passwordMissing} style={styleContent.loginInput}>
-                                <Icon active name='lock' style={styleContent.iconLoginPage} />
-                                <Input
-                                    style={commonStyling.inputBoxStyle}
-                                    placeholder='Password'
-                                    placeholderTextColor="#b4b4b4"
-                                    secureTextEntry={true}
-                                    clearButtonMode="always"
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    onChangeText={(val) => { this.onPasswordChanged(val) }} />
-                            </Item>
+                        <View style={styleContent.loginUpperContent}>
+                            <View style={styleContent.loginUpper}>
+                                <Text style={styleContent.h1Login}>LOGIN</Text>
+                                <View style={styleContent.hairline} />
+                                <Text style={styleContent.welcomeMsg}>Welcome to AMETEK Insight, one stop shop for all your prospect, leads and market news</Text>
+                            </View>
+                            <View style={styleContent.loginMiddle}>
+                                {this.getErrorView()}
+                                <Item regular error={this.state.userNameMissing} style={styleContent.loginInput}>
+                                    <Icon active name='person' style={styleContent.iconLoginPage} />
+                                    <Input
+                                        style={commonStyling.inputBoxStyle}
+                                        containerStyle={commonStyling.fontMediumLabel}
+                                        placeholder='Username'
+                                        placeholderTextColor="#b4b4b4"
+                                        returnKeyType="next"
+                                        clearButtonMode="always"
+                                        autoCapitalize="none"
+                                        autoCorrect={false}
+                                        onChangeText={(val) => { this.onUserNameChanged(val) }} />
+                                </Item>
+                                <View style={{ height: 12 }} />
+                                <Item regular error={this.state.passwordMissing} style={styleContent.loginInput}>
+                                    <Icon active name='lock' style={styleContent.iconLoginPage} />
+                                    <Input
+                                        style={commonStyling.inputBoxStyle}
+                                        placeholder='Password'
+                                        placeholderTextColor="#b4b4b4"
+                                        secureTextEntry={true}
+                                        clearButtonMode="always"
+                                        autoCapitalize="none"
+                                        autoCorrect={false}
+                                        onChangeText={(val) => { this.onPasswordChanged(val) }} />
+                                </Item>
 
-                            <View style={
-                                {
-                                    width: "100%",
-                                    paddingVertical: "2%",
-                                    alignItems: "flex-end"
-                                }
-                            }>
-                                <Button style={styleContent.forgetPswdLinkButton}
-                                    transparent
-                                    onPress={
-                                        () => {
-                                            this.toggleForgotPassword()
-                                        }
-                                    }>
-                                    <Text style={styleContent.forgetPswdLink}>Forgot password</Text>
-                                </Button>
+                                <View style={
+                                    {
+                                        width: "100%",
+                                        paddingVertical: "2%",
+                                        alignItems: "flex-end"
+                                    }
+                                }>
+                                    <Button style={styleContent.forgetPswdLinkButton}
+                                        transparent
+                                        onPress={
+                                            () => {
+                                                this.toggleForgotPassword()
+                                            }
+                                        }>
+                                        <Text style={styleContent.forgetPswdLink}>Forgot password</Text>
+                                    </Button>
+                                </View>
                             </View>
                         </View>
-                    </View>
-                    <View style={styleContent.versionView}>
+                        <View style={styleContent.versionView}>
 
-                        <Text style={styleContent.versionContent}> v0.0.0.2 </Text>
-                    </View>
+                            <Text style={styleContent.versionContent}> v0.0.0.2 </Text>
+                        </View>
 
-                    <View style={styleContent.footerContent} >
-                        <Button style={styleContent.loginBtn}
-                            onPress={() => this.onSignInBtnClicked()}>
-                            <View style={styleContent.buttonTextView} >
-                                <Text style={styleContent.signInText} > SIGN IN </Text><Icon name="arrow-forward" style={styleContent.signInIcon} />
-                            </View>
-                        </Button>
-                    </View>
-                    {this.getForgotPasswordModalView()}
-                    {this.getSpinnerComponentView()}
-                </Content>
-            </Container>
+                        <View style={styleContent.footerContent} >
+                            <Button style={styleContent.loginBtn}
+                                onPress={() => this.onSignInBtnClicked()}>
+                                <View style={styleContent.buttonTextView} >
+                                    <Text style={styleContent.signInText} > SIGN IN </Text><Icon name="arrow-forward" style={styleContent.signInIcon} />
+                                </View>
+                            </Button>
+                        </View>
+                        {this.getForgotPasswordModalView()}
+
+                    </Content>
+
+                </Container>
+                {this.getSpinnerComponentView()}
+            </React.Fragment>
+
         );
     }
 }

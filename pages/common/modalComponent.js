@@ -191,7 +191,7 @@ export default class ModalComponent extends BaseComponent {
           Alert.alert('Modal has been closed.');
         }}>
         <View style={{ marginTop: 22 }}>
-          <View>
+          
             <View style={styleContent.modalHeaderDiv}>
               <Text note style={styleContent.modalHeader}  > {modalTitle} </Text>
               {this.getHeaderCloseView()}
@@ -209,10 +209,16 @@ export default class ModalComponent extends BaseComponent {
 
               {this.showSecondaryForgotPasswordBtn()}
 
-              {this.showModalBtn()}
+              
 
             </View>
-          </View>
+              
+
+
+
+            <View style={styleContent.modalFooter}>
+            {this.showModalBtn()}
+            </View>
         </View>
         {this.getSpinnerComponentView(this.state.spinner)}
       </Modal>

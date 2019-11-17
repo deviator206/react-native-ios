@@ -1,6 +1,6 @@
 import { Col, DatePicker, Grid, Row, Text } from 'native-base';
 import React from 'react';
-import { Alert, Modal, TouchableHighlight, View } from 'react-native';
+import { Modal, TouchableHighlight, View } from 'react-native';
 import { default as FeatherIcon } from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { default as commonStyle } from '../common/commonStyling';
@@ -131,7 +131,7 @@ export default class miFilterComponent extends React.Component {
                             </TouchableHighlight>
                         </View>
                     </View>
-                    <View style={{ flex: 1, padding: 20 }}>
+                    <View style={{ flex: 0.9, padding: 20 }}>
                         <Grid style={commonStyle.formGrid}>
                             <Row style={commonStyle.formGridLabel}>
                                 <Col>
@@ -185,7 +185,7 @@ export default class miFilterComponent extends React.Component {
                         </Grid>
                     </View>
 
-                    <View style={commonStyle.modalFooter}>
+                    
                         <View style={commonStyle.modalButtonContent}>
                             <View style={{ width: "40%" }}>
                                 <TouchableHighlight
@@ -208,7 +208,7 @@ export default class miFilterComponent extends React.Component {
                                 </TouchableHighlight>
                             </View>
                         </View>
-                    </View>
+                    
                 </View>
 
             </Modal>
