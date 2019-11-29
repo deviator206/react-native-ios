@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ametek_ios.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>armv7</string>
+				<string>arm64</string>
+			</array>
+			<key>bitcode</key>
+			<true/>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>9899805BC42DAC9CD7B9F1667246F2A8BE69EDB5</string>
+				<key>dateExpires</key>
+				<string>9/10/20</string>
+				<key>type</key>
+				<string>iOS Distribution</string>
+			</dict>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>J49987U8AR.org.reactjs.native.example.ametek-ios</string>
+				<key>beta-reports-active</key>
+				<true/>
+				<key>com.apple.developer.team-identifier</key>
+				<string>J49987U8AR</string>
+				<key>get-task-allow</key>
+				<false/>
+				<key>keychain-access-groups</key>
+				<array>
+					<string>J49987U8AR.org.reactjs.native.example.ametek-ios</string>
+				</array>
+			</dict>
+			<key>name</key>
+			<string>ametek_ios.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>b379dfbf-ad26-4543-becb-58c8dd42391d</string>
+				<key>name</key>
+				<string>AppStore_Profile</string>
+			</dict>
+			<key>symbols</key>
+			<true/>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>J49987U8AR</string>
+				<key>name</key>
+				<string>Sandeep Bamane</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
