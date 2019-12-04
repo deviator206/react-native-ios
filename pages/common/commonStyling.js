@@ -101,9 +101,7 @@ const styleContent = StyleSheet.create({
         marginLeft: "5%"
     },
     dropdownTextItemAndSelection: {
-        color: "#444444",
         fontSize: 14,
-       //  width:"92%",
         height: 40,
         lineHeight: 40,
         fontFamily: 'Montserrat-Regular',

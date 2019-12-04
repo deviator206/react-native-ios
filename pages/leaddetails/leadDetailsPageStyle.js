@@ -1,5 +1,13 @@
 
 import { StyleSheet } from 'react-native';
+/**
+ * colValue: {
+        flexDirection: 'row', 
+        flexWrap: 'wrap',
+        marginBottom:"2%" ,   
+        backgroundColor:"red"
+    },
+ */
 const styleContent = StyleSheet.create({
     mainContent: {
         flex: 1,
@@ -65,12 +73,7 @@ const styleContent = StyleSheet.create({
         color: "#1A1A1A",
         marginLeft:"3%"
     },
-    colValue: {
-        flexDirection: 'row', 
-        flexWrap: 'wrap',
-        marginBottom:"2%" ,   
-        backgroundColor:"red"
-    },
+    
     iconStyling: {
         fontSize: 20
     },

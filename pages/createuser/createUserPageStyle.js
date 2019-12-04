@@ -1,17 +1,19 @@
 
 import { StyleSheet } from 'react-native';
+/**
+ * addLeadFooter:{
+        backgroundColor: '#ec2227',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        height: '100%'
+    },
+ */
 const styleContent = StyleSheet.create({
     mainContent: {
         flex:0.8,
         backgroundColor:"#FFFFFF",
         width: "100%",
-        height: '100%'
-    },
-    addLeadFooter:{
-        backgroundColor: '#ec2227',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
         height: '100%'
     },
     addLeadFooterText:{

@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { hidden, red } from 'ansi-colors';
-import {default as AppConst} from '../common/consts';
+import { default as AppConst } from '../common/consts';
 const styleContent = StyleSheet.create({
   bigBlue: {
     color: 'blue',
@@ -34,7 +33,6 @@ const styleContent = StyleSheet.create({
     fontWeight: 'bold'
   },
   buttonTextView: {
-    paddingTop: "2%",
     flex:1,
     flexDirection:"row",
     justifyContent: "center",
