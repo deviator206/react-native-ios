@@ -104,7 +104,7 @@ export default class DropDownComponent extends React.Component {
     getRegularView() {
         const { selected = '' } = this.state;
         let returnedView;
-        const { dataSource = [], onDropDownSelectionChange = this.onSelectionChanged, showAttribute, returnAttribute } = this.props;
+        const { dataSource = [], onDropDownSelectionChange = this.onSelectionChanged } = this.props;
         const pickerItemArr = [];
         const indG = 'KEY_' + parseInt(Math.random(0, 111) * 1000);
         dataSource.forEach(singleItem => {
@@ -142,7 +142,7 @@ export default class DropDownComponent extends React.Component {
     getRoundedView() {
         const { selected = '' } = this.state;
         let returnedView;
-        const { dataSource = [], onDropDownSelectionChange = this.onSelectionChanged, showAttribute, returnAttribute } = this.props;
+        const { dataSource = [], onDropDownSelectionChange = this.onSelectionChanged } = this.props;
         const pickerItemArr = [];
         const indG = 'KEY_' + parseInt(Math.random(0, 111) * 1000);
         dataSource.forEach(singleItem => {

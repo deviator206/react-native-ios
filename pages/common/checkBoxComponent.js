@@ -50,7 +50,7 @@ export default class CheckBoxComponent extends React.Component {
     getView() {
         let returnedView;
         const { checkedState = false } = this.state;
-        const { checkBoxLabel = "NO LABEL", onCheckBoxChanged = this.onSelectionChanged, currentState,
+        const { checkBoxLabel = "NO LABEL", onCheckBoxChanged = this.onSelectionChanged, 
             listItemStyle = {
                 padding: "0%",
                 marginLeft: "0%",

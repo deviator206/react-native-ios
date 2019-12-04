@@ -192,20 +192,15 @@ export default class MiDetailsPage extends React.Component {
         } = this.state;
 
         let hasInfoUpdated = false;
-        let convertToLead = false
-
+        
         const { navigation } = this.props;
         const itemId = navigation.getParam('miId', 'NO-ID');
         let payload = {
             "id": itemId
         };
-        if (ADD_MORE_INFO && INPUT_ADD_MORE_INFO && INPUT_ADD_MORE_INFO !== '') {
+        if (ADD_MORE_INFO && INPUT_ADD_MORE_INFO) {
             hasInfoUpdated = true;
-            const myBU = (window.userInformation &&
-                window.userInformation.userInfo &&
-                window.userInformation.userInfo.businessUnit) ? window.userInformation.userInfo.businessUnit : "";
-
-
+            
             const userId = (window.userInformation &&
                 window.userInformation.userInfo &&
                 window.userInformation.userInfo.userId) ? window.userInformation.userInfo.userId : "";
@@ -219,12 +214,9 @@ export default class MiDetailsPage extends React.Component {
             ]
         } else if (
             CONVERT_TO_LEAD &&
-            INPUT_CTL_CUSTOMER_NAME &&
-            INPUT_CTL_CUSTOMER_NAME !== '' &&
-            INPUT_CTL_REQUIREMENT &&
-            INPUT_CTL_REQUIREMENT !== ''
+            INPUT_CTL_CUSTOMER_NAME  &&
+            INPUT_CTL_REQUIREMENT 
         ) {
-            convertToLead = true;
             this.props.navigation.navigate("addlead", {
                 INPUT_CTL_CUSTOMER_NAME: INPUT_CTL_CUSTOMER_NAME,
                 INPUT_CTL_REQUIREMENT: INPUT_CTL_REQUIREMENT,
@@ -300,7 +292,7 @@ export default class MiDetailsPage extends React.Component {
             resultSet = [...fullSet];
         }
         let returnedView;
-        if (resultSet && resultSet.length > 0) {
+        if (resultSet.length > 0) {
             returnedView = (
                 <FlatList
                     data={resultSet}

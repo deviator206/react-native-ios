@@ -24,7 +24,7 @@ export default class RadioButtonGroupComponent extends React.Component {
   }
 
   radioButtonSelected(btnCode) {
-    const { defaultSelectionCode, updateToParent } = this.props;
+    const {  updateToParent } = this.props;
     this.setState({
       SELECTED_RADIO: btnCode
     });

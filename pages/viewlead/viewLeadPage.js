@@ -90,7 +90,7 @@ class ViewLeadPage extends React.Component {
 
     onSearchButtonClicked() {
         const { searchInput = '' } = this.state;
-        if (searchInput && searchInput !== '') {
+        if (searchInput ) {
             const filterPayload = {
                 "searchText": searchInput
             }
@@ -186,7 +186,7 @@ class ViewLeadPage extends React.Component {
 
     prepareInputPayload(filterState) {
         const { searchText, LEAD_STATUS_DROP_DOWN,
-            TENURE, COUNTRY, BU, SOURCE, INDUSTRY, DROP_DOWN_SELF_MODE, DROP_DOWN_GENERAL_BU_MODE, ORIGINATOR_BU, TARGET_BU } = filterState;
+            TENURE, COUNTRY, SOURCE, INDUSTRY, DROP_DOWN_SELF_MODE, DROP_DOWN_GENERAL_BU_MODE, ORIGINATOR_BU, TARGET_BU } = filterState;
 
         let filterPayload = {};
 
@@ -471,7 +471,7 @@ class ViewLeadPage extends React.Component {
     }
     render() {
         const { navigation } = this.props;
-        const { resultSet, referenceData = {} } = this.state;
+        const {  referenceData = {} } = this.state;
 
         return (
             <Container>

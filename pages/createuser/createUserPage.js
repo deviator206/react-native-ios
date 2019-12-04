@@ -156,12 +156,9 @@ export default class CreateUserPage extends React.Component {
         } = this.state;
         const roleValue = appConstant.ROLES_USER_TYPE_MAPPING[CHILD_RADIO_BUTTON_VALUE];
 
-        if (INPUT_UNIQUE_USER_NAME &&
-            INPUT_UNIQUE_USER_NAME !== '' &&
-            INPUT_UNIQUE_TEMP_PASSWORD &&
-            INPUT_UNIQUE_TEMP_PASSWORD !== '' &&
-            roleValue &&
-            roleValue !== ''
+        if (INPUT_UNIQUE_USER_NAME  &&
+            INPUT_UNIQUE_TEMP_PASSWORD  &&
+            roleValue 
         ) {
             const payload = {
                 "userName": INPUT_UNIQUE_USER_NAME,

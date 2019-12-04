@@ -67,7 +67,7 @@ export default class UserListPage extends React.Component {
 
     onSearchButtonClicked() {
         const { searchInput = '' } = this.state;
-        if (searchInput && searchInput !== '') {
+        if (searchInput ) {
             this.onLoadAllMarketInt({})
         }
     }

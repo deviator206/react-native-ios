@@ -60,9 +60,9 @@ export default class ModalComponent extends BaseComponent {
   }
 
   onEmailSubmit() {
-    const { emailAdded, modalVisible } = this.state;
+    const { emailAdded } = this.state;
     console.log(emailAdded);
-    if (emailAdded && emailAdded !== '') {
+    if (emailAdded) {
       this.setState({
         spinner: true,
         showInlineError: false

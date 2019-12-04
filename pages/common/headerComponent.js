@@ -41,7 +41,7 @@ export default class HeaderComponent extends React.Component {
     }
 
     render() {
-        const { title, previousPage, showSideMenuBtn = false, sideMenuClickHandler = this.sideMenuClicked } = this.props;
+        const { title,  sideMenuClickHandler = this.sideMenuClicked } = this.props;
         return (
             <Header style={styleContent.headerSection} hasTabs>
                 <Left>

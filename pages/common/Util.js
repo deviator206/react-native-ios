@@ -35,6 +35,7 @@ const utilities = {
                 payloadInfo = {
                     toBu: RBAPolicy.getCurrentBU()
                 }
+                break;
             default:
                 break;
         }

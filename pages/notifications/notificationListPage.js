@@ -130,7 +130,6 @@ export default class NotificationListPage extends React.Component {
         return returnedView;
     }
     render() {
-        const uri = "https://facebook.github.io/react-native/docs/assets/favicon.png";
         const { navigation } = this.props;
         return (
             <Container>

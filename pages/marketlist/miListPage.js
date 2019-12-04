@@ -210,7 +210,7 @@ export default  class MiListPage extends React.Component {
 
     onSearchButtonClicked() {
         const { searchInput = '' } = this.state;
-        if (searchInput && searchInput !== '') {
+        if (searchInput) {
             const filterPayload = {
                 "searchText": searchInput
             }

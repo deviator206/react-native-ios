@@ -270,7 +270,7 @@ export default class AddLeadPage extends React.Component {
   }
 
   onLeadSubmit() {
-    const { TENURE, SOURCE, CURRENCY, INDUSTRY, COUNTRY, selectedPhyState = 'NA', leadCreatedDate = new Date(),
+    const { TENURE, SOURCE, CURRENCY, INDUSTRY, COUNTRY, leadCreatedDate = new Date(),
       CUSTOMER_NAME,
       REQUIREMENT,
       CONTACT_NAME,
