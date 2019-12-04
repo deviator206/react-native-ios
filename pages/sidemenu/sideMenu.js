@@ -50,7 +50,7 @@ export default class SideMenuBar extends React.Component {
         try {
             await AsyncStorage.removeItem(ApplicationConfiguration.runtimeConfig.KEY_FOR_USER_CRED);
         } catch (e) {
-            alert('Failed To Logout.')
+            console.log('Failed To Logout.')
         }
     }
     onSideMenuItemClicked(itemKey) {

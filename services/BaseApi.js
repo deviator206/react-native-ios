@@ -1,5 +1,5 @@
 
-import {default as i18nMessages} from '../pages/common/i18n';
+import { default as i18nMessages } from '../pages/common/i18n';
 
 class BaseApi {
     constructor() {}
@@ -21,16 +21,16 @@ class BaseApi {
         } else if(errorHandler) {
             errorHandler({message:i18nMessages['ERROR_MSG_UNKNOWN_RESPONSE']})
         } else {
-            alert("VALIDATE THE RESPONSE",serverResponse)
+            console.error("VALIDATE THE RESPONSE",serverResponse)
         }
     }
 
     invalidSuccessResponse (serverResponse) {
-        alert("VALIDATE THE RESPONSE",serverResponse)
+        console.error("VALIDATE THE RESPONSE",serverResponse)
     }
 
     invalidSuccessRejectResponse (reject, serverResponse) {
-        alert("VALIDATE THE RESPONSE",serverResponse);
+        console.error("VALIDATE THE RESPONSE",serverResponse);
         reject({ message: "RESPONSE IS NOT AS EXPECTED", error: "INVALID" });
     }
 
@@ -52,7 +52,7 @@ class BaseApi {
         } else if(errorHandler) {
             errorHandler({message:i18nMessages['ERROR_MSG_UNKNOWN_RESPONSE']})
         } else {
-            alert("VALIDATE THE RESPONSE",serverResponse)
+            console.error("VALIDATE THE RESPONSE",serverResponse)
         }
     }
 

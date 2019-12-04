@@ -457,7 +457,7 @@ export default class LeadDetailsPage extends React.Component {
 
 
   sideMenuClickHandler() {
-    alert("clicked side panel")
+    console.log("clicked side panel")
   }
 
   onDropDownChange({ type, value }) {

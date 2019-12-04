@@ -3,7 +3,6 @@ import React from 'react';
 import { Alert, FlatList, Modal, TouchableHighlight, View } from 'react-native';
 import { default as FilterIcon } from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import FooterComponent from '../common/footerComponent';
 import HeaderComponent from '../common/headerComponent';
 import styleContent from './notificationListStyle';
 
@@ -20,7 +19,7 @@ export default class NotificationListPage extends React.Component {
     }
 
     sideMenuClickHandler() {
-        alert("clicked side panel")
+        console.log("clicked side panel")
     }
 
     filerBtnToggled() {

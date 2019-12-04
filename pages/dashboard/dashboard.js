@@ -234,7 +234,7 @@ export default class DashboardPage extends React.Component {
     }
 
     onErrorResponseFromReferenceData(resp) {
-        alert("Error While fetching Business Unit", resp)
+        console.log("Error While fetching Business Unit", resp)
     }
 
 

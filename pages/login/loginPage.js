@@ -145,7 +145,7 @@ export default class LoginPage extends Component {
         try {
             await AsyncStorage.setItem(ApplicationConfiguration.runtimeConfig.KEY_FOR_USER_CRED, JSON.stringify({ userName, password }));
         } catch (e) {
-            alert('Failed to save LOGIN')
+            console.log('Failed to save LOGIN')
         }
 
 

@@ -218,7 +218,7 @@ export default class AddLeadPage extends React.Component {
     const { marketIntId, INPUT_CTL_CUSTOMER_NAME, INPUT_CTL_REQUIREMENT } = this.state;
 
     if (!userId || userId == -1) {
-      alert("User Id is not Valid")
+      console.log("User Id is not Valid");
       return true;
     }
 
