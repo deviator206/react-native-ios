@@ -366,6 +366,7 @@ class ViewLeadPage extends React.Component {
 
         // prepare input
         const filterPayload = this.prepareInputPayload(basicInput);
+        filterPayload["temp"] = "temp";
 
         this.leadApi.searchLeadsWithFilters(filterPayload).then(this.onLeadResponseSuccess).catch(this.onLeadResponseError)
 
@@ -377,8 +378,6 @@ class ViewLeadPage extends React.Component {
     componentDidMount() {
         this.setState({
             filterVisible: false
-            // ,
-            // userId:RBAPolicy.getCurrentUserId()
         });
         this.willFocusSubscription = this.props.navigation.addListener('didFocus', this.loadAllLeads);
     }
