@@ -8,7 +8,6 @@ import RefDataApi from '../../services/RefDataApi';
 import { default as commonStyle } from '../common/commonStyling';
 import { default as appConstant } from '../common/consts';
 import FlatListComponent from '../common/flatListComponent';
-import FooterComponent from '../common/footerComponent';
 import HeaderComponent from '../common/headerComponent';
 import i18nMessages from '../common/i18n';
 import { default as RBAPolicy } from '../common/rbaPolicy';
@@ -538,7 +537,7 @@ class ViewLeadPage extends React.Component {
                 />
                 {this.getSpinnerComponentView()}
 
-                <FooterComponent  {...this.props} disableView={true} />
+              
             </Container>
         )
     }
