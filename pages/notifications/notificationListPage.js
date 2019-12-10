@@ -1,10 +1,14 @@
-import { Button, Card, CardItem, Col, Container, Content, Grid, Input, Item, Row, Tab, Tabs, Text } from 'native-base';
+import { Card, CardItem, Col, Container, Content, Grid, Row, Text } from 'native-base';
 import React from 'react';
 import { Alert, FlatList, Modal, TouchableHighlight, View } from 'react-native';
-import { default as FilterIcon } from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import NotificationApi from '../../services/NotificationApi';
+import { default as commonStyling } from '../common/commonStyling';
 import HeaderComponent from '../common/headerComponent';
+import { default as RBAPolicy } from '../common/rbaPolicy';
+import SpinnerComponent from '../common/spinnerComponent';
+import Utils from '../common/Util';
 import styleContent from './notificationListStyle';
+
 
 
 
@@ -16,10 +20,87 @@ export default class NotificationListPage extends React.Component {
         };
         this.filerBtnToggled = this.filerBtnToggled.bind(this);
         this.sideMenuClickHandler = this.sideMenuClickHandler.bind(this);
+        this.gridViewBasedOnType = this.gridViewBasedOnType.bind(this);
+        this.loadAllRecords = this.loadAllRecords.bind(this);
+        this.willFocusSubscription = null;
+        this.notificationApi = new NotificationApi({ state: {} });
+        this.getSpinnerComponentView = this.getSpinnerComponentView.bind(this);
+
+        this.onRecordFetchSucess = this.onRecordFetchSucess.bind(this);
+        this.onRecordFetchError = this.onRecordFetchError.bind(this);
+
+    }
+
+    getSpinnerComponentView() {
+        const { spinner } = this.state;
+
+        const loaderView = (<SpinnerComponent />);
+        const nonLoaderView = null;
+        if (spinner) {
+            return loaderView;
+        }
+        return nonLoaderView;
+    }
+
+
+
+    onRecordFetchSucess(resp) {
+        this.setState({
+            spinner: false,
+            resultSet: resp
+        });
+    }
+
+    onRecordFetchError(error) {
+        // console.log(error);
+        this.setState({
+            spinner: false,
+            resultSet: []
+
+        });
+    }
+
+
+    loadAllRecords() {
+        this.setState({
+            spinner: true
+        });
+        const params = "recipientId=" + RBAPolicy.getCurrentUserId();
+        this.notificationApi.getAllMessages({ params }).then(this.onRecordFetchSucess).catch(this.onRecordFetchError)
     }
 
     sideMenuClickHandler() {
         console.log("clicked side panel")
+    }
+
+    gridViewBasedOnType(item) {
+        return (
+            <Grid>
+                <Row>
+                    <Col>
+                        <Text style={[commonStyling.list_cardViewMainTitle, commonStyling.camelCase]} > Message # {" " + item.id} </Text>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Text style={commonStyling.list_cardViewSecondaryInfo}  > {item.notificationText} </Text>
+                    </Col>
+                </Row>
+                {(item && item.originationDate) && (
+                    <Row>
+                        <Col style={commonStyling.list_colLabelOnly} >
+                            <Text style={commonStyling.list_cardViewPrimaryLabel}  > Originated Date </Text>
+
+                        </Col>
+                        <Col style={commonStyling.list_colValue} >
+                            <Text style={commonStyling.list_cardViewPrimaryValue} >:   </Text>
+                            <Text style={commonStyling.list_cardViewPrimaryValue} > {Utils.getFormattedDate(new Date(item.originationDate))} </Text>
+                        </Col>
+
+                    </Row>
+                )}
+            </Grid>
+        );
     }
 
     filerBtnToggled() {
@@ -33,93 +114,28 @@ export default class NotificationListPage extends React.Component {
         this.setState({
             filterVisible: false
         });
+        this.willFocusSubscription = this.props.navigation.addListener('didFocus', this.loadAllRecords);
+
     }
 
     getViewLeads() {
-        const dataR = [
-            {
-                miId: "MI#779",
-                type: "New Item",
-                description: "This is likely happening when upgrading React Native from below 0.60 to 0.60 or above. Going forward",
-                status: "CLOSED"
-
-            }, {
-                miId: "MI#779",
-                type: "New Item",
-                description: "This is likely happening when upgrading React Native from below 0.60 to 0.60 or above. Going forward",
-                status: "CLOSED"
-
-            },
-            {
-                miId: "MI#779",
-                type: "New Item",
-                description: "This is likely happening when upgrading React Native from below 0.60 to 0.60 or above. Going forward",
-                status: "CLOSED"
-
-            },
-            {
-                miId: "MI#779",
-                type: "New Item",
-                description: "This is likely happening when upgrading React Native from below 0.60 to 0.60 or above. Going forward",
-                status: "CLOSED"
-            },
-            {
-                miId: "MI#779",
-                type: "New Item",
-                description: "This is likely happening when upgrading React Native from below 0.60 to 0.60 or above. Going forward",
-                status: "CLOSED"
-            },
-            {
-                miId: "MI#779",
-                type: "New Item",
-                description: "This is likely happening when upgrading React Native from below 0.60 to 0.60 or above. Going forward",
-                status: "CLOSED"
-            },
-            {
-                miId: "MI#779",
-                type: "New Item",
-                description: "This is likely happening when upgrading React Native from below 0.60 to 0.60 or above. Going forward",
-                status: "CLOSED"
-            }];
+        const { resultSet = [] } = this.state;
 
         const returnedView = (
             <FlatList
-                data={dataR}
+                data={resultSet}
                 renderItem={({ item }) =>
                     <Row>
-                        <Card style={styleContent.gridCardWrapper} >
+
+                        <Card style={styleContent.gridCardWrapper}>
                             <CardItem>
                                 <Col>
-                                    <Grid>
-                                        <Row>
-                                            <Col>
-                                                <Text style={styleContent.cardViewMainTitle} > {item.miId} </Text>
-                                            </Col>
-                                            <Col style={{ flexDirection: "row" }}>
-                                                <Text style={styleContent.cardViewSecondaryInfo}  > Type:  </Text>
-                                                <Text style={styleContent.cardViewPrimaryValue}  >  {item.type} </Text>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col>
-                                                <Text style={styleContent.cardViewSecondaryInfo}  > {item.description} </Text>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col style={styleContent.colLabelOnly} >
-                                                <Text style={styleContent.cardViewPrimaryLabel}  > Status </Text>
-
-                                            </Col>
-                                            <Col style={styleContent.colValue} >
-                                                <Text style={styleContent.cardViewPrimaryValue} >: {item.status}  </Text>
-                                            </Col>
-
-                                        </Row>
-                                    </Grid>
-
+                                    {this.gridViewBasedOnType(item)}
                                 </Col>
                             </CardItem>
                         </Card>
+
+
                     </Row>
                 }
             >
@@ -133,100 +149,18 @@ export default class NotificationListPage extends React.Component {
         const { navigation } = this.props;
         return (
             <Container>
-                <HeaderComponent navigation={navigation}   title="Notifications" />
-                
+                <HeaderComponent navigation={navigation} title="Notifications" />
+
                 <Content style={styleContent.mainContent}>
-                <View style={{ height: '100%' }}>
-                    <Tabs tabBarUnderlineStyle={{backgroundColor:'red', height:3}} tabBarPosition="overlayTop" tabStyle={{ fontFamily: 'Montserrat-Bold'}}>
-                        <Tab 
-                        activeTabStyle={{backgroundColor:"#FFFFFF"}} 
-                        activeTextStyle={{color:"#000000"}} 
-                        textStyle={{color:"#888"}} 
-                        tabStyle={{backgroundColor:"#fff"}} 
-                        heading="READ"
-                        >
-                            <Grid style={{ backgroundColor: '#E8E8E8' }}>
-                                <Row style={styleContent.searchAndFilterWrapper}>
-                                    <Col style={styleContent.searchBarWrapper} >
-                                        <Item searchBar rounded style={styleContent.searchBarStyling}>
-                                            <Input placeholder="Search" />
-                                            <Icon name="search" style={styleContent.iconStyling} />
-                                        </Item>
-                                    </Col>
-                                    <Col  >
-                                        <Button
-                                            transparent
-                                            onPress={() => {
-                                                this.filerBtnToggled();
-                                            }
-
-
-                                            }
-                                        >
-                                            <FilterIcon name="filter-outline" style={styleContent.iconStyling} />
-                                        </Button>
-                                    </Col>
-                                </Row>
-                            </Grid>
-                            <Grid style={styleContent.gridWrapper} >
-                                {this.getViewLeads()}
-                            </Grid>
-                            
-                        </Tab>
-                        <Tab 
-                        activeTabStyle={{backgroundColor:"#FFFFFF"}} 
-                        activeTextStyle={{color:"#000000"}} 
-                        textStyle={{color:"#616161"}} 
-                        tabStyle={{backgroundColor:"#fff"}} 
-                        heading="UNREAD"
-                        >
-                            <Grid style={{ backgroundColor: '#E8E8E8' }}>
-                                <Row style={styleContent.searchAndFilterWrapper}>
-                                    <Col style={styleContent.searchBarWrapper} >
-                                        <Item searchBar rounded style={styleContent.searchBarStyling}>
-                                            <Input placeholder="Search" />
-                                            <Icon name="search" style={styleContent.iconStyling} />
-                                        </Item>
-                                    </Col>
-                                    <Col  >
-                                        <Button
-                                            transparent
-                                            onPress={() => {
-                                                this.filerBtnToggled();
-                                            }
-
-
-                                            }
-                                        >
-                                            <FilterIcon name="filter-outline" style={styleContent.iconStyling} />
-                                        </Button>
-                                    </Col>
-                                </Row>
-                            </Grid>
-
-                            <Grid style={styleContent.gridWrapper} >
-                                {this.getViewLeads()}
-                            </Grid>
-                        </Tab>
-                    </Tabs>
-                   </View> 
+                    <View style={{ height: '100%' }}>
+                        <Grid style={styleContent.gridWrapper} >
+                            {this.getViewLeads()}
+                        </Grid>
+                    </View>
                 </Content>
-                <View style={styleContent.floatingButtonView}>
-                    <Button
-                        style={styleContent.floatingButton}
-                        button
-                        onPress={() => {
-                            this.props.navigation.navigate("miadd");
-                        }} >
-                        <Icon name="add" style={{
-                            color: "white",
-                            fontSize: 30,
-                            marginLeft: 15
-                        }} />
-                    </Button>
-                </View>
-                
-                
+                {this.getSpinnerComponentView()}
+
+
                 <Modal
                     animationType="slide"
                     transparent={false}

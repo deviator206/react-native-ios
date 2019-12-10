@@ -34,6 +34,11 @@ const routes = [
         key: "logout",
         caption: "Logout",
         icon: 'exit-to-app'
+    },
+    {
+        key: "notificationlist",
+        caption: "Notifications",
+        icon: 'notifications'
     }
 ];
 

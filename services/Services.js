@@ -24,7 +24,8 @@ const SERVICE_URL = {
     'SEARCH_LEAD': 'search/leads/',
     'GET_LEAD_STATS': 'statistics/lead?',
     'FORGOT_PASSWORD':'/forgotpassword',
-    'EXTRACT_REPORT':'statistics/lead?'
+    'EXTRACT_REPORT':'statistics/lead?',
+    'GET_NOTIFICATION':'notification?'
 }
 
 const axiosInstance = axios.create({
@@ -99,6 +100,11 @@ class ServiceClass {
     static async getUsers(params) {
         return await axiosInstance.get(SERVICE_URL['GET_USERS']+params);
     }
+
+    static async getNotificationMessages(params) {
+        return await axiosInstance.get(SERVICE_URL['GET_NOTIFICATION']+params);
+    }
+
 
     static async searchLeadsWithFilters(filterPayload) {
         return await axiosInstance.post(SERVICE_URL['SEARCH_LEAD'], filterPayload);
