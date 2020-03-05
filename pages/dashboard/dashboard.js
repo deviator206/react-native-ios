@@ -599,7 +599,7 @@ export default class DashboardPage extends React.Component {
                                     <Button transparent
                                         onPress={this.iniateExtractResult}
                                         style={styleContent.roundedButton}>
-                                        <Text style={styleContent.roundedButtonText}> Extract RESULTS</Text>
+                                        <Text style={styleContent.roundedButtonText}>Extract RESULTS</Text>
                                     </Button>
                                 </Col>
                             </Row>

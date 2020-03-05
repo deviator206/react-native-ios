@@ -323,8 +323,8 @@ export default class AddLeadPage extends React.Component {
       INPUT_CTL_REQUIREMENT
     ) {
       inputPayload["leadsSummaryRes"]["rootLeadId"] = marketIntId;
-      inputPayload["custName"] = CUSTOMER_NAME;
-      inputPayload["description"] = REQUIREMENT;
+      inputPayload["custName"] = INPUT_CTL_CUSTOMER_NAME;
+      inputPayload["description"] = INPUT_CTL_REQUIREMENT;
     }
 
     this.setState({
